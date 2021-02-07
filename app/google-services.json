@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "802347869992",
+    "project_id": "community-d3062",
+    "storage_bucket": "community-d3062.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802347869992:android:419328f24b0b455f1ed21d",
+        "android_client_info": {
+          "package_name": "com.brainer.underkg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802347869992-fejki1103qkdnd7f003ev7fp19uobs94.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMEpiwwHje5b6U4sYQ1c_zcEN90QD6RHs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802347869992-fejki1103qkdnd7f003ev7fp19uobs94.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
