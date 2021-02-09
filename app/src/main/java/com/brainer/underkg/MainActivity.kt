@@ -70,7 +70,7 @@ fun AppBar() {
                         .fillMaxSize(),
                 scaffoldState = scaffoldState,
                 topBar = {
-                    Column(Modifier.height(259.71.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(text = "News",
                                 style = MaterialTheme.typography.h2,
                                 textAlign = TextAlign.Center)
