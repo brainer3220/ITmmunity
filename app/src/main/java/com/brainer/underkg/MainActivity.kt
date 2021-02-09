@@ -66,16 +66,20 @@ fun AppBar() {
     ScrollableColumn() {
         Scaffold(
                 modifier = Modifier
-                    .height(259.71.dp)
-                    .fillMaxWidth(),
+//                        .height(259.71.dp)
+                        .fillMaxSize(),
                 scaffoldState = scaffoldState,
                 topBar = {
-                    Column(Modifier.fillMaxSize()) {
-//                        Spacer(modifier = Modifier)
-                        Text(text = "News", Modifier.fillMaxSize(), style = MaterialTheme.typography.h2)
+                    Column(Modifier.height(259.71.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(text = "News",
+                                style = MaterialTheme.typography.h2,
+                                textAlign = TextAlign.Center)
                     }
                 },
-                bodyContent = {}
+                bodyContent = {
+                    Modifier.fillMaxSize()
+                    NewsCard(listOf(dummies))
+                }
         )
     }
 }
