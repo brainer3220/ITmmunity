@@ -85,7 +85,7 @@ fun AppBar() {
 
 @Composable
 fun NewsCard(
-        news: List<NewsStruct>
+    news: List<NewsStruct>
 //        onSelected: (NewsStruct) -> Unit
 ) {
     var backGroundUnitColor: Color = Color(255, 255, 255)
