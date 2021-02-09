@@ -42,7 +42,7 @@ fun MainView() {
             val scroll = rememberScrollState(0f)
             Column() {
                 AppBar()
-                Spacer(modifier = Modifier.padding(6.dp))
+                Spacer(modifier = Modifier.padding(2.dp))
                 NewsCard(dummies)
             }
         }
@@ -64,28 +64,32 @@ fun FilMaxBackGround() {
 @Composable
 fun AppBar() {
     val scaffoldState = rememberScaffoldState()
+    Log.i("Simple Log", "scaffoldState: $scaffoldState")
     ScrollableColumn() {
         Scaffold(
-            modifier = Modifier
-                .height(259.71.dp)
-                .fillMaxSize(),
-            scaffoldState = scaffoldState,
-            topBar = {
-                FilMaxBackGround()
-                Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "News",
-                        style = MaterialTheme.typography.h2,
-                        textAlign = TextAlign.Center)
-                }
-            },
-            bodyContent = { }
+                modifier = Modifier
+                        .height(259.71.dp)
+                        .fillMaxWidth(),
+                scaffoldState = scaffoldState,
+                topBar = {
+                    FilMaxBackGround()
+                    ScrollableColumn(modifier = Modifier.height(259.71.dp).fillMaxWidth(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(text = "News",
+                                style = MaterialTheme.typography.h3,
+                                textAlign = TextAlign.Center)
+                    }
+                },
+                bodyContent = {
+//                    Spacer(modifier = Modifier.padding(6.dp))
+//                    NewsCard(dummies)
+                },
         )
     }
 }
 
 @Composable
 fun NewsCard(
-    news: List<NewsStruct>
+        news: List<NewsStruct>
 //        onSelected: (NewsStruct) -> Unit
 ) {
     var backGroundUnitColor: Color = Color(255, 255, 255)
@@ -105,10 +109,10 @@ fun NewsCard(
 @Composable
 fun NewsListOf(aNews: NewsStruct, modifier: Modifier = Modifier) {
     Surface(
-        Modifier
-            .height(125.dp)
-            .background(Color.White)
-            .clickable() { }) {
+            Modifier
+                    .height(125.dp)
+                    .background(Color.White)
+                    .clickable() { }) {
         Column(modifier = modifier.padding(16.dp)) {
             Text(text = aNews.title, style = MaterialTheme.typography.h6)
             Spacer(modifier = Modifier.padding(4.dp))
@@ -117,8 +121,8 @@ fun NewsListOf(aNews: NewsStruct, modifier: Modifier = Modifier) {
                 Spacer(modifier = Modifier.padding(3.dp))
                 Text(text = aNews.numComment.toString(), style = MaterialTheme.typography.body1)
             }
-            Spacer(modifier = Modifier.padding(6.dp))
-            Divider()
+//            Spacer(Modifier.padding(top = 12.dp, bottom = 0.dp))
+            Divider(Modifier.padding(top = 12.dp, bottom = 0.dp))
         }
     }
 }
