@@ -10,11 +10,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontSynthesis
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.brainer.datta.ui.DattaTheme
@@ -39,8 +41,8 @@ fun MainView() {
             val scroll = rememberScrollState(0f)
             Column() {
                 AppBar()
-                Spacer(modifier = Modifier.padding(6.dp))
-                NewsCard(listOf(dummies))
+//                Spacer(modifier = Modifier.padding(6.dp))
+//                NewsCard(listOf(dummies))
             }
         }
     }
@@ -90,7 +92,6 @@ fun NewsCard(
         backGroundUnitColor = Color(255, 255, 255)
     }
 
-
     Surface(shape = RoundedCornerShape(25.dp)) {
         LazyColumnFor(items = news) {
             NewsListOf(aNews = it, Modifier.background(backGroundUnitColor))
@@ -101,9 +102,9 @@ fun NewsCard(
 @Composable
 fun NewsListOf(aNews: NewsStruct, modifier: Modifier = Modifier) {
     Surface(
-        Modifier
-            .height(125.dp)
-            .clickable() { }) {
+            Modifier
+                    .height(125.dp)
+                    .clickable() { }) {
         Column(modifier = modifier.padding(16.dp)) {
             Text(text = aNews.title, style = MaterialTheme.typography.h6)
             Spacer(modifier = Modifier.padding(4.dp))
