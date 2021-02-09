@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 fun MainView() {
     val scaffoldState = rememberScaffoldState()
     DattaTheme {
+        FilMaxBackGround()
         Box(Modifier.fillMaxSize())
         {
             val scroll = rememberScrollState(0f)
@@ -51,10 +52,10 @@ fun MainView() {
 @Composable
 fun FilMaxBackGround() {
     if (isSystemInDarkTheme()) {
-        Surface(color = com.brainer.underkg.ui.theme.themeOFDarkPrimary) {
+        Surface(Modifier.fillMaxSize(), color = com.brainer.underkg.ui.theme.themeOFDarkPrimary) {
         }
     } else if(!isSystemInDarkTheme()) {
-        Surface(color = com.brainer.underkg.ui.theme.Primary) {
+        Surface(Modifier.fillMaxSize(), color = com.brainer.underkg.ui.theme.Primary) {
         }
     }
 }
@@ -65,18 +66,19 @@ fun AppBar() {
     val scaffoldState = rememberScaffoldState()
     ScrollableColumn() {
         Scaffold(
-                modifier = Modifier
-                        .height(259.71.dp)
-                        .fillMaxSize(),
-                scaffoldState = scaffoldState,
-                topBar = {
-                    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = "News",
-                                style = MaterialTheme.typography.h2,
-                                textAlign = TextAlign.Center)
-                    }
-                },
-                bodyContent = { }
+            modifier = Modifier
+                .height(259.71.dp)
+                .fillMaxSize(),
+            scaffoldState = scaffoldState,
+            topBar = {
+                FilMaxBackGround()
+                Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = "News",
+                        style = MaterialTheme.typography.h2,
+                        textAlign = TextAlign.Center)
+                }
+            },
+            bodyContent = { }
         )
     }
 }
@@ -103,9 +105,10 @@ fun NewsCard(
 @Composable
 fun NewsListOf(aNews: NewsStruct, modifier: Modifier = Modifier) {
     Surface(
-            Modifier
-                    .height(125.dp)
-                    .clickable() { }) {
+        Modifier
+            .height(125.dp)
+            .background(Color.White)
+            .clickable() { }) {
         Column(modifier = modifier.padding(16.dp)) {
             Text(text = aNews.title, style = MaterialTheme.typography.h6)
             Spacer(modifier = Modifier.padding(4.dp))
