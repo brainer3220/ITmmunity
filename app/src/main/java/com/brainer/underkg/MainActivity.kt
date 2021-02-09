@@ -42,7 +42,7 @@ fun MainView() {
             Column() {
                 AppBar()
                 Spacer(modifier = Modifier.padding(6.dp))
-                NewsCard(listOf(dummies))
+                NewsCard(dummies)
             }
         }
     }
