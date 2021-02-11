@@ -40,7 +40,7 @@ fun MainView() {
         Box(Modifier.fillMaxSize())
         {
             val scroll = rememberScrollState(0f)
-            Column() {
+            Column {
                 AppBar()
                 Spacer(modifier = Modifier.padding(2.dp))
                 NewsCard(dummies)
@@ -65,7 +65,7 @@ fun FilMaxBackGround() {
 fun AppBar() {
     val scaffoldState = rememberScaffoldState()
     Log.i("Simple Log", "scaffoldState: $scaffoldState")
-    ScrollableColumn() {
+    ScrollableColumn {
         Scaffold(
                 modifier = Modifier
                         .height(259.71.dp)
@@ -112,11 +112,11 @@ fun NewsListOf(aNews: Content, modifier: Modifier = Modifier) {
             Modifier
                     .height(125.dp)
                     .background(Color.White)
-                    .clickable() { }) {
+                    .clickable { }) {
         Column(modifier = modifier.padding(16.dp)) {
             Text(text = aNews.title, style = MaterialTheme.typography.h6)
             Spacer(modifier = Modifier.padding(4.dp))
-            Row() {
+            Row {
                 Text(text = aNews.hit.toString(), style = MaterialTheme.typography.body1)
                 Spacer(modifier = Modifier.padding(3.dp))
                 Text(text = aNews.numComment.toString(), style = MaterialTheme.typography.body1)
