@@ -89,8 +89,8 @@ fun AppBar() {
 
 @Composable
 fun NewsCard(
-        news: List<NewsStruct>
-//        onSelected: (NewsStruct) -> Unit
+        news: List<Content>
+//        onSelected: (Content) -> Unit
 ) {
     var backGroundUnitColor: Color = Color(255, 255, 255)
     if (isSystemInDarkTheme()) {
@@ -107,7 +107,7 @@ fun NewsCard(
 }
 
 @Composable
-fun NewsListOf(aNews: NewsStruct, modifier: Modifier = Modifier) {
+fun NewsListOf(aNews: Content, modifier: Modifier = Modifier) {
     Surface(
             Modifier
                     .height(125.dp)
