@@ -1,5 +1,12 @@
 package com.brainer.underkg
 
+public val urlList = listOf<String> (
+        "http://underkg.co.kr",
+        "https://meeco.kr",
+        "https://quasarzone.com",
+        "https://coolenjoy.net"
+)
+
 
 data class Content(
         val title: String,
