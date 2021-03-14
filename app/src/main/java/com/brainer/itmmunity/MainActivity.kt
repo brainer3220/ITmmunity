@@ -12,16 +12,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.brainer.itmmunity.ui.DattaTheme
+import androidx.compose.foundation.lazy.items
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,9 +42,9 @@ fun MainView() {
     {
         val scroll = rememberScrollState(0)
         Column {
-            AppBar()
-            Spacer(modifier = Modifier.padding(2.dp))
-//                NewsCard(dummies)
+//            AppBar()
+//            Spacer(modifier = Modifier.padding(2.dp))
+            NewsCard(dummies)
         }
     }
 }
@@ -62,7 +60,6 @@ fun MainView() {
 //    }
 //}
 
-@Preview
 @Composable
 fun AppBar() {
     val scaffoldState = rememberScaffoldState()
@@ -71,20 +68,20 @@ fun AppBar() {
         Scaffold(
             scaffoldState = scaffoldState,
             drawerContent = { Text("Drawer content") },
-            topBar = {
-                TopAppBar(
-                    title = { Text("Simple Scaffold Screen") },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-//                                scope.launch { scaffoldState.drawerState.open() }
-                            }
-                        ) {
-                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
-                        }
-                    }
-                )
-            },
+//            topBar = {
+//                TopAppBar(
+//                    title = { Text("Simple Scaffold Screen") },
+//                    navigationIcon = {
+//                        IconButton(
+//                            onClick = {
+////                                scope.launch { scaffoldState.drawerState.open() }
+//                            }
+//                        ) {
+//                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
+//                        }
+//                    }
+//                )
+//            },
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
                 ExtendedFloatingActionButton(
@@ -111,7 +108,7 @@ fun AppBar() {
 @Composable
 fun NewsCard(
     news: List<Content>
-//        onSelected: (Content) -> Unit
+//    onSelected: (Content) -> Unit
 ) {
     var backGroundUnitColor: Color = Color(255, 255, 255)
     if (isSystemInDarkTheme()) {
@@ -120,13 +117,13 @@ fun NewsCard(
         backGroundUnitColor = Color(255, 255, 255)
     }
 
-//    Surface(shape = RoundedCornerShape(25.dp)) {
-//        LazyColumn() {
-//            items(messages) { message ->
-//                MessageRow(message)
-//            }
-//        }
-//    }
+    Surface(shape = RoundedCornerShape(25.dp)) {
+        LazyColumn() {
+            items(news) { item ->
+                NewsListOf(item)
+            }
+        }
+    }
 }
 
 @Composable
