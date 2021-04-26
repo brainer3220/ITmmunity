@@ -1,12 +1,5 @@
 package com.brainer.itmmunity
 
-val urlList = listOf<String>(
-    "http://underkg.co.kr",
-    "https://meeco.kr",
-    "https://quasarzone.com",
-    "https://coolenjoy.net"
-)
-
 
 data class Content(
     val title: String,
