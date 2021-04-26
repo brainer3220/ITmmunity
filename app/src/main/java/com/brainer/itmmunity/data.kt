@@ -1,6 +1,6 @@
 package com.brainer.itmmunity
 
-public val urlList = listOf<String>(
+val urlList = listOf<String>(
     "http://underkg.co.kr",
     "https://meeco.kr",
     "https://quasarzone.com",

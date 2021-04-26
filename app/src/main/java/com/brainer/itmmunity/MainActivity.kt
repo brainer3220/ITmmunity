@@ -118,7 +118,7 @@ fun NewsCard(
     }
 
     Surface(shape = RoundedCornerShape(25.dp)) {
-        LazyColumn() {
+        LazyColumn {
             items(news) { item ->
                 NewsListOf(item)
             }
