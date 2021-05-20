@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 //}
 
 
-class CustomAdapter(private val dataSet: Array<Content>) :
+class CustomAdapter(private val dataSet: List<Content>) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
     /**
@@ -27,7 +27,7 @@ class CustomAdapter(private val dataSet: Array<Content>) :
     }
 
     // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder { 
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.text_row_item, viewGroup, false)

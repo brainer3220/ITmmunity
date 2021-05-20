@@ -32,6 +32,9 @@ class MainActivity : Activity() {
             )
         )
 
-//        main_list = findViewById<RecyclerView>(R.id.main_list)
+        val recMainView: RecyclerView = findViewById(R.id.main_list)
+
+        val mAdapter = CustomAdapter(dummies)
+        recMainView.adapter = mAdapter
     }
 }
