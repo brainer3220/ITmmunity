@@ -16,6 +16,10 @@ class MainActivity : Activity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        CreateMainList()
+    }
+
+    private fun CreateMainList() {
         val dummies = listOf(
             Content(
                 title = "삼성전자, 갤럭시 엑스커버 프로 원 UI 3.0 업데이트 배포",
