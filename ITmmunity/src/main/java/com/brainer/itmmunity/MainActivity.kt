@@ -2,6 +2,7 @@ package com.brainer.itmmunity
 
 import android.app.Activity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.brainer.itmmunity.databinding.ActivityMainBinding
 
@@ -36,5 +37,9 @@ class MainActivity : Activity() {
 
         val mAdapter = CustomAdapter(dummies)
         recMainView.adapter = mAdapter
+
+        val layout = LinearLayoutManager(this)
+        recMainView.layoutManager = layout
+        recMainView.setHasFixedSize(true)
     }
 }

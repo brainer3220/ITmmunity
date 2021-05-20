@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="128sp"
     android:gravity="bottom|center|top|center_vertical|end">
 
     <TextView
         android:id="@+id/main_textView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:text="textview"
         android:textAlignment="center"
         android:textSize="20sp" />
