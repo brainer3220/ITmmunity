@@ -106,7 +106,7 @@ fun AppBar() {
 
 @Composable
 fun NewsCard(
-    news: List<Content>
+    news: List<Croll.Content>
 //    onSelected: (Content) -> Unit
 ) {
     var backGroundUnitColor: Color = Color(255, 255, 255)
@@ -126,7 +126,7 @@ fun NewsCard(
 }
 
 @Composable
-fun NewsListOf(aNews: Content, modifier: Modifier = Modifier) {
+fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
     Surface(
         Modifier
             .height(125.dp)
