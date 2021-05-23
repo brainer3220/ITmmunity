@@ -13,16 +13,16 @@ class Croll {
         val url: String
     )
 
-     fun getHTML(URL: String): Document? {
-        val doc = Jsoup.connect(URL).get()
+     fun getHTML(url: String): Document? {
+        val doc = Jsoup.connect(url).get()
         Log.d("HTML", doc.toString())
         return doc
     }
 
-    fun getItem(URL: String, Target: String, Dtail: String): ArrayList<String> {
-        val doc = Croll().getHTML(URL)
+    fun getItem(url: String, target: String, dTail: String): ArrayList<String> {
+        val doc = Croll().getHTML(url)
         val newsList = arrayListOf<String>()
-        doc?.select("h1")?.forEach { i ->
+        doc?.select(target)?.forEach { i ->
             newsList.add(i.text())
         }
         return newsList
