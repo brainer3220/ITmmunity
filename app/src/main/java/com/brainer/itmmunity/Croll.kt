@@ -6,11 +6,11 @@ import org.jsoup.nodes.Document
 
 class Croll {
     data class Content(
-        val title: String,
-        val image: String?,
-        val hit: Int,
-        val numComment: Int,
-        val url: String
+        var title: String,
+        var image: String?,
+        var hit: Int,
+        var numComment: Int,
+        var url: String
     )
 
      fun getHTML(url: String): Document? {
