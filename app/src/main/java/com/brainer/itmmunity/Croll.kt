@@ -18,4 +18,13 @@ class Croll {
         Log.d("HTML", doc.toString())
         return doc
     }
+
+    fun getItem(URL: String, Target: String, Dtail: String): ArrayList<String> {
+        val doc = Croll().getHTML(URL)
+        val newsList = arrayListOf<String>()
+        doc?.select("h1")?.forEach { i ->
+            newsList.add(i.text())
+        }
+        return newsList
+    }
 }
