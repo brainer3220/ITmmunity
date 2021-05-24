@@ -46,10 +46,10 @@ class Croll {
         val itemList = arrayListOf<Content>()
         for (i in aItemList) {
             itemList.add(i)
-            Log.i("returnData item", i.toString())
+            Log.i("returnDataItem", i.toString())
         }
 
-        println("return data$itemList")
+        println("returnData$itemList")
         return itemList
     }
 }

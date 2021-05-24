@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         GlobalScope.launch  {
-            var underkgNews = CoroutineScope(Dispatchers.Default).async {
+            val underkgNews = CoroutineScope(Dispatchers.Default).async {
                 Croll().returnData()
             }.await()
             setContent {
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview
+@Preview(name = "MainView", device = Devices.DEFAULT)
 @Composable
 fun MainView(underkgNews: ArrayList<Croll.Content>?) {
     val scaffoldState = rememberScaffoldState()
