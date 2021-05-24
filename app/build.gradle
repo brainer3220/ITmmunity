@@ -56,8 +56,15 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0-native-mt'
+
+    // Jsoup
     implementation 'org.jsoup:jsoup:1.11.3'
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0-native-mt'
+
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    implementation "com.google.accompanist:accompanist-glide:0.10.0"
 
 }
