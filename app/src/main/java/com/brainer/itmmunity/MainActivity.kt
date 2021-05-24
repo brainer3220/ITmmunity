@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var scope = GlobalScope.launch  {
+        GlobalScope.launch  {
             var underkgNews = CoroutineScope(Dispatchers.Default).async {
                 Croll().returnData()
             }.await()
