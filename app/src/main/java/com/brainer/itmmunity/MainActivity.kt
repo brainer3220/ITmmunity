@@ -19,23 +19,41 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.brainer.itmmunity.ui.DattaTheme
+import kotlinx.coroutines.*
+
+lateinit var newsScope: ArrayList<Croll.Content>
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        var scope = GlobalScope.launch  {
+            var underkgNews = CoroutineScope(Dispatchers.Default).async {
+                Croll().returnData()
+            }.await()
+            setContent {
+                DattaTheme {
+                    // A surface container using the 'background' color from the theme
+                    Surface(color = MaterialTheme.colors.background) {
+                        MainView(underkgNews)
+                    }
+                }
+            }
+        }
         setContent {
             DattaTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    MainView()
+                    MainView(null)
                 }
             }
         }
     }
 }
+
 @Preview
 @Composable
-fun MainView() {
+fun MainView(underkgNews: ArrayList<Croll.Content>?) {
     val scaffoldState = rememberScaffoldState()
     Box(Modifier.fillMaxSize())
     {
@@ -43,7 +61,9 @@ fun MainView() {
         Column {
 //            AppBar()
 //            Spacer(modifier = Modifier.padding(2.dp))
-            NewsCard(dummies)
+            if (underkgNews != null) {
+                NewsCard(underkgNews)
+            }
         }
     }
 }
