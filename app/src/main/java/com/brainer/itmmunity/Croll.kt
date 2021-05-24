@@ -31,4 +31,16 @@ class Croll {
         }
         return itemList
     }
+
+    suspend fun returnData(): ArrayList<Content> {
+        val aItemList = Croll().getItem("https://www.underkg.co.kr/news", "h1", "Text")
+
+        val itemList = arrayListOf<Content>()
+        for (i in aItemList) {
+            itemList.add(Content(title=i, image=null, hit=100, numComment=15, url="www.underkg.co.kr"))
+            Log.i("returnData item", i)
+        }
+        println("return data$itemList")
+        return itemList
+    }
 }
