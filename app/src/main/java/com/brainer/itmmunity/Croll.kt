@@ -33,7 +33,7 @@ class Croll {
                     title=i.select("a").text(),
                     image=i.select("div.thumb-wrap > a > img").attr("src"),
                     hit = 100,
-                    numComment = 15,
+                    numComment = null,
                     url = "underkg.co.kr"))
             }
         }
