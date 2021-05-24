@@ -19,27 +19,36 @@ class Croll {
         return doc
     }
 
-    private fun getItem(url: String, target: String, dTail: String): ArrayList<String> {
+    private fun getItem(url: String, target: String, dTail: String): ArrayList<Content> {
         val doc = Croll().getHTML(url)?.select(target)
-        val itemList = arrayListOf<String>()
+        val itemList = arrayListOf<Content>()
         if (doc != null) {
-            Log.i("getItem", "doc is not null")
-            doc.forEach { i ->
-                Log.d("getItem", "ForEach" + i.text())
-                itemList.add(i.text())
+            Log.i("getItem null", "doc is not null")
+            Log.i("getItem_String", doc.toString())
+
+            doc.forEach() { i ->
+                Log.d("getItem_title", "ForEach: " + i.select("a").text())
+                Log.d("getItem_image", "ForEach: " + i.select("div.thumb-wrap > a > img").attr("src"))
+                itemList.add(Content(
+                    title=i.select("a").text(),
+                    image=i.select("#board_list > div").select("img").attr("src").toString(),
+                    hit = 100,
+                    numComment = 15,
+                    url = "underkg.co.kr"))
             }
         }
         return itemList
     }
 
-    suspend fun returnData(): ArrayList<Content> {
-        val aItemList = Croll().getItem("https://www.underkg.co.kr/news", "h1", "Text")
+    fun returnData(): ArrayList<Content> {
+        var aItemList = Croll().getItem("https://www.underkg.co.kr/news", "#board_list > div > div", "Text")
 
         val itemList = arrayListOf<Content>()
         for (i in aItemList) {
-            itemList.add(Content(title=i, image=null, hit=100, numComment=15, url="www.underkg.co.kr"))
-            Log.i("returnData item", i)
+            itemList.add(i)
+            Log.i("returnData item", i.toString())
         }
+
         println("return data$itemList")
         return itemList
     }
