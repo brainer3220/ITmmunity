@@ -56,17 +56,30 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainView(underkgNews: ArrayList<Croll.Content>?) {
     val scaffoldState = rememberScaffoldState()
-    Box(Modifier.fillMaxSize())
-    {
-        val scroll = rememberScrollState(0)
-        Column {
+
+    if (underkgNews != null) {
+        Box(Modifier.fillMaxSize())
+        {
+            val scroll = rememberScrollState(0)
+            Column {
 //            AppBar()
 //            Spacer(modifier = Modifier.padding(2.dp))
-            if (underkgNews != null) {
-                NewsCard(underkgNews)
+                if (underkgNews != null) {
+                    NewsCard(underkgNews)
+                }
             }
         }
+    } else {
+        Box(modifier = Modifier.fillMaxSize().padding(top = 10.dp, bottom = 10.dp)) {
+            LoadingView()
+        }
     }
+}
+
+@Preview
+@Composable
+fun LoadingView() {
+    Text(modifier = Modifier.fillMaxSize(), text = "로딩중입니다.", fontSize = 20.sp, textAlign = TextAlign.Center)
 }
 
 //@Composable
