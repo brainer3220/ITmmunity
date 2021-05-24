@@ -15,16 +15,20 @@ class Croll {
 
      fun getHTML(url: String): Document? {
         val doc = Jsoup.connect(url).get()
-        Log.d("HTML", doc.toString())
+        Log.d("getHTML", doc.toString())
         return doc
     }
 
-    fun getItem(url: String, target: String, dTail: String): ArrayList<String> {
-        val doc = Croll().getHTML(url)
-        val newsList = arrayListOf<String>()
-        doc?.select(target)?.forEach { i ->
-            newsList.add(i.text())
+    private fun getItem(url: String, target: String, dTail: String): ArrayList<String> {
+        val doc = Croll().getHTML(url)?.select(target)
+        val itemList = arrayListOf<String>()
+        if (doc != null) {
+            Log.i("getItem", "doc is not null")
+            doc.forEach { i ->
+                Log.d("getItem", "ForEach" + i.text())
+                itemList.add(i.text())
+            }
         }
-        return newsList
+        return itemList
     }
 }
