@@ -16,19 +16,21 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.brainer.itmmunity.ui.DattaTheme
 import kotlinx.coroutines.*
-
-lateinit var newsScope: ArrayList<Croll.Content>
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.stringResource
+import com.google.accompanist.glide.rememberGlidePainter
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var scope = GlobalScope.launch  {
-            var underkgNews = CoroutineScope(Dispatchers.Default).async {
+        GlobalScope.launch  {
+            val underkgNews = CoroutineScope(Dispatchers.Default).async {
                 Croll().returnData()
             }.await()
             setContent {
@@ -51,7 +53,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview
+@Preview(name = "MainView", device = Devices.DEFAULT)
 @Composable
 fun MainView(underkgNews: ArrayList<Croll.Content>?) {
     val scaffoldState = rememberScaffoldState()
@@ -150,18 +152,33 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
     Surface(
         Modifier
             .height(125.dp)
+            .fillMaxWidth()
             .background(Color.White)
             .clickable { }) {
-        Column(modifier = modifier.padding(16.dp)) {
-            Text(text = aNews.title, style = MaterialTheme.typography.h6)
-            Spacer(modifier = Modifier.padding(4.dp))
-            Row {
-                Text(text = aNews.hit.toString(), style = MaterialTheme.typography.body1)
-                Spacer(modifier = Modifier.padding(3.dp))
-                Text(text = aNews.numComment.toString(), style = MaterialTheme.typography.body1)
+            Row(modifier = modifier.padding(16.dp)) {
+                if (aNews.image != null) {
+                    Log.i("Thumbnail", "Thumbnail load success")
+                    Log.d("Thumbnail", "Thumbnail: " + aNews.image)
+                    Image(
+                        modifier = Modifier
+                            .height(120.dp)
+                            .width(90.dp)
+                            .padding(2.dp),
+                        painter = rememberGlidePainter(
+                            request = aNews.image,
+                        ),
+                        contentDescription = stringResource(R.string.main_thumbnail),
+                    )
+                }
+//            Box(modifier = Modifier.height(100.dp).fillMaxWidth())
+                Text(text = aNews.title, style = MaterialTheme.typography.h6)
+                Spacer(modifier = Modifier.padding(4.dp))
             }
-//            Spacer(Modifier.padding(top = 12.dp, bottom = 0.dp))
-            Divider(Modifier.padding(top = 12.dp, bottom = 0.dp))
-        }
+//        Row {
+//            Text(text = "조회수: " +aNews.hit.toString(), style = MaterialTheme.typography.body1)
+//            Spacer(modifier = Modifier.padding(2.dp))
+//            Text(text = aNews.numComment.toString(), style = MaterialTheme.typography.body1)
+//        }
+//        Divider(Modifier.padding(top = 12.dp, bottom = 0.dp))
     }
 }
