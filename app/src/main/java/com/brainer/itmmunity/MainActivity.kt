@@ -21,8 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.brainer.itmmunity.ui.DattaTheme
 import kotlinx.coroutines.*
 
-lateinit var newsScope: ArrayList<Croll.Content>
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
