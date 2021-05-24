@@ -31,7 +31,7 @@ class Croll {
                 Log.d("getItem_image", "ForEach: " + i.select("div.thumb-wrap > a > img").attr("src"))
                 itemList.add(Content(
                     title=i.select("a").text(),
-                    image=i.select("#board_list > div").select("img").attr("src").toString(),
+                    image=i.select("div.thumb-wrap > a > img").attr("src"),
                     hit = 100,
                     numComment = 15,
                     url = "underkg.co.kr"))
