@@ -9,7 +9,7 @@ class Croll {
         var title: String,
         var image: String?,
         var hit: Int,
-        var numComment: Int,
+        var numComment: Int?,
         var url: String
     )
 
