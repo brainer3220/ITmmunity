@@ -26,7 +26,7 @@ class Croll {
             Log.i("getItem null", "doc is not null")
             Log.i("getItem_String", doc.toString())
 
-            doc.forEach() { i ->
+            doc.forEach { i ->
                 Log.d("getItem_title", "ForEach: " + i.select("a").text())
                 Log.d("getItem_image", "ForEach: " + i.select("div.thumb-wrap > a > img").attr("src"))
                 itemList.add(Content(
