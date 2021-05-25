@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -222,12 +223,14 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
                 }.await()
             }
 
-            Text(
-                modifier = Modifier
-                    .clickable { expanded = !expanded }
-                    .fillMaxWidth()
-                    .padding(2.dp), text = contenHtml, textAlign = TextAlign.Center
-            )
+            SelectionContainer {
+                Text(
+                    modifier = Modifier
+                        .clickable { expanded = !expanded }
+                        .fillMaxWidth()
+                        .padding(2.dp), text = contenHtml, textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
