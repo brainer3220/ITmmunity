@@ -1,10 +1,10 @@
-package com.brainer.itmmunity
+package com.brainer.itmmunity.Croll
 
 import android.util.Log
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-class Croll {
+open class Croll {
     data class Content(
         var title: String,
         var image: String?,
@@ -29,18 +29,21 @@ class Croll {
             doc.forEach { i ->
                 Log.d("getItem_title", "ForEach: " + i.select("a").text())
                 Log.d("getItem_image", "ForEach: " + i.select("div.thumb-wrap > a > img").attr("src"))
-                itemList.add(Content(
+                Log.d("getItem_url", "ForEach: " + i.select("a").attr("href"))
+                itemList.add(
+                    Content(
                     title=i.select("a").text(),
                     image=i.select("div.thumb-wrap > a > img").attr("src"),
                     hit = 100,
                     numComment = null,
-                    url = "underkg.co.kr"))
+                    url = i.select("a").attr("href"))
+                )
             }
         }
         return itemList
     }
 
-    fun returnData(): ArrayList<Content> {
+    open fun returnData(): ArrayList<Content> {
         var aItemList = Croll().getItem("https://www.underkg.co.kr/news", "#board_list > div > div", "Text")
 
         val itemList = arrayListOf<Content>()
