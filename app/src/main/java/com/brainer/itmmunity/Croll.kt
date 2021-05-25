@@ -29,12 +29,13 @@ class Croll {
             doc.forEach { i ->
                 Log.d("getItem_title", "ForEach: " + i.select("a").text())
                 Log.d("getItem_image", "ForEach: " + i.select("div.thumb-wrap > a > img").attr("src"))
+                Log.d("getItem_url", "ForEach: " + i.select("a").attr("href"))
                 itemList.add(Content(
                     title=i.select("a").text(),
                     image=i.select("div.thumb-wrap > a > img").attr("src"),
                     hit = 100,
                     numComment = null,
-                    url = "underkg.co.kr"))
+                    url = i.select("a").attr("href")))
             }
         }
         return itemList
