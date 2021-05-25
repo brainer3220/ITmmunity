@@ -23,6 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.Croll.UnderKGNewsContent
 import com.brainer.itmmunity.ui.DattaTheme
 import com.google.accompanist.glide.rememberGlidePainter
 import kotlinx.coroutines.*
@@ -152,7 +154,6 @@ fun AppBar() {
 @Composable
 fun NewsCard(
     news: List<Croll.Content>
-//    onSelected: (Content) -> Unit
 ) {
     var backGroundUnitColor: Color = Color(255, 255, 255)
     if (isSystemInDarkTheme()) {
@@ -216,16 +217,20 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
         }
         AnimatedVisibility(visible = expanded) {
             runBlocking{
+//                CoroutineScope(Dispatchers.Default).async {
+//                    contenHtml = Croll().getHTML(aNews.url)?.text().toString()
+//                    println("html is $contenHtml")
+//                }.await()
                 CoroutineScope(Dispatchers.Default).async {
-                    contenHtml = Croll().getHTML(aNews.url)?.text().toString()
-                    println("html is $contenHtml")
+                    contenHtml = UnderKGNewsContent().returnData(aNews.url)?.text().toString()
                 }.await()
             }
 
             Text(
                 modifier = Modifier
                     .clickable { expanded = !expanded }
-                    .fillMaxWidth(), text = contenHtml, textAlign = TextAlign.Center
+                    .fillMaxWidth()
+                    .padding(2.dp), text = contenHtml, textAlign = TextAlign.Center
             )
         }
     }
