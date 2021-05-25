@@ -4,20 +4,23 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brainer.itmmunity.ui.DattaTheme
@@ -52,7 +55,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(name = "MainView", device = Devices.DEFAULT)
+@Preview(name = "MainView")
 @Composable
 fun MainView(underkgNews: ArrayList<Croll.Content>?) {
     val scaffoldState = rememberScaffoldState()
@@ -83,7 +86,9 @@ fun MainView(underkgNews: ArrayList<Croll.Content>?) {
 fun LoadingView() {
     Column() {
         Spacer(modifier = Modifier.weight(10f))
-        Text(modifier = Modifier.fillMaxWidth().weight(1f), text = "로딩중입니다.", fontSize = 20.sp, textAlign = TextAlign.Center)
+        Text(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f), text = "로딩중입니다... ", fontSize = 20.sp, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.weight(10f))
     }
 }
@@ -166,22 +171,28 @@ fun NewsCard(
     }
 }
 
+@DelicateCoroutinesApi
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
-    Surface(
-        Modifier
-            .height(125.dp)
-            .fillMaxWidth()
-            .background(Color.White)
-            .clickable { }) {
-            Row(modifier = modifier.padding(10.dp)) {
+    var expanded by remember { mutableStateOf(false) }
+    var contenHtml: String = "로딩중..."
+
+    Column() {
+        Surface(
+            Modifier
+                .height(125.dp)
+                .fillMaxWidth()
+                .background(Color.White)
+                .clickable { expanded = !expanded }) {
+            Row(modifier = modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 if (aNews.image != null) {
                     Log.i("Thumbnail", "Thumbnail load success")
                     Log.d("Thumbnail", "Thumbnail: " + aNews.image)
                     Image(
                         modifier = Modifier
-                            .height(120.dp)
-                            .width(85.dp),
+                            .weight(1f)
+                            .clip(RoundedCornerShape(8.dp)),
                         painter = rememberGlidePainter(
                             request = aNews.image,
                         ),
@@ -189,17 +200,47 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
                     )
                     Spacer(modifier = Modifier.padding(5.dp))
                 }
-                Column() {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(modifier = Modifier.weight(2f).fillMaxWidth(), text = aNews.title, style = MaterialTheme.typography.h6)
-                    Spacer(modifier = Modifier.weight(1f))
-                }
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(4f), text = aNews.title, style = MaterialTheme.typography.h6
+                )
             }
+
 //        Row {
 //            Text(text = "조회수: " +aNews.hit.toString(), style = MaterialTheme.typography.body1)
 //            Spacer(modifier = Modifier.padding(2.dp))
 //            Text(text = aNews.numComment.toString(), style = MaterialTheme.typography.body1)
 //        }
 //        Divider(Modifier.padding(top = 12.dp, bottom = 0.dp))
+        }
+        AnimatedVisibility(visible = expanded) {
+            runBlocking{
+                CoroutineScope(Dispatchers.Default).async {
+                    contenHtml = Croll().getHTML("https://www.google.com")?.text().toString()
+                    println("html is $contenHtml")
+                }.await()
+            }
+
+            Text(
+                modifier = Modifier
+                    .clickable { expanded = !expanded }
+                    .fillMaxWidth(), text = contenHtml, textAlign = TextAlign.Center
+            )
+        }
     }
+}
+
+//@Composable
+//fun DrawUnderKGNews(doc: String?) {
+//    if (doc != null) {
+//        Text(modifier = Modifier
+////        .clickable { expanded = !expanded }
+//            .fillMaxWidth(), text = doc, textAlign = TextAlign.Center)
+//    }
+//}
+
+@Composable
+fun NewsItem(item: Croll.Content) {
+    Text(text = item.url)
 }
