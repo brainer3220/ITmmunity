@@ -217,10 +217,6 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
         }
         AnimatedVisibility(visible = expanded) {
             runBlocking{
-//                CoroutineScope(Dispatchers.Default).async {
-//                    contenHtml = Croll().getHTML(aNews.url)?.text().toString()
-//                    println("html is $contenHtml")
-//                }.await()
                 CoroutineScope(Dispatchers.Default).async {
                     contenHtml = UnderKGNewsContent().returnData(aNews.url)?.text().toString()
                 }.await()
