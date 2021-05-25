@@ -70,7 +70,9 @@ fun MainView(underkgNews: ArrayList<Croll.Content>?) {
             }
         }
     } else {
-        Box(modifier = Modifier.fillMaxSize().padding(top = 10.dp, bottom = 10.dp)) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 10.dp, bottom = 10.dp)) {
             LoadingView()
         }
     }
@@ -79,7 +81,11 @@ fun MainView(underkgNews: ArrayList<Croll.Content>?) {
 @Preview
 @Composable
 fun LoadingView() {
-    Text(modifier = Modifier.fillMaxSize(), text = "로딩중입니다.", fontSize = 20.sp, textAlign = TextAlign.Center)
+    Column() {
+        Spacer(modifier = Modifier.weight(10f))
+        Text(modifier = Modifier.fillMaxWidth().weight(1f), text = "로딩중입니다.", fontSize = 20.sp, textAlign = TextAlign.Center)
+        Spacer(modifier = Modifier.weight(10f))
+    }
 }
 
 //@Composable
@@ -150,8 +156,9 @@ fun NewsCard(
         backGroundUnitColor = Color(255, 255, 255)
     }
 
+    val listState = rememberLazyListState()
     Surface(shape = RoundedCornerShape(25.dp)) {
-        LazyColumn {
+        LazyColumn(state = listState) {
             items(news) { item ->
                 NewsListOf(item)
             }
@@ -167,23 +174,26 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .background(Color.White)
             .clickable { }) {
-            Row(modifier = modifier.padding(16.dp)) {
+            Row(modifier = modifier.padding(10.dp)) {
                 if (aNews.image != null) {
                     Log.i("Thumbnail", "Thumbnail load success")
                     Log.d("Thumbnail", "Thumbnail: " + aNews.image)
                     Image(
                         modifier = Modifier
                             .height(120.dp)
-                            .width(90.dp)
-                            .padding(2.dp),
+                            .width(85.dp),
                         painter = rememberGlidePainter(
                             request = aNews.image,
                         ),
                         contentDescription = stringResource(R.string.main_thumbnail),
                     )
+                    Spacer(modifier = Modifier.padding(5.dp))
                 }
-                Text(text = aNews.title, style = MaterialTheme.typography.h6)
-                Spacer(modifier = Modifier.padding(4.dp))
+                Column() {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(modifier = Modifier.weight(2f).fillMaxWidth(), text = aNews.title, style = MaterialTheme.typography.h6)
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
 //        Row {
 //            Text(text = "조회수: " +aNews.hit.toString(), style = MaterialTheme.typography.body1)
