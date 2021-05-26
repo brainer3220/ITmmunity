@@ -177,12 +177,13 @@ fun NewsCard(
     }
 }
 
+@SuppressLint("SetJavaScriptEnabled")
 @DelicateCoroutinesApi
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
-    var contenHtml: String = "로딩중..."
+    var contentHtml: String = "로딩중..."
 
     Column() {
         Surface(
@@ -223,13 +224,14 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
         AnimatedVisibility(visible = expanded) {
             runBlocking{
                 CoroutineScope(Dispatchers.Default).async {
-                    contenHtml = KGNewsContent().returnData(aNews.url).toString()
+                    contentHtml = KGNewsContent().returnData(aNews.url).toString()
+                    Log.d("contentHTML", "$contentHtml")
                 }.await()
             }
 
-
             AndroidView(modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
+                .padding(2.dp)
                 .clickable { expanded = !expanded },
                 factory = {
                 WebView(it).apply {
@@ -238,11 +240,11 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
                     webViewClient = WebViewClient()
-                    loadData(contenHtml, "text/html", "utf-8")
+                    loadData(contentHtml, "text/html", "utf-8")
                 }
             }, update = {
                 it.settings.javaScriptEnabled = true
-                it.loadData(contenHtml, "text/html", "utf-8")
+                it.loadData(contentHtml, "text/html", "utf-8")
                 it.getSettings().setUseWideViewPort(true)
                 it.getSettings().setLoadWithOverviewMode(true)
                 it.getSettings().setTextZoom(250)
