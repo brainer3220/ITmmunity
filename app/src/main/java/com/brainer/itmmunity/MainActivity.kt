@@ -250,6 +250,14 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
                 it.getSettings().setTextZoom(250)
             })
 
+//            SelectionContainer {
+//                Text(
+//                    modifier = Modifier
+//                        .clickable { expanded = !expanded }
+//                        .fillMaxWidth()
+//                        .padding(2.dp), text = contenHtml, textAlign = TextAlign.Center
+//                )
+//            }
         }
     }
 }
