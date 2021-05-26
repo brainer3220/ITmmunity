@@ -245,9 +245,12 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
             }, update = {
                 it.settings.javaScriptEnabled = true
                 it.loadData(contentHtml, "text/html", "utf-8")
+//                it.getSettings().setTextZoom(100)
+//                it.getSettings().setTextSize(WebSettings.TextSize.LARGER)
+                it.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN)
+
                 it.getSettings().setUseWideViewPort(true)
                 it.getSettings().setLoadWithOverviewMode(true)
-                it.getSettings().setTextZoom(250)
             })
 
 //            SelectionContainer {
