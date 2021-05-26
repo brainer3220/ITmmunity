@@ -3,7 +3,7 @@ package com.brainer.itmmunity.Croll
 import android.util.Log
 import org.jsoup.select.Elements
 
-class UnderKGNewsContent: Croll() {
+class KGNewsContent: Croll() {
     fun getItem(url: String, target: String): Elements? {
         val doc = Croll().getHTML(url)?.select(target)
 //        val itemList = arrayListOf<Content>()

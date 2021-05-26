@@ -1,7 +1,11 @@
 package com.brainer.itmmunity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
@@ -12,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,8 +27,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.brainer.itmmunity.Croll.Croll
-import com.brainer.itmmunity.Croll.UnderKGNewsContent
+import com.brainer.itmmunity.Croll.KGNewsContent
 import com.brainer.itmmunity.ui.DattaTheme
 import com.google.accompanist.glide.rememberGlidePainter
 import kotlinx.coroutines.*
@@ -219,18 +223,31 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
         AnimatedVisibility(visible = expanded) {
             runBlocking{
                 CoroutineScope(Dispatchers.Default).async {
-                    contenHtml = UnderKGNewsContent().returnData(aNews.url)?.text().toString()
+                    contenHtml = KGNewsContent().returnData(aNews.url).toString()
                 }.await()
             }
 
-            SelectionContainer {
-                Text(
-                    modifier = Modifier
-                        .clickable { expanded = !expanded }
-                        .fillMaxWidth()
-                        .padding(2.dp), text = contenHtml, textAlign = TextAlign.Center
-                )
-            }
+
+            AndroidView(modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = !expanded },
+                factory = {
+                WebView(it).apply {
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                    webViewClient = WebViewClient()
+                    loadData(contenHtml, "text/html", "utf-8")
+                }
+            }, update = {
+                it.settings.javaScriptEnabled = true
+                it.loadData(contenHtml, "text/html", "utf-8")
+                it.getSettings().setUseWideViewPort(true)
+                it.getSettings().setLoadWithOverviewMode(true)
+                it.getSettings().setTextZoom(250)
+            })
+
         }
     }
 }
