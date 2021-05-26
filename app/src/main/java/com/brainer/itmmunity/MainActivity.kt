@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brainer.itmmunity.Croll.Croll
-import com.brainer.itmmunity.Croll.UnderKGNewsContent
+import com.brainer.itmmunity.Croll.KGNewsContent
 import com.brainer.itmmunity.ui.DattaTheme
 import com.google.accompanist.glide.rememberGlidePainter
 import kotlinx.coroutines.*
@@ -219,7 +219,7 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
         AnimatedVisibility(visible = expanded) {
             runBlocking{
                 CoroutineScope(Dispatchers.Default).async {
-                    contenHtml = UnderKGNewsContent().returnData(aNews.url)?.text().toString()
+                    contenHtml = KGNewsContent().returnData(aNews.url)?.text().toString()
                 }.await()
             }
 
