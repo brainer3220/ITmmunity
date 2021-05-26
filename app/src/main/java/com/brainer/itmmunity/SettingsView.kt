@@ -27,7 +27,7 @@ class SettingsView : ComponentActivity() {
 
 @Composable
 fun SettingsList() {
-    
+
 }
 
 @Composable
