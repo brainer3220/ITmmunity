@@ -226,7 +226,7 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
             runBlocking{
                 CoroutineScope(Dispatchers.Default).async {
                     contentHtml = KGNewsContent().returnData(aNews.url).toString()
-                    Log.d("contentHTML", "$contentHtml")
+                    Log.d("contentHTML", contentHtml)
                 }.await()
             }
 
