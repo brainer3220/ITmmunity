@@ -34,6 +34,7 @@ import com.brainer.itmmunity.Croll.KGNewsContent
 import com.brainer.itmmunity.ui.DattaTheme
 import com.google.accompanist.glide.rememberGlidePainter
 import kotlinx.coroutines.*
+import androidx.compose.foundation.isSystemInDarkTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -230,6 +231,8 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
                 }.await()
             }
 
+            var isDarkMode = isSystemInDarkTheme()
+
             AndroidView(modifier = Modifier
                 .fillMaxSize()
                 .padding(2.dp)
@@ -252,6 +255,11 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
 
                 it.getSettings().setUseWideViewPort(true)
                 it.getSettings().setLoadWithOverviewMode(true)
+                if (isDarkMode) {
+                    it.getSettings().setForceDark(FORCE_DARK_ON)
+                } else {
+                    it.getSettings().setForceDark(FORCE_DARK_OFF)
+                }
             })
 
 //            SelectionContainer {
