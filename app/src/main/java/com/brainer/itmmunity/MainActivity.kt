@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
 import android.webkit.WebSettings
+import android.webkit.WebSettings.*
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
@@ -35,6 +36,8 @@ import com.brainer.itmmunity.ui.DattaTheme
 import com.google.accompanist.glide.rememberGlidePainter
 import kotlinx.coroutines.*
 import androidx.compose.foundation.isSystemInDarkTheme
+
+val FIT_IMAGE_SCRIPT = "<style>img{display: inline;height: auto;max-width: 100%;}</style>"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -226,7 +229,7 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
         AnimatedVisibility(visible = expanded) {
             runBlocking{
                 CoroutineScope(Dispatchers.Default).async {
-                    contentHtml = KGNewsContent().returnData(aNews.url).toString()
+                    contentHtml = KGNewsContent().returnData(aNews.url).toString() + FIT_IMAGE_SCRIPT
                     Log.d("contentHTML", contentHtml)
                 }.await()
             }
