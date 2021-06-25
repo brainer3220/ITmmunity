@@ -40,4 +40,3 @@ dependencies {
     implementation "androidx.wear:wear-tiles:1.0.0-alpha01"
     debugImplementation "androidx.wear:wear-tiles-renderer:1.0.0-alpha01"
 }
-
