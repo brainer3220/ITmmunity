@@ -1,15 +1,16 @@
 package com.brainer.itmmunity
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
-import android.webkit.WebSettings
 import android.webkit.WebSettings.*
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
@@ -40,6 +41,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 val FIT_IMAGE_SCRIPT = "<style>img{display: inline;height: auto;max-width: 100%;}</style>"
 
 class MainActivity : ComponentActivity() {
+    @ExperimentalAnimationApi
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -67,7 +70,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(name = "MainView")
 @Composable
 fun MainView(underkgNews: ArrayList<Croll.Content>?) {
     val scaffoldState = rememberScaffoldState()
@@ -79,9 +81,7 @@ fun MainView(underkgNews: ArrayList<Croll.Content>?) {
             Column {
 //            AppBar()
 //            Spacer(modifier = Modifier.padding(2.dp))
-                if (underkgNews != null) {
-                    NewsCard(underkgNews)
-                }
+                NewsCard(underkgNews)
             }
         }
     } else {
@@ -234,7 +234,7 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
                 }.await()
             }
 
-            var isDarkMode = isSystemInDarkTheme()
+            val isDarkMode = isSystemInDarkTheme()
 
             AndroidView(modifier = Modifier
                 .fillMaxSize()
@@ -250,11 +250,10 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
                     loadData(contentHtml, "text/html", "utf-8")
                 }
             }, update = {
-                it.settings.javaScriptEnabled = true
-                it.loadData(contentHtml, "text/html", "utf-8")
-//                it.getSettings().setTextZoom(100)
-//                it.getSettings().setTextSize(WebSettings.TextSize.LARGER)
-                it.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN)
+                    it.settings.javaScriptEnabled = true
+                    it.loadData(contentHtml, "text/html", "utf-8")
+
+//                    it.getSettings().layoutAlgorithm = LayoutAlgorithm.SINGLE_COLUMN
 
                 it.getSettings().setUseWideViewPort(true)
                 it.getSettings().setLoadWithOverviewMode(true)
