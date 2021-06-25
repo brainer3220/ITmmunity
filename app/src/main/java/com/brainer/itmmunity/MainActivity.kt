@@ -255,12 +255,18 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
 
 //                    it.getSettings().layoutAlgorithm = LayoutAlgorithm.SINGLE_COLUMN
 
-                it.getSettings().setUseWideViewPort(true)
-                it.getSettings().setLoadWithOverviewMode(true)
+                    it.settings.layoutAlgorithm = LayoutAlgorithm.SINGLE_COLUMN
+                    it.isHorizontalScrollBarEnabled = false;
+
+//                    it.isHorizontalScrollBarEnabled = false;
+
+//                    it.settings.useWideViewPort = true
+                    it.settings.loadWithOverviewMode = true
+
                 if (isDarkMode) {
-                    it.getSettings().setForceDark(FORCE_DARK_ON)
+                    it.settings.forceDark = FORCE_DARK_ON
                 } else {
-                    it.getSettings().setForceDark(FORCE_DARK_OFF)
+                    it.settings.forceDark = FORCE_DARK_OFF
                 }
             })
 
