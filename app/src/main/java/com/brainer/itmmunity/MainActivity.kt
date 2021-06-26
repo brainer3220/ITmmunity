@@ -182,6 +182,7 @@ fun NewsCard(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @SuppressLint("SetJavaScriptEnabled")
 @DelicateCoroutinesApi
 @OptIn(ExperimentalAnimationApi::class)
