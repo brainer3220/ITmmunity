@@ -228,11 +228,10 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
         }
         AnimatedVisibility(visible = expanded) {
             runBlocking{
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    contentHtml =
-                        KGNewsContent().returnData(aNews.url).toString() + FIT_IMAGE_SCRIPT
+                CoroutineScope(Dispatchers.Default).async {
+                    contentHtml = KGNewsContent().returnData(aNews.url).toString() + FIT_IMAGE_SCRIPT
                     Log.d("contentHTML", contentHtml)
-                }
+                }.await()
             }
 
             val isDarkMode = isSystemInDarkTheme()
