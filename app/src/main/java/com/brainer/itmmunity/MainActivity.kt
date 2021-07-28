@@ -38,7 +38,7 @@ import com.google.accompanist.glide.rememberGlidePainter
 import kotlinx.coroutines.*
 import androidx.compose.foundation.isSystemInDarkTheme
 
-val FIT_IMAGE_SCRIPT = "<style>img{display: inline;height: auto;max-width: 100%;}</style>"
+const val FIT_IMAGE_SCRIPT = "<style>img{display: inline;height: auto;max-width: 100%;}</style>"
 
 class MainActivity : ComponentActivity() {
     @ExperimentalAnimationApi
@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
 
         GlobalScope.launch  {
             val underkgNews = CoroutineScope(Dispatchers.Default).async {
-                Croll().returnData()
+                KGNewsContent().returnData()
             }.await()
             setContent {
                 DattaTheme {
@@ -182,7 +182,6 @@ fun NewsCard(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @SuppressLint("SetJavaScriptEnabled")
 @DelicateCoroutinesApi
 @OptIn(ExperimentalAnimationApi::class)
@@ -229,10 +228,11 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
         }
         AnimatedVisibility(visible = expanded) {
             runBlocking{
-                CoroutineScope(Dispatchers.Default).async {
-                    contentHtml = KGNewsContent().returnData(aNews.url).toString() + FIT_IMAGE_SCRIPT
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    contentHtml =
+                        KGNewsContent().returnData(aNews.url).toString() + FIT_IMAGE_SCRIPT
                     Log.d("contentHTML", contentHtml)
-                }.await()
+                }
             }
 
             val isDarkMode = isSystemInDarkTheme()
@@ -264,11 +264,13 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
 //                    it.settings.useWideViewPort = true
                     it.settings.loadWithOverviewMode = true
 
-                if (isDarkMode) {
-                    it.settings.forceDark = FORCE_DARK_ON
-                } else {
-                    it.settings.forceDark = FORCE_DARK_OFF
-                }
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                        if (isDarkMode) {
+                            it.settings.forceDark = FORCE_DARK_ON
+                        } else {
+                            it.settings.forceDark = FORCE_DARK_OFF
+                        }
+                    }
             })
 
 //            SelectionContainer {
