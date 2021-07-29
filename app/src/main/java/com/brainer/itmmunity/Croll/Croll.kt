@@ -44,13 +44,7 @@ open class Croll {
     }
 
     open fun returnData(): ArrayList<Content> {
-        var aItemList = Croll().getItem("https://www.underkg.co.kr/news", "#board_list > div > div", "Text")
-
-        val itemList = arrayListOf<Content>()
-        for (i in aItemList) {
-            itemList.add(i)
-            Log.i("returnDataItem", i.toString())
-        }
+        var itemList = Croll().getItem("https://www.underkg.co.kr/news", "#board_list > div > div", "Text")
 
         println("returnData$itemList")
         return itemList
