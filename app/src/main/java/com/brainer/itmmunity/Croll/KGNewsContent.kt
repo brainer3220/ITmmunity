@@ -12,13 +12,4 @@ class KGNewsContent: Croll() {
         }
         return doc
     }
-
-    fun returnData(url: String): Pair<Elements?, Elements?> {
-        val aItemList = this.getItem(url, "body > div.user_layout > div.body > div.content > div > div.docInner > div.read_body")
-        val aCommentList = this.getItem(url, "div#comment.feedback")
-
-        Log.d("KGNews_Content", "$aItemList")
-        Log.d("KGNews_Comment", "$aCommentList")
-        return Pair(aItemList, aCommentList)
-    }
 }
