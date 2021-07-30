@@ -1,14 +1,16 @@
 package com.brainer.itmmunity
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
-import android.webkit.WebSettings
+import android.webkit.WebSettings.*
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
@@ -31,23 +33,39 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.Croll.KGNewsContent
+import com.brainer.itmmunity.Croll.MeecoNews
 import com.brainer.itmmunity.ui.DattaTheme
 import com.google.accompanist.glide.rememberGlidePainter
 import kotlinx.coroutines.*
+import androidx.compose.foundation.isSystemInDarkTheme
+
+const val FIT_IMAGE_SCRIPT = "<style>img{display: inline;height: auto;max-width: 100%;}</style>"
 
 class MainActivity : ComponentActivity() {
+    @ExperimentalAnimationApi
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
+        var unified_list = ArrayList<Croll.Content>()
         super.onCreate(savedInstanceState)
 
         GlobalScope.launch  {
             val underkgNews = CoroutineScope(Dispatchers.Default).async {
-                Croll().returnData()
+                KGNewsContent().returnData()
             }.await()
+            val meecoNews = CoroutineScope(Dispatchers.Default).async {
+                MeecoNews().returnData()
+            }.await()
+            Log.d("meecoNews", "$meecoNews")
+
+            unified_list.addAll(underkgNews)
+            unified_list.addAll(meecoNews.slice(3 until meecoNews.size))
+//            underkgNews.addAll(meecoNews.slice(3 until meecoNews.size))
+
             setContent {
                 DattaTheme {
                     // A surface container using the 'background' color from the theme
                     Surface(color = MaterialTheme.colors.background) {
-                        MainView(underkgNews)
+                        MainView(unified_list)
                     }
                 }
             }
@@ -63,7 +81,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(name = "MainView")
 @Composable
 fun MainView(underkgNews: ArrayList<Croll.Content>?) {
     val scaffoldState = rememberScaffoldState()
@@ -75,9 +92,7 @@ fun MainView(underkgNews: ArrayList<Croll.Content>?) {
             Column {
 //            AppBar()
 //            Spacer(modifier = Modifier.padding(2.dp))
-                if (underkgNews != null) {
-                    NewsCard(underkgNews)
-                }
+                NewsCard(underkgNews)
             }
         }
     } else {
@@ -225,10 +240,12 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
         AnimatedVisibility(visible = expanded) {
             runBlocking{
                 CoroutineScope(Dispatchers.Default).async {
-                    contentHtml = KGNewsContent().returnData(aNews.url).toString()
-                    Log.d("contentHTML", "$contentHtml")
+                    contentHtml = aNews.returnContent(aNews).toString() + FIT_IMAGE_SCRIPT
+                    Log.d("contentHTML", contentHtml)
                 }.await()
             }
+
+            val isDarkMode = isSystemInDarkTheme()
 
             AndroidView(modifier = Modifier
                 .fillMaxSize()
@@ -244,14 +261,26 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
                     loadData(contentHtml, "text/html", "utf-8")
                 }
             }, update = {
-                it.settings.javaScriptEnabled = true
-                it.loadData(contentHtml, "text/html", "utf-8")
-//                it.getSettings().setTextZoom(100)
-//                it.getSettings().setTextSize(WebSettings.TextSize.LARGER)
-                it.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN)
+                    it.settings.javaScriptEnabled = true
+                    it.loadData(contentHtml, "text/html", "utf-8")
 
-                it.getSettings().setUseWideViewPort(true)
-                it.getSettings().setLoadWithOverviewMode(true)
+//                    it.getSettings().layoutAlgorithm = LayoutAlgorithm.SINGLE_COLUMN
+
+                    it.settings.layoutAlgorithm = LayoutAlgorithm.SINGLE_COLUMN
+                    it.isHorizontalScrollBarEnabled = false;
+
+//                    it.isHorizontalScrollBarEnabled = false;
+
+//                    it.settings.useWideViewPort = true
+                    it.settings.loadWithOverviewMode = true
+
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                        if (isDarkMode) {
+                            it.settings.forceDark = FORCE_DARK_ON
+                        } else {
+                            it.settings.forceDark = FORCE_DARK_OFF
+                        }
+                    }
             })
 
 //            SelectionContainer {

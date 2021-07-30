@@ -3,6 +3,7 @@ package com.brainer.itmmunity.Croll
 import android.util.Log
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
 
 open class Croll {
     data class Content(
@@ -11,7 +12,29 @@ open class Croll {
         var hit: Int,
         var numComment: Int?,
         var url: String
-    )
+    ) {
+        fun returnContent(content: Content): Pair<Elements?, Elements?> {
+            if (content.url.contains("meeco.kr/news")) {
+                Log.d("Meeco_URL", content.url)
+                val aItemList = MeecoNews().getHTML(content.url)?.select("article > div")
+                val aCommentList = MeecoNews().getHTML(content.url)?.select("#comment")
+
+                Log.d("MeecoNews_Content", "$aItemList")
+                Log.d("MeecoNews_Comment", "$aCommentList")
+                return Pair(aItemList, aCommentList)
+            } else if (content.url.contains("underkg.co.kr/news")) {
+                val aItemList = KGNewsContent().getItem(content.url, "body > div.user_layout > div.body > div.content > div > div.docInner > div.read_body")
+                val aCommentList = KGNewsContent().getItem(content.url, "div#comment.feedback")
+
+                Log.d("KGNews_Content", "$aItemList")
+                Log.d("KGNews_Comment", "$aCommentList")
+                return Pair(aItemList, aCommentList)
+            } else {
+                Log.d("Failed_URL", content.url)
+                return Pair(null, null)
+            }
+        }
+    }
 
      fun getHTML(url: String): Document? {
         val doc = Jsoup.connect(url).get()
@@ -44,13 +67,7 @@ open class Croll {
     }
 
     open fun returnData(): ArrayList<Content> {
-        var aItemList = Croll().getItem("https://www.underkg.co.kr/news", "#board_list > div > div", "Text")
-
-        val itemList = arrayListOf<Content>()
-        for (i in aItemList) {
-            itemList.add(i)
-            Log.i("returnDataItem", i.toString())
-        }
+        var itemList = Croll().getItem("https://www.underkg.co.kr/news", "#board_list > div > div", "Text")
 
         println("returnData$itemList")
         return itemList
