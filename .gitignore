@@ -104,4 +104,4 @@ lint/tmp/
 *.hprof
 
 # Security
-*google-services.json
+app/google-services.json
