@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ITmmunity_Android"
+        android:theme="@style/OneUITheme"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".SettingsView"
