@@ -1,18 +1,21 @@
 package com.brainer.itmmunity.Croll
 
+import android.os.Parcelable
 import android.util.Log
+import kotlinx.android.parcel.Parcelize
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 
 open class Croll {
+    @Parcelize
     data class Content(
         var title: String,
         var image: String?,
         var hit: Int,
         var numComment: Int?,
         var url: String
-    ) {
+    ) : Parcelable {
         fun returnContent(content: Content): Pair<Elements?, Elements?> {
             if (content.url.contains("meeco.kr/news")) {
                 Log.d("Meeco_URL", content.url)

@@ -10,8 +10,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ITmmunity_Android"
+        android:theme="@style/OneUITheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ContentView"
+            android:exported="true"
+            android:label="@string/title_activity_content_view"
+            android:theme="@style/OneUITheme" />
         <activity
             android:name=".SettingsView"
             android:exported="true"

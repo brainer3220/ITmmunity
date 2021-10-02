@@ -1,17 +1,13 @@
 package com.brainer.itmmunity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.ViewGroup
-import android.webkit.WebSettings.*
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -25,36 +21,38 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.Croll.KGNewsContent
 import com.brainer.itmmunity.Croll.MeecoNews
 import com.brainer.itmmunity.ui.DattaTheme
 import com.google.accompanist.glide.rememberGlidePainter
 import kotlinx.coroutines.*
-import androidx.compose.foundation.isSystemInDarkTheme
 
 const val FIT_IMAGE_SCRIPT = "<style>img{display: inline;height: auto;max-width: 100%;}</style>"
 
 class MainActivity : ComponentActivity() {
+    @OptIn(DelicateCoroutinesApi::class)
     @ExperimentalAnimationApi
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         var unified_list = ArrayList<Croll.Content>()
         super.onCreate(savedInstanceState)
 
-        GlobalScope.launch  {
-            val underkgNews = CoroutineScope(Dispatchers.Default).async {
-                KGNewsContent().returnData()
-            }.await()
-            val meecoNews = CoroutineScope(Dispatchers.Default).async {
-                MeecoNews().returnData()
-            }.await()
+        GlobalScope.launch {
+            val underkgNews =
+                withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+                    KGNewsContent().returnData()
+                }
+            val meecoNews =
+                withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+                    MeecoNews().returnData()
+                }
             Log.d("meecoNews", "$meecoNews")
 
             unified_list.addAll(underkgNews)
@@ -172,6 +170,7 @@ fun AppBar() {
     }
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun NewsCard(
     news: List<Croll.Content>
@@ -199,7 +198,7 @@ fun NewsCard(
 @Composable
 fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
-    var contentHtml: String = "로딩중..."
+    var contentHtml: String?
 
     Column() {
         Surface(
@@ -237,63 +236,17 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
 //        }
 //        Divider(Modifier.padding(top = 12.dp, bottom = 0.dp))
         }
-        AnimatedVisibility(visible = expanded) {
-            runBlocking{
-                CoroutineScope(Dispatchers.Default).async {
-                    contentHtml = aNews.returnContent(aNews).toString() + FIT_IMAGE_SCRIPT
-                    Log.d("contentHTML", contentHtml)
-                }.await()
-            }
 
-            val isDarkMode = isSystemInDarkTheme()
+        if (expanded) {
+            val context = LocalContext.current
+            val contentIntent = Intent(Intent(LocalContext.current, ContentView::class.java))
 
-            AndroidView(modifier = Modifier
-                .fillMaxSize()
-                .padding(2.dp)
-                .clickable { expanded = !expanded },
-                factory = {
-                WebView(it).apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                    webViewClient = WebViewClient()
-                    loadData(contentHtml, "text/html", "utf-8")
-                }
-            }, update = {
-                    it.settings.javaScriptEnabled = true
-                    it.loadData(contentHtml, "text/html", "utf-8")
-
-//                    it.getSettings().layoutAlgorithm = LayoutAlgorithm.SINGLE_COLUMN
-
-                    it.settings.layoutAlgorithm = LayoutAlgorithm.SINGLE_COLUMN
-                    it.isHorizontalScrollBarEnabled = false;
-
-//                    it.isHorizontalScrollBarEnabled = false;
-
-//                    it.settings.useWideViewPort = true
-                    it.settings.loadWithOverviewMode = true
-
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                        if (isDarkMode) {
-                            it.settings.forceDark = FORCE_DARK_ON
-                        } else {
-                            it.settings.forceDark = FORCE_DARK_OFF
-                        }
-                    }
-            })
-
-//            SelectionContainer {
-//                Text(
-//                    modifier = Modifier
-//                        .clickable { expanded = !expanded }
-//                        .fillMaxWidth()
-//                        .padding(2.dp), text = contenHtml, textAlign = TextAlign.Center
-//                )
-//            }
+            contentIntent.putExtra("content", aNews)
+            context.startActivity(contentIntent)
         }
     }
 }
+
 
 //@Composable
 //fun DrawUnderKGNews(doc: String?) {
