@@ -1,5 +1,6 @@
 package com.brainer.itmmunity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -27,9 +28,8 @@ import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import kotlinx.coroutines.*
 
-lateinit var intent: Intent
-
 class ContentView : ComponentActivity() {
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var contentHtml: String? = null
@@ -66,6 +66,7 @@ class ContentView : ComponentActivity() {
     }
 }
 
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun contentView(contentHtml: String?) {
     val isDarkMode = isSystemInDarkTheme()
@@ -93,14 +94,10 @@ fun contentView(contentHtml: String?) {
                 it.settings.javaScriptEnabled = true
                 it.loadData(contentHtml, "text/html", "utf-8")
 
-//                    it.getSettings().layoutAlgorithm = LayoutAlgorithm.SINGLE_COLUMN
-
                 it.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
                 it.isHorizontalScrollBarEnabled = false;
 
-//                    it.isHorizontalScrollBarEnabled = false;
-
-//                    it.settings.useWideViewPort = true
+//                it.settings.useWideViewPort = true
                 it.settings.loadWithOverviewMode = true
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
