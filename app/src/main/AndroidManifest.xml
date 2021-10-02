@@ -13,6 +13,11 @@
         android:theme="@style/OneUITheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ContentView"
+            android:exported="true"
+            android:label="@string/title_activity_content_view"
+            android:theme="@style/OneUITheme" />
+        <activity
             android:name=".SettingsView"
             android:exported="true"
             android:label="@string/title_activity_settings_view"
