@@ -29,16 +29,17 @@ import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import kotlinx.coroutines.*
 
 class ContentView : ComponentActivity() {
+    private lateinit var contentHtml: String
+
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var contentHtml: String? = null
 
         val aNews = intent.getParcelableExtra<Croll.Content>("content")
 
         GlobalScope.launch {
             contentHtml = aNews?.let { aNews.returnContent(it).toString() } + FIT_IMAGE_SCRIPT
-            Log.d("contentHTML", contentHtml!!)
+            Log.d("contentHTML", contentHtml)
 
             setContent {
                 ITmmunity_AndroidTheme {
@@ -47,7 +48,7 @@ class ContentView : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colors.background
                     ) {
-                        contentView(contentHtml)
+                        aNews?.let { contentView(contentHtml, it) }
                     }
                 }
             }
@@ -59,16 +60,21 @@ class ContentView : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    contentView(null)
+                    contentView(null, null)
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        contentHtml = ""
+        super.onDestroy()
     }
 }
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun contentView(contentHtml: String?) {
+fun contentView(contentHtml: String?, aNews: Croll.Content?) {
     val isDarkMode = isSystemInDarkTheme()
 
     if (contentHtml == null) {
