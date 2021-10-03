@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -84,24 +85,16 @@ fun ContentView(contentHtml: String?, aNews: Croll.Content?) {
         }
     } else {
         Column() {
-            Box(
-                modifier = Modifier.padding(top = 20.dp, bottom = 20.dp)
-            ) {
-                Column() {
-                    if (aNews != null) {
-                        SelectionContainer {
-                            Text(
-                                modifier = Modifier,
-                                text = aNews.title,
-                                fontSize = 20.sp,
-                                textAlign = TextAlign.Left,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                    }
-                }
-            }
+            TopAppBar(title = {
+                Text(
+                    text = aNews!!.title,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Left,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            })
+
             AndroidView(modifier = Modifier
                 .fillMaxSize()
                 .padding(2.dp),
