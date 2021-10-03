@@ -1,6 +1,7 @@
 package com.brainer.itmmunity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -10,15 +11,15 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -85,15 +86,34 @@ fun ContentView(contentHtml: String?, aNews: Croll.Content?) {
         }
     } else {
         Column() {
-            TopAppBar(title = {
-                Text(
-                    text = aNews!!.title,
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Left,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            })
+            Row() {
+                TopAppBar(title = {
+                    Text(
+                        text = aNews!!.title,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Left,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                    actions = {
+                        val context = LocalContext.current
+                        Icon(
+                            Icons.Filled.Share,
+                            contentDescription = "공유",
+                            Modifier.clickable {
+                                val sendIntent: Intent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TEXT, aNews?.url + "\n\nPowered by ITmmunity")
+                                    type = "text/plain"
+                                }
+
+                                val shareIntent = Intent.createChooser(sendIntent, null)
+                                context.startActivity(shareIntent)
+                            })
+                    })
+                Spacer(modifier = Modifier.padding(4.dp))
+            }
 
             AndroidView(modifier = Modifier
                 .fillMaxSize()
