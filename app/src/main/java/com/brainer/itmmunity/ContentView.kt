@@ -47,7 +47,7 @@ class ContentView : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colors.background
                     ) {
-                        aNews?.let { contentView(contentHtml, it) }
+                        aNews?.let { ContentView(contentHtml, it) }
                     }
                 }
             }
@@ -59,7 +59,7 @@ class ContentView : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    contentView(null, null)
+                    ContentView(null, null)
                 }
             }
         }
@@ -73,7 +73,7 @@ class ContentView : ComponentActivity() {
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun contentView(contentHtml: String?, aNews: Croll.Content?) {
+fun ContentView(contentHtml: String?, aNews: Croll.Content?) {
     val isDarkMode = isSystemInDarkTheme()
 
     if (contentHtml == null) {
