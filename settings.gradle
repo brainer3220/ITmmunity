@@ -7,4 +7,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ITmmunity_Android"
 include ':app'
-include ':ITmmunity'
