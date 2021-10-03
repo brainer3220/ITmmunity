@@ -37,11 +37,12 @@ import kotlinx.coroutines.*
 const val FIT_IMAGE_SCRIPT = "<style>img{display: inline;height: auto;max-width: 100%;}</style>"
 
 class MainActivity : ComponentActivity() {
+    var unified_list = ArrayList<Croll.Content>()
+
     @OptIn(DelicateCoroutinesApi::class)
     @ExperimentalAnimationApi
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
-        var unified_list = ArrayList<Croll.Content>()
         super.onCreate(savedInstanceState)
 
         GlobalScope.launch {
@@ -76,6 +77,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        unified_list.clear()
+        super.onDestroy()
     }
 }
 
