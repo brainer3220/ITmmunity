@@ -243,6 +243,7 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
 
             contentIntent.putExtra("content", aNews)
             context.startActivity(contentIntent)
+            expanded = !expanded
         }
     }
 }
