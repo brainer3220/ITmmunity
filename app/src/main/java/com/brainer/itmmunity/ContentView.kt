@@ -135,4 +135,3 @@ fun contentView(contentHtml: String?, aNews: Croll.Content?) {
         }
     }
 }
-
