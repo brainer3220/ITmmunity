@@ -144,7 +144,8 @@ fun ContentView(contentHtml: String?, aNews: Croll.Content?) {
                             it.settings.forceDark = WebSettings.FORCE_DARK_OFF
                         }
                     }
-                })
+                }
+            )
         }
     }
 }
