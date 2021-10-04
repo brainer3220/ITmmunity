@@ -104,7 +104,9 @@ fun ContentView(contentHtml: String?, aNews: Croll.Content?) {
                             Modifier.clickable {
                                 val sendIntent: Intent = Intent().apply {
                                     action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TEXT, aNews?.url + "\n\nPowered by ITmmunity")
+                                    putExtra(Intent.EXTRA_TITLE, aNews?.title.toString())
+                                    putExtra(Intent.EXTRA_SUBJECT, "Powered by ITmmunity")
+                                    putExtra(Intent.EXTRA_TEXT, aNews?.url)
                                     type = "text/plain"
                                 }
 
