@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -90,15 +92,31 @@ fun MainView(underkgNews: ArrayList<Croll.Content>?) {
     val scaffoldState = rememberScaffoldState()
 
     if (underkgNews != null) {
-        Box(Modifier.fillMaxSize())
-        {
-            val scroll = rememberScrollState(0)
-            Column {
-//            AppBar()
-//            Spacer(modifier = Modifier.padding(2.dp))
-                NewsCard(underkgNews)
-            }
-        }
+        Scaffold(
+            scaffoldState = scaffoldState,
+            drawerContent = { Text("Drawer content") },
+            topBar = {
+                TopAppBar(
+                    title = { Text("ITmmunity") },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+//                                scope.launch { scaffoldState.drawerState.open() }
+                            }
+                        ) {
+                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
+                        }
+                    }
+                )
+            },
+            content = {
+                Box(Modifier.fillMaxSize()) {
+                val scroll = rememberScrollState(0)
+                Column {
+                    NewsCard(underkgNews)
+                }
+                }
+            })
     } else {
         Box(modifier = Modifier
             .fillMaxSize()
