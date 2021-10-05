@@ -16,7 +16,31 @@
             android:name=".ContentView"
             android:exported="true"
             android:label="@string/title_activity_content_view"
-            android:theme="@style/OneUITheme" />
+            android:theme="@style/OneUITheme">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="underkg.co.kr"
+                    android:pathPattern="/news/.*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="meeco.kr"
+                    android:pathPattern="/news/.*" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".SettingsView"
             android:exported="true"
