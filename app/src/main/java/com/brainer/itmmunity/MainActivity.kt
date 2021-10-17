@@ -62,6 +62,10 @@ class MainActivity : ComponentActivity() {
             unified_list.addAll(meecoNews.slice(3 until meecoNews.size))
 //            underkgNews.addAll(meecoNews.slice(3 until meecoNews.size))
 
+            underkgNews.clear()
+            meecoNews.clear()
+            System.gc()
+
             setContent {
                 DattaTheme {
                     // A surface container using the 'background' color from the theme
