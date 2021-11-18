@@ -98,7 +98,6 @@ fun MainView(underkgNews: ArrayList<Croll.Content>?) {
     if (underkgNews != null) {
         Scaffold(
             scaffoldState = scaffoldState,
-            drawerContent = { Text("Drawer content") },
             topBar = {
                 TopAppBar(
                     title = { Text("ITmmunity") },
