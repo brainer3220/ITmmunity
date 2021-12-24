@@ -78,7 +78,7 @@ class MainViewModel : ViewModel() {
                     KGNewsContent().returnData()
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
-                        _unifiedList.value = _unifiedList.value!! + it//?.addAll(it)
+                        _unifiedList.value = _unifiedList.value!! + it
                     }
                 }
                 kotlin.runCatching {
