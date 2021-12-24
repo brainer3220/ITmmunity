@@ -79,6 +79,7 @@ class MainViewModel : ViewModel() {
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
                         _unifiedList.value = _unifiedList.value!! + it
+                        _unifiedList.value = _unifiedList.value?.toSet()?.toList()
                     }
                 }
                 kotlin.runCatching {
@@ -86,6 +87,7 @@ class MainViewModel : ViewModel() {
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
                         _unifiedList.value = _unifiedList.value?.plus(it)
+                        _unifiedList.value = _unifiedList.value?.toSet()?.toList()
                     }
                 }
             }
