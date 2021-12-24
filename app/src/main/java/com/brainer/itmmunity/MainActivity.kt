@@ -86,7 +86,7 @@ class MainViewModel : ViewModel() {
                     MeecoNews().returnData()
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
-                        _unifiedList.value = _unifiedList.value?.plus(it)
+                        _unifiedList.value = _unifiedList.value?.plus(it.slice(3 until it.size))
                         _unifiedList.value = _unifiedList.value?.toSet()?.toList()
                     }
                 }
