@@ -94,9 +94,9 @@ class MainViewModel : ViewModel() {
 }
 
 @Composable
-fun MainView(MainViewModel: MainViewModel = MainViewModel()) {
+fun MainView(viewModel: MainViewModel = MainViewModel()) {
     val scaffoldState = rememberScaffoldState()
-    val unifiedList by MainViewModel.unifiedList.observeAsState(arrayListOf())
+    val unifiedList by viewModel.unifiedList.observeAsState(arrayListOf())
 
     val swipeRefreshState by remember { mutableStateOf(true) }
 
@@ -133,7 +133,7 @@ fun MainView(MainViewModel: MainViewModel = MainViewModel()) {
         content = {
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                onRefresh = { MainViewModel.getRefresh() }) {
+                onRefresh = { viewModel.getRefresh() }) {
                 Box(Modifier.fillMaxSize()) {
                     val scroll = rememberScrollState(0)
                     Column {
