@@ -16,9 +16,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,114 +28,132 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.Croll.KGNewsContent
 import com.brainer.itmmunity.Croll.MeecoNews
-import com.brainer.itmmunity.ui.DattaTheme
+import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.google.accompanist.glide.rememberGlidePainter
-import kotlinx.coroutines.*
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 const val FIT_IMAGE_SCRIPT = "<style>img{display: inline;height: auto;max-width: 100%;}</style>"
 
 class MainActivity : ComponentActivity() {
-    var unified_list = ArrayList<Croll.Content>()
-
     @OptIn(DelicateCoroutinesApi::class)
     @ExperimentalAnimationApi
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        GlobalScope.launch {
-            val underkgNews =
-                withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
-                    KGNewsContent().returnData()
-                }
-            val meecoNews =
-                withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
-                    MeecoNews().returnData()
-                }
-            Log.d("meecoNews", "$meecoNews")
-
-            unified_list.addAll(underkgNews)
-            unified_list.addAll(meecoNews.slice(3 until meecoNews.size))
-//            underkgNews.addAll(meecoNews.slice(3 until meecoNews.size))
-
-            underkgNews.clear()
-            meecoNews.clear()
-            System.gc()
-
-            setContent {
-                DattaTheme {
-                    // A surface container using the 'background' color from the theme
-                    Surface(color = MaterialTheme.colors.background) {
-                        MainView(unified_list)
-                    }
-                }
-            }
-        }
         setContent {
-            DattaTheme {
+            ITmmunity_AndroidTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    MainView(null)
+                    MainView()
                 }
             }
         }
     }
+}
 
-    override fun onDestroy() {
-        unified_list.clear()
-        super.onDestroy()
+class MainViewModel : ViewModel() {
+    private var _unifiedList = MutableLiveData(listOf<Croll.Content>())
+    val unifiedList: LiveData<List<Croll.Content>> = _unifiedList
+
+    init {
+        getRefresh()
+    }
+
+    fun getRefresh() {
+        viewModelScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                kotlin.runCatching {
+                    KGNewsContent().returnData()
+                }.onSuccess {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        _unifiedList.value = _unifiedList.value!! + it//?.addAll(it)
+                    }
+                }
+                kotlin.runCatching {
+                    MeecoNews().returnData()
+                }.onSuccess {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        _unifiedList.value = _unifiedList.value?.plus(it)
+                    }
+                }
+            }
+        }
     }
 }
 
 @Composable
-fun MainView(underkgNews: ArrayList<Croll.Content>?) {
+fun MainView(viewModel: MainViewModel = MainViewModel()) {
     val scaffoldState = rememberScaffoldState()
+    val unifiedList by viewModel.unifiedList.observeAsState(arrayListOf())
 
-    if (underkgNews != null) {
-        Scaffold(
-            scaffoldState = scaffoldState,
-            topBar = {
-                TopAppBar(
-                    title = { Text("ITmmunity") },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-//                                scope.launch { scaffoldState.drawerState.open() }
-                            }
-                        ) {
-                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
-                        }
-                    }
-                )
-            },
-            content = {
-                Box(Modifier.fillMaxSize()) {
-                val scroll = rememberScrollState(0)
-                Column {
-                    NewsCard(underkgNews)
-                }
-                }
-            })
+    val swipeRefreshState by remember { mutableStateOf(true) }
+
+    Log.d("Unified_List", unifiedList.toString())
+
+    val textColor: Color = if (isSystemInDarkTheme()) {
+        Color.White
     } else {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 10.dp, bottom = 10.dp)) {
-            LoadingView()
-        }
+        Color.Black
     }
+
+//    val scrollBehavior = remember(decayAnimationSpec) {
+//        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
+//    }
+
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("ITmmunity", color = textColor)
+                },
+//                navigationIcon = {
+//                        IconButton(
+//                            onClick = {
+////                                scope.launch { scaffoldState.drawerState.open() }
+//                            }
+//                        ) {
+//                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
+//                        }
+//                }
+            )
+        },
+        content = {
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                onRefresh = { viewModel.getRefresh() }) {
+                Box(Modifier.fillMaxSize()) {
+                    val scroll = rememberScrollState(0)
+                    Column {
+                        NewsCard(unifiedList)
+                    }
+                }
+            }
+        })
 }
 
 @Preview
 @Composable
 fun LoadingView() {
-    Column() {
+    Column {
         Spacer(modifier = Modifier.weight(10f))
-        Text(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f), text = "로딩중입니다... ", fontSize = 20.sp, textAlign = TextAlign.Center)
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f), text = "로딩중입니다... ", fontSize = 20.sp, textAlign = TextAlign.Center
+        )
         Spacer(modifier = Modifier.weight(10f))
     }
 }
@@ -227,7 +244,7 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
     var contentHtml: String?
 
-    Column() {
+    Column {
         Surface(
             Modifier
                 .height(125.dp)
