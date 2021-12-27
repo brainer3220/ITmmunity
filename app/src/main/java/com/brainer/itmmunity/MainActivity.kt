@@ -28,21 +28,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.brainer.itmmunity.Croll.Croll
-import com.brainer.itmmunity.Croll.KGNewsContent
-import com.brainer.itmmunity.Croll.MeecoNews
+import com.brainer.itmmunity.ViewModel.MainViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.google.accompanist.glide.rememberGlidePainter
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 const val FIT_IMAGE_SCRIPT = "<style>img{display: inline;height: auto;max-width: 100%;}</style>"
 
@@ -57,38 +49,6 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     MainView()
-                }
-            }
-        }
-    }
-}
-
-class MainViewModel : ViewModel() {
-    private var _unifiedList = MutableLiveData(listOf<Croll.Content>())
-    val unifiedList: LiveData<List<Croll.Content>> = _unifiedList
-
-    init {
-        getRefresh()
-    }
-
-    fun getRefresh() {
-        viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                kotlin.runCatching {
-                    KGNewsContent().returnData()
-                }.onSuccess {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        _unifiedList.value = _unifiedList.value!! + it
-                        _unifiedList.value = _unifiedList.value?.toSet()?.toList()
-                    }
-                }
-                kotlin.runCatching {
-                    MeecoNews().returnData()
-                }.onSuccess {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        _unifiedList.value = _unifiedList.value?.plus(it.slice(3 until it.size))
-                        _unifiedList.value = _unifiedList.value?.toSet()?.toList()
-                    }
                 }
             }
         }
