@@ -68,7 +68,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     implementation "androidx.compose.runtime:runtime-livedata:1.0.5"
 
-    implementation "com.google.accompanist:accompanist-swiperefresh:0.20.2"
+    implementation "com.google.accompanist:accompanist-swiperefresh:0.22.0-rc"
  
     //system-ui accompanist library
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.22.0-rc"
