@@ -2,9 +2,7 @@ package com.brainer.itmmunity.Croll
 
 import android.os.Parcelable
 import android.util.Log
-import androidx.paging.*
 import kotlinx.android.parcel.Parcelize
-import kotlinx.coroutines.flow.Flow
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements

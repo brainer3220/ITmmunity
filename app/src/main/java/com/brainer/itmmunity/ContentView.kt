@@ -35,21 +35,13 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class ContentView : ComponentActivity() {
-    private lateinit var contentHtml: String
-
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val viewModel = ContentViewModel()
-
         val aNews = intent.getParcelableExtra<Croll.Content>("content")
 
         GlobalScope.launch {
-            if (aNews != null) {
-                viewModel.getHtml(aNews)
-            }
-
             setContent {
                 ITmmunity_AndroidTheme {
                     // A surface container using the 'background' color from the theme
@@ -62,11 +54,6 @@ class ContentView : ComponentActivity() {
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        contentHtml = ""
-        super.onDestroy()
     }
 }
 
