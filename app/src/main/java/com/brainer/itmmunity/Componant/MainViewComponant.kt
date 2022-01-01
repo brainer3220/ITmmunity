@@ -10,7 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.brainer.itmmunity.ContentView
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
+import com.brainer.itmmunity.ViewModel.MainViewModel
 import com.google.accompanist.glide.rememberGlidePainter
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -45,17 +46,6 @@ fun LoadingView() {
         Spacer(modifier = Modifier.weight(10f))
     }
 }
-
-//@Composable
-//fun FilMaxBackGround() {
-//    if (isSystemInDarkTheme()) {
-//        Surface(Modifier.fillMaxSize(), color = com.brainer.ITmmunity.ui.theme.themeOFDarkPrimary) {
-//        }
-//    } else if (!isSystemInDarkTheme()) {
-//        Surface(Modifier.fillMaxSize(), color = com.brainer.ITmmunity.ui.theme.Primary) {
-//        }
-//    }
-//}
 
 @Composable
 fun AppBar() {
@@ -81,6 +71,7 @@ fun AppBar() {
 //            },
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
+
                 ExtendedFloatingActionButton(
                     text = { Text("Inc") },
                     onClick = { /* fab click handler */ }
@@ -102,11 +93,14 @@ fun AppBar() {
     }
 }
 
+
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun NewsCard(
-    news: List<Croll.Content>
+    news: List<Croll.Content>,
+    mainViewModel: MainViewModel
 ) {
+
     var backGroundUnitColor: Color = Color(255, 255, 255)
     if (isSystemInDarkTheme()) {
         backGroundUnitColor = Color(23, 23, 23)
@@ -117,8 +111,11 @@ fun NewsCard(
     val listState = rememberLazyListState()
     Surface(shape = RoundedCornerShape(25.dp)) {
         LazyColumn(state = listState) {
-            items(news) { item ->
+            itemsIndexed(news) { index, item ->
                 NewsListOf(item)
+                if (index == news.lastIndex) {
+                    mainViewModel.addData()
+                }
             }
         }
     }

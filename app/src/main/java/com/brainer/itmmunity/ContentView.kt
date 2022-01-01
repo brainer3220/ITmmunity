@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -18,6 +17,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -27,8 +28,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.brainer.itmmunity.Componant.LoadingView
 import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.ViewModel.ContentViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
-import kotlinx.coroutines.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ContentView : ComponentActivity() {
     private lateinit var contentHtml: String
@@ -37,11 +41,14 @@ class ContentView : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val viewModel = ContentViewModel()
+
         val aNews = intent.getParcelableExtra<Croll.Content>("content")
 
         GlobalScope.launch {
-            contentHtml = aNews?.let { aNews.returnContent(it).toString() } + FIT_IMAGE_SCRIPT
-            Log.d("contentHTML", contentHtml)
+            if (aNews != null) {
+                viewModel.getHtml(aNews)
+            }
 
             setContent {
                 ITmmunity_AndroidTheme {
@@ -50,19 +57,8 @@ class ContentView : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colors.background
                     ) {
-                        aNews?.let { ContentView(contentHtml, it) }
+                        ContentView(viewModel)
                     }
-                }
-            }
-        }
-        setContent {
-            ITmmunity_AndroidTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    ContentView(null, null)
                 }
             }
         }
@@ -76,18 +72,23 @@ class ContentView : ComponentActivity() {
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun ContentView(contentHtml: String?, aNews: Croll.Content?) {
+fun ContentView(viewModel: ContentViewModel = ContentViewModel()) {
     val isDarkMode = isSystemInDarkTheme()
 
+    val contentHtml by viewModel.contentHtml.observeAsState()
+    val aNews by viewModel.aNews.observeAsState()
+
     if (contentHtml == null) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 10.dp, bottom = 10.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 10.dp, bottom = 10.dp)
+        ) {
             LoadingView()
         }
     } else {
-        Column() {
-            Row() {
+        Column {
+            Row {
                 TopAppBar(title = {
                     Text(
                         text = aNews!!.title,
@@ -128,14 +129,14 @@ fun ContentView(contentHtml: String?, aNews: Croll.Content?) {
                             ViewGroup.LayoutParams.MATCH_PARENT
                         )
                         webViewClient = WebViewClient()
-                        loadData(contentHtml, "text/html", "utf-8")
+                        loadData(contentHtml!!, "text/html", "utf-8")
                     }
                 }, update = {
                     it.settings.javaScriptEnabled = true
-                    it.loadData(contentHtml, "text/html", "utf-8")
+                    it.loadData(contentHtml!!, "text/html", "utf-8")
 
                     it.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
-                    it.isHorizontalScrollBarEnabled = false;
+                    it.isHorizontalScrollBarEnabled = false
 
 //                it.settings.useWideViewPort = true
                     it.settings.loadWithOverviewMode = true

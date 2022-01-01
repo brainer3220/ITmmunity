@@ -11,7 +11,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -88,9 +87,8 @@ fun MainView(viewModel: MainViewModel = MainViewModel()) {
                 state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
                 onRefresh = { viewModel.getRefresh() }) {
                 Box(Modifier.fillMaxSize()) {
-                    val scroll = rememberScrollState(0)
                     Column {
-                        NewsCard(unifiedList)
+                        NewsCard(unifiedList, viewModel)
                     }
                 }
             }

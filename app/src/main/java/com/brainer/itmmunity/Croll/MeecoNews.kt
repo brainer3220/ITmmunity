@@ -3,11 +3,9 @@ package com.brainer.itmmunity.Croll
 import android.util.Log
 
 class MeecoNews: Croll() {
-    val url: String = "https://meeco.kr/news"
-
     private fun getItem(url: String, target: String): ArrayList<Content> {
         val itemList = arrayListOf<Content>()
-        var doc = getHTML(url)?.select(target)
+        val doc = getHTML(url)?.select(target)
         if (doc != null) {
             Log.i("meecoGetItem_null", "doc is not null")
             Log.i("meecoGetItem_String", doc.toString())
@@ -29,8 +27,8 @@ class MeecoNews: Croll() {
         }
         return itemList
     }
-    override fun returnData(): ArrayList<Content> {
-        val itemList = this.getItem(url, "#bBd > div.bBox > div > table > tbody > tr")
+    override fun returnData(page: Int): ArrayList<Content> {
+        val itemList = this.getItem("https://meeco.kr/index.php?mid=news&page=${page}", "#bBd > div.bBox > div > table > tbody > tr")
 
         Log.d("MeecoNews_Content", "$itemList")
         return itemList
