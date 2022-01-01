@@ -3,19 +3,29 @@ package com.brainer.itmmunity.ViewModel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.brainer.itmmunity.ContentView
 import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.FIT_IMAGE_SCRIPT
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 
 class ContentViewModel {
     private var _contentHtml = MutableLiveData("")
     val contentHtml: LiveData<String> = _contentHtml
 
-    private var _aNews = MutableLiveData(Croll.Content(title="", image=null, hit=0, numComment=0, url=""))
-    val aNews: LiveData<Croll.Content> = _aNews
-
-    fun getHtml(url: String) {
-        val doc = Jsoup.connect(url).get()
-        Log.d("getHTML", doc.toString())
-        _contentHtml.value = doc.toString()
+    fun getHtml(news: Croll.Content) {
+        CoroutineScope(Dispatchers.IO).launch {
+            kotlin.runCatching {
+                news.let { news.returnContent(it).toString() } + FIT_IMAGE_SCRIPT
+            }.onSuccess {
+                CoroutineScope(Dispatchers.Main).launch {
+                    _contentHtml.value = it
+                }
+                Log.d("getHtmlViewModel", it)
+            }
+        }
     }
 }

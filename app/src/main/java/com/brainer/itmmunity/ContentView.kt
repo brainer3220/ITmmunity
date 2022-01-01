@@ -30,11 +30,10 @@ import com.brainer.itmmunity.Componant.LoadingView
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.ViewModel.ContentViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class ContentView : ComponentActivity() {
+    @SuppressLint("CoroutineCreationDuringComposition")
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,13 +42,21 @@ class ContentView : ComponentActivity() {
 
         GlobalScope.launch {
             setContent {
+                if (aNews != null) {
+//                    CoroutineScope(Dispatchers.Main).launch {
+                    viewModel.getHtml(aNews)
+//                    }
+                }
+
                 ITmmunity_AndroidTheme {
                     // A surface container using the 'background' color from the theme
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colors.background
                     ) {
-                        ContentView(viewModel)
+                        if (aNews != null) {
+                            ContentView(aNews, viewModel)
+                        }
                     }
                 }
             }
@@ -59,11 +66,10 @@ class ContentView : ComponentActivity() {
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun ContentView(viewModel: ContentViewModel = ContentViewModel()) {
+fun ContentView(aNews: Croll.Content, viewModel: ContentViewModel = ContentViewModel()) {
     val isDarkMode = isSystemInDarkTheme()
 
     val contentHtml by viewModel.contentHtml.observeAsState()
-    val aNews by viewModel.aNews.observeAsState()
 
     if (contentHtml == null) {
         Box(
@@ -78,7 +84,7 @@ fun ContentView(viewModel: ContentViewModel = ContentViewModel()) {
             Row {
                 TopAppBar(title = {
                     Text(
-                        text = aNews!!.title,
+                        text = aNews.title,
                         fontSize = 20.sp,
                         textAlign = TextAlign.Left,
                         maxLines = 2,
@@ -93,9 +99,9 @@ fun ContentView(viewModel: ContentViewModel = ContentViewModel()) {
                             Modifier.clickable {
                                 val sendIntent: Intent = Intent().apply {
                                     action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TITLE, aNews?.title.toString())
+                                    putExtra(Intent.EXTRA_TITLE, aNews.title.toString())
                                     putExtra(Intent.EXTRA_SUBJECT, "Powered by ITmmunity")
-                                    putExtra(Intent.EXTRA_TEXT, aNews?.url)
+                                    putExtra(Intent.EXTRA_TEXT, aNews.url)
                                     type = "text/plain"
                                 }
 
