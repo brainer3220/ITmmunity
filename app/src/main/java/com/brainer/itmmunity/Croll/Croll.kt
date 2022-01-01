@@ -2,7 +2,9 @@ package com.brainer.itmmunity.Croll
 
 import android.os.Parcelable
 import android.util.Log
+import androidx.paging.*
 import kotlinx.android.parcel.Parcelize
+import kotlinx.coroutines.flow.Flow
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -17,24 +19,28 @@ open class Croll {
         var url: String
     ) : Parcelable {
         fun returnContent(content: Content): Pair<Elements?, Elements?> {
-            if (content.url.contains("meeco.kr/news")) {
-                Log.d("Meeco_URL", content.url)
-                val aItemList = MeecoNews().getHTML(content.url)?.select("article > div")
-                val aCommentList = MeecoNews().getHTML(content.url)?.select("#comment")
+            when {
+                content.url.contains("meeco.kr") -> {
+                    Log.d("Meeco_URL", content.url)
+                    val aItemList = MeecoNews().getHTML(content.url)?.select("article > div")
+                    val aCommentList = MeecoNews().getHTML(content.url)?.select("#comment")
 
-                Log.d("MeecoNews_Content", "$aItemList")
-                Log.d("MeecoNews_Comment", "$aCommentList")
-                return Pair(aItemList, aCommentList)
-            } else if (content.url.contains("underkg.co.kr/news")) {
-                val aItemList = KGNewsContent().getItem(content.url, "body > div.user_layout > div.body > div.content > div > div.docInner > div.read_body")
-                val aCommentList = KGNewsContent().getItem(content.url, "div#comment.feedback")
+                    Log.d("MeecoNews_Content", "$aItemList")
+                    Log.d("MeecoNews_Comment", "$aCommentList")
+                    return Pair(aItemList, aCommentList)
+                }
+                content.url.contains("underkg.co.kr") -> {
+                    val aItemList = KGNewsContent().getItem(content.url, "body > div.user_layout > div.body > div.content > div > div.docInner > div.read_body")
+                    val aCommentList = KGNewsContent().getItem(content.url, "div#comment.feedback")
 
-                Log.d("KGNews_Content", "$aItemList")
-                Log.d("KGNews_Comment", "$aCommentList")
-                return Pair(aItemList, aCommentList)
-            } else {
-                Log.d("Failed_URL", content.url)
-                return Pair(null, null)
+                    Log.d("KGNews_Content", "$aItemList")
+                    Log.d("KGNews_Comment", "$aCommentList")
+                    return Pair(aItemList, aCommentList)
+                }
+                else -> {
+                    Log.d("Failed_URL", content.url)
+                    return Pair(null, null)
+                }
             }
         }
     }
@@ -69,10 +75,10 @@ open class Croll {
         return itemList
     }
 
-    open fun returnData(): ArrayList<Content> {
-        var itemList = Croll().getItem("https://www.underkg.co.kr/news", "#board_list > div > div", "Text")
+    open fun returnData(page: Int = 1): ArrayList<Content> {
+        val itemList = Croll().getItem("http://underkg.co.kr/index.php?mid=news&page=${page}", "#board_list > div > div", "Text")
 
-        println("returnData$itemList")
+        Log.d("returnData", "$itemList")
         return itemList
     }
 }
