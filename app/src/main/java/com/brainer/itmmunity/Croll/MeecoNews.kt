@@ -2,7 +2,7 @@ package com.brainer.itmmunity.Croll
 
 import android.util.Log
 
-class MeecoNews: Croll() {
+class MeecoNews : Croll() {
     private fun getItem(url: String, target: String): ArrayList<Content> {
         val itemList = arrayListOf<Content>()
         val doc = getHTML(url)?.select(target)
@@ -14,7 +14,10 @@ class MeecoNews: Croll() {
         doc?.forEach { i ->
             Log.d("meecoGetItemTitle", "forEach ${i.select("td.title > a > span").text()}")
             Log.d("meecoGetItemUrl", "forEach ${i.select("td.title > a").attr("href")}")
-            Log.d("meecoGetItemNumComment", "forEach ${i.toggleClass("num").select("span")[1].text().toInt()}")
+            Log.d(
+                "meecoGetItemNumComment",
+                "forEach ${i.toggleClass("num").select("span")[1].text().toInt()}"
+            )
             itemList.add(
                 Content(
                     title = i.select("td.title > a > span").text(),
@@ -27,8 +30,12 @@ class MeecoNews: Croll() {
         }
         return itemList
     }
+
     override fun returnData(page: Int): ArrayList<Content> {
-        val itemList = this.getItem("https://meeco.kr/index.php?mid=news&page=${page}", "#bBd > div.bBox > div > table > tbody > tr")
+        val itemList = this.getItem(
+            "https://meeco.kr/index.php?mid=news&page=${page}",
+            "#bBd > div.bBox > div > table > tbody > tr"
+        )
 
         Log.d("MeecoNews_Content", "$itemList")
         return itemList

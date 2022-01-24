@@ -3,14 +3,11 @@ package com.brainer.itmmunity.ViewModel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.brainer.itmmunity.ContentView
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.FIT_IMAGE_SCRIPT
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.jsoup.Jsoup
 
 class ContentViewModel {
     private var _contentHtml = MutableLiveData("")

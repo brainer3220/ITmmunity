@@ -28,7 +28,10 @@ open class Croll {
                     return Pair(aItemList, aCommentList)
                 }
                 content.url.contains("underkg.co.kr") -> {
-                    val aItemList = KGNewsContent().getItem(content.url, "body > div.user_layout > div.body > div.content > div > div.docInner > div.read_body")
+                    val aItemList = KGNewsContent().getItem(
+                        content.url,
+                        "body > div.user_layout > div.body > div.content > div > div.docInner > div.read_body"
+                    )
                     val aCommentList = KGNewsContent().getItem(content.url, "div#comment.feedback")
 
                     Log.d("KGNews_Content", "$aItemList")
@@ -43,7 +46,7 @@ open class Croll {
         }
     }
 
-     fun getHTML(url: String): Document? {
+    fun getHTML(url: String): Document? {
         val doc = Jsoup.connect(url).get()
         Log.d("getHTML", doc.toString())
         return doc
@@ -58,15 +61,19 @@ open class Croll {
 
             doc.forEach { i ->
                 Log.d("getItem_title", "ForEach: " + i.select("a").text())
-                Log.d("getItem_image", "ForEach: " + i.select("div.thumb-wrap > a > img").attr("src"))
+                Log.d(
+                    "getItem_image",
+                    "ForEach: " + i.select("div.thumb-wrap > a > img").attr("src")
+                )
                 Log.d("getItem_url", "ForEach: " + i.select("a").attr("href"))
                 itemList.add(
                     Content(
-                    title=i.select("a").text(),
-                    image=i.select("div.thumb-wrap > a > img").attr("src"),
-                    hit = 100,
-                    numComment = null,
-                    url = i.select("a").attr("href"))
+                        title = i.select("a").text(),
+                        image = i.select("div.thumb-wrap > a > img").attr("src"),
+                        hit = 100,
+                        numComment = null,
+                        url = i.select("a").attr("href")
+                    )
                 )
             }
         }
@@ -74,7 +81,11 @@ open class Croll {
     }
 
     open fun returnData(page: Int = 1): ArrayList<Content> {
-        val itemList = Croll().getItem("http://underkg.co.kr/index.php?mid=news&page=${page}", "#board_list > div > div", "Text")
+        val itemList = Croll().getItem(
+            "http://underkg.co.kr/index.php?mid=news&page=${page}",
+            "#board_list > div > div",
+            "Text"
+        )
 
         Log.d("returnData", "$itemList")
         return itemList
