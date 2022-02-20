@@ -8,9 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,7 +17,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.brainer.itmmunity.Componant.NewsCard
+import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.ViewModel.MainViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -83,12 +83,30 @@ fun MainView(viewModel: MainViewModel = MainViewModel()) {
             )
         },
         content = {
-            SwipeRefresh(
-                state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                onRefresh = { viewModel.getRefresh() }) {
-                Box(Modifier.fillMaxSize()) {
-                    Column {
-                        NewsCard(unifiedList, viewModel)
+            BoxWithConstraints(Modifier.fillMaxSize()) {
+                val boxWithConstraintsScope = this
+                Row(Modifier.fillMaxSize()) {
+                    SwipeRefresh(
+                        modifier = Modifier.weight(1f),
+                        state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                        onRefresh = { viewModel.getRefresh() }) {
+                        Column {
+                            NewsCard(unifiedList, viewModel)
+                        }
+                    }
+
+                    if (boxWithConstraintsScope.maxWidth >= 480.dp) {
+                        Box(modifier = Modifier.weight(1f)) {
+                            ContentView(
+                                aNews = Croll.Content(
+                                    hit = 0,
+                                    image = null,
+                                    numComment = 100,
+                                    title = "test",
+                                    url = "https://www.naver.com/"
+                                )
+                            )
+                        }
                     }
                 }
             }
