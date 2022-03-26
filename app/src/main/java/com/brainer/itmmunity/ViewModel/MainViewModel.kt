@@ -29,6 +29,9 @@ class MainViewModel : ViewModel() {
     fun getRefresh() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
+                CoroutineScope(Dispatchers.Main).launch {
+                    _unifiedList.value = listOf<Croll.Content>()
+                }
                 kotlin.runCatching {
                     KGNewsContent().returnData()
                 }.onSuccess {
