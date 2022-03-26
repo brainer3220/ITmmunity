@@ -40,7 +40,7 @@ class ContentView : ComponentActivity() {
         val viewModel = ContentViewModel()
         val aNews = intent.getParcelableExtra<Croll.Content>("content")
 
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.Main).launch {
             setContent {
                 if (aNews != null) {
 //                    CoroutineScope(Dispatchers.Main).launch {
