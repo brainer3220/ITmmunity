@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ContentViewModel {
+class ContentViewModel: ViewModel() {
     private var _contentHtml = MutableLiveData("")
     val contentHtml: LiveData<String> = _contentHtml
 
