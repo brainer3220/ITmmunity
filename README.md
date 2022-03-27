@@ -7,7 +7,7 @@
 ![Example](./Example.gif)
 
 # Now Available
-- UnderKG
-  - News
-- Meeco
-  - News
+- [UnderKG](http://underkg.co.kr)
+  - [News](http://underkg.co.kr/news)
+- [Meeco](https://meeco.kr)
+  - [News](https://meeco.kr/news)
