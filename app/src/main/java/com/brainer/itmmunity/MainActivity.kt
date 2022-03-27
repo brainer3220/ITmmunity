@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                     Log.d("Config", "Fetch failed")
                 }
             }
-            
+
         setContent {
             ITmmunity_AndroidTheme {
                 // A surface container using the 'background' color from the theme
