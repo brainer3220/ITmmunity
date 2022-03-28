@@ -91,5 +91,8 @@ dependencies {
     implementation 'com.google.accompanist:accompanist-glide:0.15.0'
 
     implementation 'io.github.yanndroid:oneui:2.1.1'
+    implementation 'io.github.furstenheim:copy_down:1.0'
+    implementation "com.halilibo.compose-richtext:richtext-commonmark:0.11.0"
+    implementation "com.halilibo.compose-richtext:richtext-ui:0.11.0"
 
 }
