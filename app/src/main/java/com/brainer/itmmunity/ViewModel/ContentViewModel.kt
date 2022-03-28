@@ -1,18 +1,17 @@
 package com.brainer.itmmunity.ViewModel
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.brainer.itmmunity.Croll.Croll
-import com.brainer.itmmunity.FIT_IMAGE_SCRIPT
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class ContentViewModel: ViewModel() {
+class ContentViewModel : ViewModel() {
     private var _contentHtml = MutableLiveData("")
     val contentHtml: LiveData<String> = _contentHtml
 
@@ -20,12 +19,15 @@ class ContentViewModel: ViewModel() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
                 kotlin.runCatching {
-                    news.let { news.returnContent(it).toString() } + FIT_IMAGE_SCRIPT
+                    news.htmlToMarkdown(news.returnContent(news).toString())!!.replace("\t", "").replace("    ", "")
                 }.onSuccess {
+                    val contentHtmlTmp = it.slice(2 until it!!.length-1)
                     CoroutineScope(Dispatchers.Main).launch {
-                        _contentHtml.value = it
+                        _contentHtml.value = contentHtmlTmp
                     }
-                    Log.d("getHtmlViewModel", it)
+                    if (contentHtmlTmp != null) {
+                        Log.d("getHtmlViewModel", contentHtmlTmp)
+                    }
                 }
             }
         }
