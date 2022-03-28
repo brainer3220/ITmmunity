@@ -2,10 +2,12 @@ package com.brainer.itmmunity.Croll
 
 import android.os.Parcelable
 import android.util.Log
+import io.github.furstenheim.CopyDown
 import kotlinx.android.parcel.Parcelize
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+
 
 open class Croll {
     @Parcelize
@@ -43,6 +45,11 @@ open class Croll {
                     return Pair(null, null)
                 }
             }
+        }
+
+        open fun htmlToMarkdown(html: String): String? {
+            val converter = CopyDown()
+            return converter.convert(html)
         }
     }
 
