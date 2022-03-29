@@ -91,7 +91,7 @@ fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: Netwo
 //        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
 //    }
 
-    if(isConnection) {
+    if (isConnection) {
         Scaffold(
             scaffoldState = scaffoldState,
             topBar = {
@@ -99,33 +99,52 @@ fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: Netwo
                     title = {
                         Text("ITmmunity", color = textColor)
                     },
-    //                navigationIcon = {
-    //                        IconButton(
-    //                            onClick = {
-    ////                                scope.launch { scaffoldState.drawerState.open() }
-    //                            }
-    //                        ) {
-    //                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
-    //                        }
-    //                }
+//                navigationIcon = {
+//                        IconButton(
+//                            onClick = {
+////                                scope.launch { scaffoldState.drawerState.open() }
+//                            }
+//                        ) {
+//                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
+//                        }
+//                }
                 )
             },
             content = {
-                SwipeRefresh(
-                    state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                    onRefresh = { viewModel.getRefresh() }) {
-                    Box(Modifier.fillMaxSize()) {
-                        Column {
-                            NewsCard(unifiedList, viewModel)
+                BoxWithConstraints(Modifier.fillMaxSize()) {
+                    val boxWithConstraintsScope = this
+                    Row(Modifier.fillMaxSize()) {
+                        SwipeRefresh(
+                            modifier = Modifier.weight(1f),
+                            state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                            onRefresh = { viewModel.getRefresh() }) {
+                            Column {
+                                NewsCard(unifiedList, viewModel)
+                            }
+                        }
+
+                        if (boxWithConstraintsScope.maxWidth >= 480.dp) {
+                            Box(modifier = Modifier.weight(1f)) {
+                                ContentView(
+                                    aNews = Croll.Content(
+                                        hit = 0,
+                                        image = null,
+                                        numComment = 100,
+                                        title = "test",
+                                        url = "https://www.naver.com/"
+                                    )
+                                )
+                            }
                         }
                     }
                 }
             })
-    }
-    else if(!isConnection) {
+    } else {
         Box(Modifier.fillMaxSize()) {
             Column(
-                Modifier.fillMaxSize().align(Alignment.Center),
+                Modifier
+                    .fillMaxSize()
+                    .align(Alignment.Center),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(

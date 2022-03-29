@@ -71,12 +71,11 @@ class ContentView : ComponentActivity() {
 @Composable
 fun ContentView(aNews: Croll.Content, viewModel: ContentViewModel) {
     val isDarkMode = isSystemInDarkTheme()
-
     val contentHtml by viewModel.contentHtml.observeAsState()
     val listState = rememberScrollState()
 
     if (contentHtml == null) {
-        Box(
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 10.dp, bottom = 10.dp)
