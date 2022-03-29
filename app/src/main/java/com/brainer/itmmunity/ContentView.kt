@@ -27,8 +27,7 @@ import com.brainer.itmmunity.Componant.LoadingView
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.ViewModel.ContentViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
-import com.halilibo.richtext.markdown.Markdown
-import com.halilibo.richtext.ui.RichText
+import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -119,13 +118,7 @@ fun ContentView(aNews: Croll.Content, viewModel: ContentViewModel) {
 
             SelectionContainer {
                 Column(Modifier.verticalScroll(listState)) {
-                    RichText(
-                        Modifier
-                            .fillMaxSize()
-                            .padding(8.dp)
-                    ) {
-                        Markdown(content = contentHtml!!.trimIndent())
-                    }
+                    MarkdownText(modifier = Modifier.padding(8.dp), markdown = contentHtml!!)
                 }
             }
         }
