@@ -124,8 +124,16 @@ fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: Netwo
     }
     else if(!isConnection) {
         Box(Modifier.fillMaxSize()) {
-            Column(Modifier.fillMaxSize().align(Alignment.Center), verticalArrangement=Arrangement.Center) {
-                Text(modifier = Modifier.fillMaxWidth(), text = "인터넷이 연결돼있지 않아요.\n인터넷 연결을 확인해주세요.", textAlign = TextAlign.Center)
+            Column(
+                Modifier.fillMaxSize().align(Alignment.Center),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "인터넷이 연결돼있지 않아요.\n인터넷 연결을 확인해주세요.",
+                    textAlign = TextAlign.Center
+                )
             }
         }
+    }
 }
