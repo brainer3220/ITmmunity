@@ -32,7 +32,6 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import kotlinx.coroutines.DelicateCoroutinesApi
 
-const val FIT_IMAGE_SCRIPT = "<style>img{display: inline;height: auto;max-width: 100%;}</style>"
 val TABLET_UI_WIDTH = 480.dp
 
 class MainActivity : ComponentActivity() {
