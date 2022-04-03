@@ -4,17 +4,15 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,8 +48,8 @@ class MainActivity : ComponentActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val updated = task.result
-                    Log.d("Config", "Config params updated: $updated")
-                    Log.d("Config", "Fetch and activate succeeded")
+                    Log.d("Config", "MainActivity Config params updated: $updated")
+                    Log.d("Config", "MainActivity Fetch and activate succeeded")
                 } else {
                     Log.d("Config", "Fetch failed")
                 }
@@ -70,8 +68,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: BackGroundViewModel) {
+    val backHandlingEnabled by remember { mutableStateOf(true) }
+
     val scaffoldState = rememberScaffoldState()
     val unifiedList by viewModel.unifiedList.observeAsState(arrayListOf())
+//    val contentViewModel = remember{ ContentViewModel() }
+    val aNews by viewModel.aNews.observeAsState()
+
 
     val isConnection by networkViewModel.isConnect.observeAsState(true)
 
@@ -121,17 +124,26 @@ fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: BackG
                             }
                         }
 
-                        if (boxWithConstraintsScope.maxWidth >= 480.dp) {
+                        if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH) {
                             Box(modifier = Modifier.weight(1f)) {
-                                ContentView(
-                                    aNews = Croll.Content(
-                                        hit = 0,
-                                        image = null,
-                                        numComment = 100,
-                                        title = "test",
-                                        url = "https://www.naver.com/"
+                                if (aNews != null) {
+                                    ContentView(aNews!!, viewModel = viewModel)
+                                } else {
+                                    Text(
+                                        modifier = Modifier.fillMaxSize(),
+                                        text = "컨텐츠를 클릭해 보세요.",
+                                        textAlign = TextAlign.Center
                                     )
-                                )
+                                }
+                            }
+                        } else {
+                            if (aNews != null) {
+                                BackHandler(backHandlingEnabled) {
+                                    viewModel.changeAnews(null)
+                                }
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    ContentView(aNews!!, viewModel = viewModel)
+                                }
                             }
                         }
                     }

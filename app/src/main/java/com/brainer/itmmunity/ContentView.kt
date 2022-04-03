@@ -3,6 +3,7 @@ package com.brainer.itmmunity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -44,12 +45,6 @@ class ContentView : ComponentActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             setContent {
-                if (aNews != null) {
-//                    CoroutineScope(Dispatchers.Main).launch {
-                    viewModel.getHtml(aNews)
-//                    }
-                }
-
                 ITmmunity_AndroidTheme {
                     // A surface container using the 'background' color from the theme
                     Surface(
@@ -74,7 +69,9 @@ fun ContentView(aNews: Croll.Content, viewModel: MainViewModel) {
     val contentHtml by viewModel.contentHtml.observeAsState()
     val listState = rememberScrollState()
 
-    if (contentHtml == null) {
+    viewModel.getHtml()
+
+    if (contentHtml == null && contentHtml!!.isEmpty()) {
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
@@ -115,10 +112,14 @@ fun ContentView(aNews: Croll.Content, viewModel: MainViewModel) {
                 Spacer(modifier = Modifier.padding(4.dp))
             }
 
-            SelectionContainer {
-                Column(Modifier.verticalScroll(listState)) {
-                    MarkdownText(modifier = Modifier.padding(8.dp), markdown = contentHtml!!)
+            kotlin.runCatching {
+                SelectionContainer {
+                    Column(Modifier.verticalScroll(listState)) {
+                        MarkdownText(modifier = Modifier.padding(8.dp), markdown = contentHtml!!)
+                    }
                 }
+            }.onFailure {
+                Log.d("contentHtml", contentHtml.toString())
             }
         }
     }
