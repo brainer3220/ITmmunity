@@ -105,4 +105,27 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+    private var _contentHtml = MutableLiveData("")
+    val contentHtml: LiveData<String> = _contentHtml
+
+    fun getHtml() {
+        viewModelScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                kotlin.runCatching {
+                    aNews.value!!.htmlToMarkdown(
+                        aNews.value!!.returnContent(aNews.value!!).toString()
+                    )!!.replace("\t", "").replace("    ", "")
+                }.onSuccess {
+                    val contentHtmlTmp = it.slice(2 until it.length - 1)
+                    CoroutineScope(Dispatchers.Main).launch {
+                        _contentHtml.value = contentHtmlTmp
+                    }
+                    Log.d("getHtmlViewModel", contentHtmlTmp)
+                }
+                    .onFailure {
+                        Log.d("getHtmlViewModel", "Failed")
+                    }
+            }
+        }
+    }
 }
