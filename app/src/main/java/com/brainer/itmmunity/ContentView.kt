@@ -3,6 +3,7 @@ package com.brainer.itmmunity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -25,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brainer.itmmunity.Componant.LoadingView
 import com.brainer.itmmunity.Croll.Croll
-import com.brainer.itmmunity.ViewModel.ContentViewModel
+import com.brainer.itmmunity.ViewModel.MainViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.CoroutineScope
@@ -39,17 +40,11 @@ class ContentView : ComponentActivity() {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = ContentViewModel()
+        val viewModel = MainViewModel()
         val aNews = intent.getParcelableExtra<Croll.Content>("content")
 
         CoroutineScope(Dispatchers.Main).launch {
             setContent {
-                if (aNews != null) {
-//                    CoroutineScope(Dispatchers.Main).launch {
-                    viewModel.getHtml(aNews)
-//                    }
-                }
-
                 ITmmunity_AndroidTheme {
                     // A surface container using the 'background' color from the theme
                     Surface(
@@ -69,14 +64,15 @@ class ContentView : ComponentActivity() {
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun ContentView(aNews: Croll.Content, viewModel: ContentViewModel) {
+fun ContentView(aNews: Croll.Content, viewModel: MainViewModel) {
     val isDarkMode = isSystemInDarkTheme()
-
     val contentHtml by viewModel.contentHtml.observeAsState()
     val listState = rememberScrollState()
 
-    if (contentHtml == null) {
-        Box(
+    viewModel.getHtml()
+
+    if (contentHtml == null && contentHtml!!.isEmpty()) {
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 10.dp, bottom = 10.dp)
@@ -116,10 +112,14 @@ fun ContentView(aNews: Croll.Content, viewModel: ContentViewModel) {
                 Spacer(modifier = Modifier.padding(4.dp))
             }
 
-            SelectionContainer {
-                Column(Modifier.verticalScroll(listState)) {
-                    MarkdownText(modifier = Modifier.padding(8.dp), markdown = contentHtml!!)
+            kotlin.runCatching {
+                SelectionContainer {
+                    Column(Modifier.verticalScroll(listState)) {
+                        MarkdownText(modifier = Modifier.padding(8.dp), markdown = contentHtml!!)
+                    }
                 }
+            }.onFailure {
+                Log.d("contentHtml", contentHtml.toString())
             }
         }
     }

@@ -4,26 +4,23 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.brainer.itmmunity.Componant.NewsCard
-import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.ViewModel.BackGroundViewModel
 import com.brainer.itmmunity.ViewModel.MainViewModel
-import com.brainer.itmmunity.ViewModel.NetworkCheckViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -32,7 +29,6 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import kotlinx.coroutines.DelicateCoroutinesApi
 
-const val FIT_IMAGE_SCRIPT = "<style>img{display: inline;height: auto;max-width: 100%;}</style>"
 val TABLET_UI_WIDTH = 480.dp
 
 class MainActivity : ComponentActivity() {
@@ -52,8 +48,8 @@ class MainActivity : ComponentActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val updated = task.result
-                    Log.d("Config", "Config params updated: $updated")
-                    Log.d("Config", "Fetch and activate succeeded")
+                    Log.d("Config", "MainActivity Config params updated: $updated")
+                    Log.d("Config", "MainActivity Fetch and activate succeeded")
                 } else {
                     Log.d("Config", "Fetch failed")
                 }
@@ -63,7 +59,7 @@ class MainActivity : ComponentActivity() {
             ITmmunity_AndroidTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    MainView(networkViewModel = NetworkCheckViewModel(applicationContext))
+                    MainView(networkViewModel = BackGroundViewModel(applicationContext))
                 }
             }
         }
@@ -71,9 +67,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: NetworkCheckViewModel) {
+fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: BackGroundViewModel) {
+    val backHandlingEnabled by remember { mutableStateOf(true) }
+
     val scaffoldState = rememberScaffoldState()
     val unifiedList by viewModel.unifiedList.observeAsState(arrayListOf())
+//    val contentViewModel = remember{ ContentViewModel() }
+    val aNews by viewModel.aNews.observeAsState()
+
 
     val isConnection by networkViewModel.isConnect.observeAsState(true)
 
@@ -91,7 +92,7 @@ fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: Netwo
 //        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
 //    }
 
-    if(isConnection) {
+    if (isConnection) {
         Scaffold(
             scaffoldState = scaffoldState,
             topBar = {
@@ -99,33 +100,61 @@ fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: Netwo
                     title = {
                         Text("ITmmunity", color = textColor)
                     },
-    //                navigationIcon = {
-    //                        IconButton(
-    //                            onClick = {
-    ////                                scope.launch { scaffoldState.drawerState.open() }
-    //                            }
-    //                        ) {
-    //                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
-    //                        }
-    //                }
+//                navigationIcon = {
+//                        IconButton(
+//                            onClick = {
+////                                scope.launch { scaffoldState.drawerState.open() }
+//                            }
+//                        ) {
+//                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
+//                        }
+//                }
                 )
             },
             content = {
-                SwipeRefresh(
-                    state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                    onRefresh = { viewModel.getRefresh() }) {
-                    Box(Modifier.fillMaxSize()) {
-                        Column {
-                            NewsCard(unifiedList, viewModel)
+                BoxWithConstraints(Modifier.fillMaxSize()) {
+                    val boxWithConstraintsScope = this
+                    Row(Modifier.fillMaxSize()) {
+                        SwipeRefresh(
+                            modifier = Modifier.weight(1f),
+                            state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                            onRefresh = { viewModel.getRefresh() }) {
+                            Column {
+                                NewsCard(unifiedList, viewModel)
+                            }
+                        }
+
+                        if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH) {
+                            Box(modifier = Modifier.weight(1f)) {
+                                if (aNews != null) {
+                                    ContentView(aNews!!, viewModel = viewModel)
+                                } else {
+                                    Text(
+                                        modifier = Modifier.fillMaxSize(),
+                                        text = "컨텐츠를 클릭해 보세요.",
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+                        } else {
+                            if (aNews != null) {
+                                BackHandler(backHandlingEnabled) {
+                                    viewModel.changeAnews(null)
+                                }
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    ContentView(aNews!!, viewModel = viewModel)
+                                }
+                            }
                         }
                     }
                 }
             })
-    }
-    else if(!isConnection) {
+    } else {
         Box(Modifier.fillMaxSize()) {
             Column(
-                Modifier.fillMaxSize().align(Alignment.Center),
+                Modifier
+                    .fillMaxSize()
+                    .align(Alignment.Center),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(

@@ -25,6 +25,9 @@ class MainViewModel : ViewModel() {
     private var _meecoNextPage = MutableLiveData(0)
     val meecoNextPage: LiveData<Int> = _meecoNextPage
 
+    private var _clicked = MutableLiveData(false)
+    val clicked: LiveData<Boolean> = _clicked
+
     var meecoNewsSliceValue = 0
 
 //    private var _appWidth by remember(mutableStateOf(1.Dp))
@@ -41,12 +44,12 @@ class MainViewModel : ViewModel() {
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.fetch()
-            .addOnCompleteListener() { task ->
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val updated = task.result
                     meecoNewsSliceValue = remoteConfig.getLong("meecoNewsSlice").toInt()
                     Log.d("Config", "Config params updated: $updated")
-                    Log.d("Config","Fetch and activate succeeded")
+                    Log.d("Config", "Fetch and activate succeeded")
                 } else {
                     Log.d("Config", "Fetch failed")
                 }
@@ -72,7 +75,8 @@ class MainViewModel : ViewModel() {
                     MeecoNews().returnData()
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
-                        _unifiedList.value = _unifiedList.value?.plus(it.slice(meecoNewsSliceValue until it.size))
+                        _unifiedList.value =
+                            _unifiedList.value?.plus(it.slice(meecoNewsSliceValue until it.size))
                         _unifiedList.value = _unifiedList.value?.toSet()?.toList()
                         _meecoNextPage.value = 1
                     }
@@ -97,11 +101,53 @@ class MainViewModel : ViewModel() {
                     MeecoNews().returnData(_meecoNextPage.value!! + 1)
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
-                        _unifiedList.value = _unifiedList.value?.plus(it.slice(meecoNewsSliceValue until it.size))
+                        _unifiedList.value =
+                            _unifiedList.value?.plus(it.slice(meecoNewsSliceValue until it.size))
                         _unifiedList.value = _unifiedList.value?.toSet()?.toList()
                         _meecoNextPage.value = _meecoNextPage.value?.plus(1)
                     }
                 }
+            }
+        }
+    }
+
+    fun changeClickedValue() {
+        CoroutineScope(Dispatchers.Main).launch {
+            _clicked.value = !_clicked.value!!
+        }
+    }
+
+
+    private var _aNews = MutableLiveData<Croll.Content>(null)
+    val aNews: LiveData<Croll.Content> = _aNews
+
+    fun changeAnews(news: Croll.Content?) {
+        CoroutineScope(Dispatchers.Main).launch {
+            _aNews.value = news
+        }
+    }
+
+
+    private var _contentHtml = MutableLiveData("")
+    val contentHtml: LiveData<String> = _contentHtml
+
+    fun getHtml() {
+        viewModelScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                kotlin.runCatching {
+                    aNews.value!!.htmlToMarkdown(
+                        aNews.value!!.returnContent(aNews.value!!).toString()
+                    )!!.replace("\t", "").replace("    ", "")
+                }.onSuccess {
+                    val contentHtmlTmp = it.slice(2 until it.length - 1)
+                    CoroutineScope(Dispatchers.Main).launch {
+                        _contentHtml.value = contentHtmlTmp
+                    }
+                    Log.d("getHtmlViewModel", contentHtmlTmp)
+                }
+                    .onFailure {
+                        Log.d("getHtmlViewModel", "Failed")
+                    }
             }
         }
     }

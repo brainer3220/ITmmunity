@@ -1,7 +1,6 @@
 package com.brainer.itmmunity.Componant
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
@@ -19,18 +18,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.brainer.itmmunity.ContentView
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
 import com.brainer.itmmunity.ViewModel.MainViewModel
 import com.google.accompanist.glide.rememberGlidePainter
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @Preview
@@ -112,7 +112,7 @@ fun NewsCard(
     Surface(shape = RoundedCornerShape(25.dp)) {
         LazyColumn(state = listState) {
             itemsIndexed(news) { index, item ->
-                NewsListOf(item)
+                NewsListOf(item, mainViewModel = mainViewModel)
                 if (index == news.lastIndex) {
                     mainViewModel.addData()
                 }
@@ -121,13 +121,12 @@ fun NewsCard(
     }
 }
 
-@SuppressLint("SetJavaScriptEnabled")
+@SuppressLint("SetJavaScriptEnabled", "CoroutineCreationDuringComposition")
 @DelicateCoroutinesApi
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
+fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
-    var contentHtml: String?
 
     Column {
         Surface(
@@ -167,11 +166,11 @@ fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
         }
 
         if (expanded) {
-            val context = LocalContext.current
-            val contentIntent = Intent(Intent(LocalContext.current, ContentView::class.java))
-
-            contentIntent.putExtra("content", aNews)
-            context.startActivity(contentIntent)
+            CoroutineScope(Dispatchers.Main).launch {
+                kotlin.runCatching {
+                    mainViewModel.changeAnews(aNews)
+                }
+            }
             expanded = !expanded
         }
     }
