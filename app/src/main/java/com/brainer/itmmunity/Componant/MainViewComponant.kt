@@ -19,10 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
 import com.brainer.itmmunity.ViewModel.MainViewModel
@@ -37,13 +35,15 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoadingView() {
     Column {
-        Spacer(modifier = Modifier.weight(10f))
-        Text(
-            modifier = Modifier
+        Spacer(modifier = Modifier.weight(1f))
+        Box(
+            Modifier
                 .fillMaxWidth()
-                .weight(1f), text = "로딩중입니다... ", fontSize = 20.sp, textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.weight(10f))
+                .weight(1f)
+        ) {
+            CircularProgressIndicator(Modifier.align(Alignment.Center))
+        }
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
