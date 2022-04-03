@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.brainer.itmmunity.ContentView
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
 import com.brainer.itmmunity.ViewModel.MainViewModel
@@ -112,7 +111,7 @@ fun NewsCard(
     Surface(shape = RoundedCornerShape(25.dp)) {
         LazyColumn(state = listState) {
             itemsIndexed(news) { index, item ->
-                NewsListOf(item)
+                NewsListOf(item, mainViewModel = mainViewModel)
                 if (index == news.lastIndex) {
                     mainViewModel.addData()
                 }
@@ -121,11 +120,11 @@ fun NewsCard(
     }
 }
 
-@SuppressLint("SetJavaScriptEnabled")
+@SuppressLint("SetJavaScriptEnabled", "CoroutineCreationDuringComposition")
 @DelicateCoroutinesApi
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun NewsListOf(aNews: Croll.Content, modifier: Modifier = Modifier) {
+fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
     var contentHtml: String?
 

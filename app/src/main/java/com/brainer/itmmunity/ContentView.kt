@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brainer.itmmunity.Componant.LoadingView
 import com.brainer.itmmunity.Croll.Croll
-import com.brainer.itmmunity.ViewModel.ContentViewModel
+import com.brainer.itmmunity.ViewModel.MainViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.CoroutineScope
@@ -39,7 +39,7 @@ class ContentView : ComponentActivity() {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = ContentViewModel()
+        val viewModel = MainViewModel()
         val aNews = intent.getParcelableExtra<Croll.Content>("content")
 
         CoroutineScope(Dispatchers.Main).launch {
@@ -69,7 +69,7 @@ class ContentView : ComponentActivity() {
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun ContentView(aNews: Croll.Content, viewModel: ContentViewModel) {
+fun ContentView(aNews: Croll.Content, viewModel: MainViewModel) {
     val isDarkMode = isSystemInDarkTheme()
     val contentHtml by viewModel.contentHtml.observeAsState()
     val listState = rememberScrollState()
