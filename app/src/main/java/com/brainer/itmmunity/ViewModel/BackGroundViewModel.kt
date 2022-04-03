@@ -5,10 +5,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.Utility.NetworkConnectCheck
 import kotlinx.coroutines.*
 
-class NetworkCheckViewModel(context: Context) : ViewModel() {
+class BackGroundViewModel(context: Context) : ViewModel() {
     private var _context = MutableLiveData(context)
 
     private var _isConnect = MutableLiveData<Boolean>(true)
@@ -31,9 +32,9 @@ class NetworkCheckViewModel(context: Context) : ViewModel() {
                             CoroutineScope(Dispatchers.Main).launch {
                                 _isConnect.value = it
                             }
-//                            CoroutineScope(Dispatchers.Default).launch {
-                            Log.d("isConnection", it.toString())
-//                            }
+                            CoroutineScope(Dispatchers.Default).launch {
+                                Log.d("isConnection", it.toString())
+                            }
                         }
                     }
                 }

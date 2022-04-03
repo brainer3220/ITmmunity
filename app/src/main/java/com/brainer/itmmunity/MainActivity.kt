@@ -21,9 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.brainer.itmmunity.Componant.NewsCard
-import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.ViewModel.BackGroundViewModel
 import com.brainer.itmmunity.ViewModel.MainViewModel
-import com.brainer.itmmunity.ViewModel.NetworkCheckViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -62,7 +61,7 @@ class MainActivity : ComponentActivity() {
             ITmmunity_AndroidTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    MainView(networkViewModel = NetworkCheckViewModel(applicationContext))
+                    MainView(networkViewModel = BackGroundViewModel(applicationContext))
                 }
             }
         }
@@ -70,7 +69,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: NetworkCheckViewModel) {
+fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: BackGroundViewModel) {
     val scaffoldState = rememberScaffoldState()
     val unifiedList by viewModel.unifiedList.observeAsState(arrayListOf())
 
