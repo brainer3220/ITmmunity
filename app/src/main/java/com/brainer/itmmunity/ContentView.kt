@@ -71,7 +71,7 @@ fun ContentView(aNews: Croll.Content, viewModel: MainViewModel) {
 
     viewModel.getHtml()
 
-    if (contentHtml == null && contentHtml!!.isEmpty()) {
+    if (contentHtml == null || contentHtml!!.isEmpty()) {
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
