@@ -117,16 +117,23 @@ class MainViewModel : ViewModel() {
         }
     }
 
-
     private var _aNews = MutableLiveData<Croll.Content>(null)
     val aNews: LiveData<Croll.Content> = _aNews
 
     fun changeAnews(news: Croll.Content?) {
         CoroutineScope(Dispatchers.Main).launch {
             _aNews.value = news
+            if (news == null) {
+                changeHtml(null)
+            }
         }
     }
 
+    private fun changeHtml(html: String?) {
+        CoroutineScope(Dispatchers.Main).launch {
+            _contentHtml.value = html
+        }
+    }
 
     private var _contentHtml = MutableLiveData("")
     val contentHtml: LiveData<String> = _contentHtml
@@ -140,9 +147,7 @@ class MainViewModel : ViewModel() {
                     )!!.replace("\t", "").replace("    ", "")
                 }.onSuccess {
                     val contentHtmlTmp = it.slice(2 until it.length - 1)
-                    CoroutineScope(Dispatchers.Main).launch {
-                        _contentHtml.value = contentHtmlTmp
-                    }
+                    changeHtml(contentHtmlTmp)
                     Log.d("getHtmlViewModel", contentHtmlTmp)
                 }
                     .onFailure {
