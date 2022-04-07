@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.brainer.itmmunity.Componant.LoadingView
 import com.brainer.itmmunity.Componant.NewsCard
 import com.brainer.itmmunity.ViewModel.BackGroundViewModel
 import com.brainer.itmmunity.ViewModel.MainViewModel
@@ -119,8 +120,12 @@ fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: BackG
                             modifier = Modifier.weight(1f),
                             state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
                             onRefresh = { viewModel.getRefresh() }) {
-                            Column {
-                                NewsCard(unifiedList, viewModel)
+                            if (unifiedList.isNotEmpty()) {
+                                Column {
+                                    NewsCard(unifiedList, viewModel)
+                                }
+                            } else {
+                                LoadingView()
                             }
                         }
 
