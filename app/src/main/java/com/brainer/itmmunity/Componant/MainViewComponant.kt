@@ -114,7 +114,22 @@ fun NewsCard(
             itemsIndexed(news) { index, item ->
                 NewsListOf(item, mainViewModel = mainViewModel)
                 if (index == news.lastIndex) {
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
+                    ) {
+                        LoadingView()
+                    }
                     mainViewModel.addData()
+                } else {
+                    this@LazyColumn.item {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(8.dp)
+                        )
+                    }
                 }
             }
         }
