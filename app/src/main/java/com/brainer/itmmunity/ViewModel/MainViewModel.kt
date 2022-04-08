@@ -144,15 +144,14 @@ class MainViewModel : ViewModel() {
                 kotlin.runCatching {
                     aNews.value!!.htmlToMarkdown(
                         aNews.value!!.returnContent(aNews.value!!).toString()
-                    )!!.replace("\t", "").replace("    ", "")
+                    )
                 }.onSuccess {
-                    val contentHtmlTmp = it.slice(2 until it.length - 1)
+                    val contentHtmlTmp = it!!.slice(2 until it.length - 1)
                     changeHtml(contentHtmlTmp)
                     Log.d("getHtmlViewModel", contentHtmlTmp)
+                }.onFailure {
+                    Log.w("getHtmlViewModel", "Failed")
                 }
-                    .onFailure {
-                        Log.d("getHtmlViewModel", "Failed")
-                    }
             }
         }
     }

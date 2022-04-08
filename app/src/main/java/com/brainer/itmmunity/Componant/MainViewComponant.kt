@@ -27,9 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
 import com.brainer.itmmunity.ViewModel.MainViewModel
-import com.facebook.shimmer.Shimmer
 import com.skydoves.landscapist.CircularReveal
-import com.skydoves.landscapist.ShimmerParams
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -53,52 +51,6 @@ fun LoadingView() {
     }
 }
 
-@Composable
-fun AppBar() {
-    val scaffoldState = rememberScaffoldState()
-    Log.i("Simple Log", "scaffoldState: $scaffoldState")
-    Column {
-        Scaffold(
-            scaffoldState = scaffoldState,
-            drawerContent = { Text("Drawer content") },
-//            topBar = {
-//                TopAppBar(
-//                    title = { Text("Simple Scaffold Screen") },
-//                    navigationIcon = {
-//                        IconButton(
-//                            onClick = {
-////                                scope.launch { scaffoldState.drawerState.open() }
-//                            }
-//                        ) {
-//                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
-//                        }
-//                    }
-//                )
-//            },
-            floatingActionButtonPosition = FabPosition.End,
-            floatingActionButton = {
-
-                ExtendedFloatingActionButton(
-                    text = { Text("Inc") },
-                    onClick = { /* fab click handler */ }
-                )
-            },
-            content = { innerPadding ->
-                LazyColumn(contentPadding = innerPadding) {
-                    items(100) {
-                        Box(
-                            Modifier
-                                .fillMaxWidth()
-                                .height(50.dp)
-//                                .background(colors[it % colors.size])
-                        )
-                    }
-                }
-            }
-        )
-    }
-}
-
 
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
@@ -107,14 +59,6 @@ fun NewsCard(
     mainViewModel: MainViewModel,
     paddingValues: PaddingValues
 ) {
-
-    var backGroundUnitColor: Color = Color(255, 255, 255)
-    if (isSystemInDarkTheme()) {
-        backGroundUnitColor = Color(23, 23, 23)
-    } else if (!isSystemInDarkTheme()) {
-        backGroundUnitColor = Color(255, 255, 255)
-    }
-
     val listState = rememberLazyListState()
     Surface(shape = RoundedCornerShape(25.dp)) {
         LazyColumn(state = listState, contentPadding = paddingValues) {

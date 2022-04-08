@@ -10,7 +10,6 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.rememberSplineBasedDecay
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -20,7 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -92,12 +90,6 @@ fun MainView(
     val swipeRefreshState by remember { mutableStateOf(true) }
 
     Log.d("Unified_List", unifiedList.toString())
-
-//    val textColor: Color = if (isSystemInDarkTheme()) {
-//        Color.White
-//    } else {
-//        Color.Black
-//    }
 
     val decayAnimationSpec = rememberSplineBasedDecay<Float>()
 
