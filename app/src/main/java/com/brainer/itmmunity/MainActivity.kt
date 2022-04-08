@@ -1,5 +1,6 @@
 package com.brainer.itmmunity
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -8,14 +9,19 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.brainer.itmmunity.Componant.LoadingView
@@ -59,7 +65,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ITmmunity_AndroidTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
+                Surface {
                     MainView(networkViewModel = BackGroundViewModel(applicationContext))
                 }
             }
@@ -67,15 +73,19 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: BackGroundViewModel) {
+fun MainView(
+    viewModel: MainViewModel = remember { MainViewModel() },
+    networkViewModel: BackGroundViewModel
+) {
     val backHandlingEnabled by remember { mutableStateOf(true) }
 
-    val scaffoldState = rememberScaffoldState()
     val unifiedList by viewModel.unifiedList.observeAsState(arrayListOf())
-//    val contentViewModel = remember{ ContentViewModel() }
     val aNews by viewModel.aNews.observeAsState()
-
+//    val aNewsObserver = viewModel.aNews.observeAsState(Croll.Content("", hit = 0, image = null, numComment = null, url = ""))
+//    val aNews = rememberSaveable { aNewsObserver.value }
 
     val isConnection by networkViewModel.isConnect.observeAsState(true)
 
@@ -83,33 +93,36 @@ fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: BackG
 
     Log.d("Unified_List", unifiedList.toString())
 
-    val textColor: Color = if (isSystemInDarkTheme()) {
-        Color.White
-    } else {
-        Color.Black
-    }
-
-//    val scrollBehavior = remember(decayAnimationSpec) {
-//        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
+//    val textColor: Color = if (isSystemInDarkTheme()) {
+//        Color.White
+//    } else {
+//        Color.Black
 //    }
+
+    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+
+    val scrollBehavior = remember(decayAnimationSpec) {
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
+    }
 
     if (isConnection) {
         Scaffold(
-            scaffoldState = scaffoldState,
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                TopAppBar(
+                LargeTopAppBar(
                     title = {
-                        Text("ITmmunity", color = textColor)
+                        Text("ITmmunity")
                     },
 //                navigationIcon = {
 //                        IconButton(
 //                            onClick = {
-////                                scope.launch { scaffoldState.drawerState.open() }
+////                                scope.launch {  }
 //                            }
 //                        ) {
 //                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
 //                        }
 //                }
+                    scrollBehavior = scrollBehavior
                 )
             },
             content = {
@@ -122,7 +135,7 @@ fun MainView(viewModel: MainViewModel = MainViewModel(), networkViewModel: BackG
                             onRefresh = { viewModel.getRefresh() }) {
                             if (unifiedList.isNotEmpty()) {
                                 Column {
-                                    NewsCard(unifiedList, viewModel)
+                                    NewsCard(unifiedList, viewModel, it)
                                 }
                             } else {
                                 LoadingView()

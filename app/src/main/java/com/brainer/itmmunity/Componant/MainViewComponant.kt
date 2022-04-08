@@ -12,7 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -98,7 +98,8 @@ fun AppBar() {
 @Composable
 fun NewsCard(
     news: List<Croll.Content>,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    paddingValues: PaddingValues
 ) {
 
     var backGroundUnitColor: Color = Color(255, 255, 255)
@@ -110,7 +111,7 @@ fun NewsCard(
 
     val listState = rememberLazyListState()
     Surface(shape = RoundedCornerShape(25.dp)) {
-        LazyColumn(state = listState) {
+        LazyColumn(state = listState, contentPadding = paddingValues) {
             itemsIndexed(news) { index, item ->
                 NewsListOf(item, mainViewModel = mainViewModel)
                 if (index == news.lastIndex) {
@@ -168,7 +169,7 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(4f), text = aNews.title, style = MaterialTheme.typography.h6
+                        .weight(4f), text = aNews.title, style = MaterialTheme.typography.titleLarge
                 )
             }
 
