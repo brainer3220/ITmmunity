@@ -64,7 +64,9 @@ class MainActivity : ComponentActivity() {
             ITmmunity_AndroidTheme {
                 // A surface container using the 'background' color from the theme
                 Surface {
-                    MainView(networkViewModel = BackGroundViewModel(applicationContext))
+                    MainView(
+                        networkViewModel = BackGroundViewModel(applicationContext)
+                    )
                 }
             }
         }
@@ -82,8 +84,6 @@ fun MainView(
 
     val unifiedList by viewModel.unifiedList.observeAsState(arrayListOf())
     val aNews by viewModel.aNews.observeAsState()
-//    val aNewsObserver = viewModel.aNews.observeAsState(Croll.Content("", hit = 0, image = null, numComment = null, url = ""))
-//    val aNews = rememberSaveable { aNewsObserver.value }
 
     val isConnection by networkViewModel.isConnect.observeAsState(true)
 

@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -24,7 +23,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -38,10 +36,12 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+const val DEFAULT_LOTTIE_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_wfsunjgd.json"
+const val DEFAULT_SPACE_WEIGHT = 5F
 
 @Preview
 @Composable
-fun LoadingView(lottieURL: String? = "https://assets2.lottiefiles.com/packages/lf20_wfsunjgd.json", spaceWeight: Float = 5F) {
+fun LoadingView(lottieURL: String? = DEFAULT_LOTTIE_VIEW_URL, spaceWeight: Float = DEFAULT_SPACE_WEIGHT) {
     val composition by rememberLottieComposition(LottieCompositionSpec.Url(lottieURL!!))
 
     Column {
@@ -54,10 +54,15 @@ fun LoadingView(lottieURL: String? = "https://assets2.lottiefiles.com/packages/l
                 .weight(1f)
         ) {
             if (composition == null) {
-                CircularProgressIndicator(Modifier.align(Alignment.Center).fillMaxWidth())
+                CircularProgressIndicator(
+                    Modifier
+                        .align(Alignment.Center)
+                        .fillMaxWidth())
             }
             else {
-                LottieAnimation(composition, modifier = Modifier.align(Alignment.Center).fillMaxSize())
+                LottieAnimation(composition, modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxSize())
             }
         }
         if (spaceWeight != 0F) {
@@ -96,6 +101,8 @@ fun NewsCard(
     }
 }
 
+const val LOTTIE__IMG_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_6odgh2c6.json"
+
 @SuppressLint("SetJavaScriptEnabled", "CoroutineCreationDuringComposition")
 @DelicateCoroutinesApi
 @OptIn(ExperimentalAnimationApi::class)
@@ -122,7 +129,7 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
                             imageModel = aNews.image,
                             contentScale = ContentScale.FillWidth,
                             loading = {
-                                      LoadingView("https://assets2.lottiefiles.com/packages/lf20_6odgh2c6.json", spaceWeight = 0F)
+                                      LoadingView(LOTTIE__IMG_VIEW_URL, spaceWeight = 0F)
                             },
                             contentDescription = stringResource(id = R.string.main_thumbnail),
                             circularReveal = CircularReveal(duration = 350),
@@ -154,19 +161,4 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
             expanded = !expanded
         }
     }
-}
-
-
-//@Composable
-//fun DrawUnderKGNews(doc: String?) {
-//    if (doc != null) {
-//        Text(modifier = Modifier
-////        .clickable { expanded = !expanded }
-//            .fillMaxWidth(), text = doc, textAlign = TextAlign.Center)
-//    }
-//}
-
-@Composable
-fun NewsItem(item: Croll.Content) {
-    Text(text = item.url)
 }

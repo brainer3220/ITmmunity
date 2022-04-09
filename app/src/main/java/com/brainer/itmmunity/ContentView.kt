@@ -72,7 +72,7 @@ fun ContentView(aNews: Croll.Content, viewModel: MainViewModel) {
     val listState = rememberScrollState()
 
 
-    var textColor: Color = Color(255, 255, 255)
+    var textColor = Color(255, 255, 255)
     if (isDarkMode) {
         textColor = Color(255, 255, 255)
     } else if (!isDarkMode) {
@@ -126,7 +126,11 @@ fun ContentView(aNews: Croll.Content, viewModel: MainViewModel) {
                 kotlin.runCatching {
                     SelectionContainer(Modifier.fillMaxSize()) {
                         Column(Modifier.verticalScroll(listState)) {
-                            MarkdownText(modifier = Modifier.padding(8.dp), markdown = contentHtml!!, color = textColor)
+                            MarkdownText(
+                                modifier = Modifier.padding(8.dp),
+                                markdown = contentHtml!!,
+                                color = textColor
+                            )
                             Log.v("contentHtml", contentHtml.toString())
                         }
                     }
