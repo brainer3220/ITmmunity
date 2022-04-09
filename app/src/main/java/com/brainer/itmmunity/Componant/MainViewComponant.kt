@@ -41,7 +41,9 @@ import kotlinx.coroutines.launch
 
 @Preview
 @Composable
-fun LoadingView(composition: LottieComposition? = rememberLottieComposition(LottieCompositionSpec.Url("https://assets2.lottiefiles.com/packages/lf20_wfsunjgd.json")).value, spaceWeight: Float = 5F) {
+fun LoadingView(lottieURL: String? = "https://assets2.lottiefiles.com/packages/lf20_wfsunjgd.json", spaceWeight: Float = 5F) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.Url(lottieURL!!))
+
     Column {
         if (spaceWeight != 0F) {
             Spacer(modifier = Modifier.weight(spaceWeight))
@@ -120,7 +122,7 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
                             imageModel = aNews.image,
                             contentScale = ContentScale.FillWidth,
                             loading = {
-                                      LoadingView(rememberLottieComposition(LottieCompositionSpec.Url("https://assets2.lottiefiles.com/packages/lf20_6odgh2c6.json")).value, spaceWeight = 0F)
+                                      LoadingView("https://assets2.lottiefiles.com/packages/lf20_6odgh2c6.json", spaceWeight = 0F)
                             },
                             contentDescription = stringResource(id = R.string.main_thumbnail),
                             circularReveal = CircularReveal(duration = 350),
