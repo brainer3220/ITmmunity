@@ -129,7 +129,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private fun changeHtml(html: String?) {
+    fun changeHtml(html: String?) {
         CoroutineScope(Dispatchers.Main).launch {
             _contentHtml.value = html
         }

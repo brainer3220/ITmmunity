@@ -155,6 +155,7 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
         if (expanded) {
             CoroutineScope(Dispatchers.Main).launch {
                 kotlin.runCatching {
+                    mainViewModel.changeAnews(null)
                     mainViewModel.changeAnews(aNews)
                 }
             }
