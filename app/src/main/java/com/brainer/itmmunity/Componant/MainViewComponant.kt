@@ -119,6 +119,9 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
                             modifier = Modifier.fillMaxSize(),
                             imageModel = aNews.image,
                             contentScale = ContentScale.FillWidth,
+                            loading = {
+                                      LoadingView(rememberLottieComposition(LottieCompositionSpec.Url("https://assets2.lottiefiles.com/packages/lf20_6odgh2c6.json")).value, spaceWeight = 0F)
+                            },
                             contentDescription = stringResource(id = R.string.main_thumbnail),
                             circularReveal = CircularReveal(duration = 350),
                         )
