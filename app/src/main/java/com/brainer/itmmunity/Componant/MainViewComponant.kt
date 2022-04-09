@@ -24,6 +24,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.LottieComposition
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
 import com.brainer.itmmunity.ViewModel.MainViewModel
@@ -37,17 +41,26 @@ import kotlinx.coroutines.launch
 
 @Preview
 @Composable
-fun LoadingView() {
+fun LoadingView(composition: LottieComposition? = rememberLottieComposition(LottieCompositionSpec.Url("https://assets2.lottiefiles.com/packages/lf20_wfsunjgd.json")).value, spaceWeight: Float = 5F) {
     Column {
-        Spacer(modifier = Modifier.weight(1f))
+        if (spaceWeight != 0F) {
+            Spacer(modifier = Modifier.weight(spaceWeight))
+        }
         Box(
             Modifier
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            CircularProgressIndicator(Modifier.align(Alignment.Center))
+            if (composition == null) {
+                CircularProgressIndicator(Modifier.align(Alignment.Center).fillMaxWidth())
+            }
+            else {
+                LottieAnimation(composition, modifier = Modifier.align(Alignment.Center).fillMaxSize())
+            }
         }
-        Spacer(modifier = Modifier.weight(1f))
+        if (spaceWeight != 0F) {
+            Spacer(modifier = Modifier.weight(spaceWeight))
+        }
     }
 }
 
@@ -65,22 +78,16 @@ fun NewsCard(
             itemsIndexed(news) { index, item ->
                 NewsListOf(item, mainViewModel = mainViewModel)
                 if (index == news.lastIndex) {
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(8.dp)
-                    ) {
-                        LoadingView()
-                    }
-                    mainViewModel.addData()
-                } else {
                     this@LazyColumn.item {
                         Box(
                             Modifier
                                 .fillMaxWidth()
-                                .height(8.dp)
-                        )
+                                .height(32.dp)
+                        ) {
+                            LoadingView(spaceWeight = 0F)
+                        }
                     }
+                    mainViewModel.addData()
                 }
             }
         }
