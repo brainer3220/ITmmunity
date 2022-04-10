@@ -8,18 +8,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.rememberSplineBasedDecay
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.brainer.itmmunity.Componant.LoadingView
@@ -37,9 +34,6 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 val TABLET_UI_WIDTH = 480.dp
 
 class MainActivity : ComponentActivity() {
-    @OptIn(DelicateCoroutinesApi::class)
-    @ExperimentalAnimationApi
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -73,8 +67,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedCrossfadeTargetStateParameter")
 @Composable
 fun MainView(
     viewModel: MainViewModel = remember { MainViewModel() },
@@ -92,6 +86,8 @@ fun MainView(
     Log.d("Unified_List", unifiedList.toString())
 
     val decayAnimationSpec = rememberSplineBasedDecay<Float>()
+
+    val editable by viewModel.isContentView.observeAsState()
 
     val scrollBehavior = remember(decayAnimationSpec) {
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
@@ -136,23 +132,33 @@ fun MainView(
 
                         if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH) {
                             Box(modifier = Modifier.weight(1f)) {
-                                if (aNews != null) {
-                                    ContentView(aNews!!, viewModel = viewModel)
-                                } else {
-                                    Text(
-                                        modifier = Modifier.fillMaxSize(),
-                                        text = "컨텐츠를 클릭해 보세요.",
-                                        textAlign = TextAlign.Center
-                                    )
+                                Crossfade(targetState = aNews) {
+                                    if (it != null) {
+                                        ContentView(viewModel = viewModel)
+                                    } else {
+                                        Text(
+                                            modifier = Modifier.fillMaxSize(),
+                                            text = "컨텐츠를 클릭해 보세요.",
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
                                 }
                             }
                         } else {
-                            if (aNews != null) {
-                                BackHandler(backHandlingEnabled) {
-                                    viewModel.changeAnews(null)
-                                }
+                            AnimatedVisibility(
+                                visible = editable!!,
+                                enter = scaleIn(),
+                                exit = scaleOut() + fadeOut()
+                            ) {
                                 Box(modifier = Modifier.fillMaxSize()) {
-                                    ContentView(aNews!!, viewModel = viewModel)
+                                    ContentView(viewModel = viewModel)
+                                }
+                            }
+
+                            Log.d("editable", editable.toString())
+                            if (editable == true) {
+                                BackHandler(backHandlingEnabled) {
+                                    viewModel.changeIsContentView(false)
                                 }
                             }
                         }

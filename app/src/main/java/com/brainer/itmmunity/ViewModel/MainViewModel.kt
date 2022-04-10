@@ -25,12 +25,10 @@ class MainViewModel : ViewModel() {
     private var _meecoNextPage = MutableLiveData(0)
     val meecoNextPage: LiveData<Int> = _meecoNextPage
 
-    private var _clicked = MutableLiveData(false)
-    val clicked: LiveData<Boolean> = _clicked
+    private var _isContentView = MutableLiveData(false)
+    val isContentView : LiveData<Boolean> = _isContentView
 
     var meecoNewsSliceValue = 0
-
-//    private var _appWidth by remember(mutableStateOf(1.Dp))
 
     init {
         getRefresh()
@@ -111,12 +109,6 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun changeClickedValue() {
-        CoroutineScope(Dispatchers.Main).launch {
-            _clicked.value = !_clicked.value!!
-        }
-    }
-
     private var _aNews = MutableLiveData<Croll.Content>(null)
     val aNews: LiveData<Croll.Content> = _aNews
 
@@ -153,6 +145,12 @@ class MainViewModel : ViewModel() {
                     Log.w("getHtmlViewModel", "Failed")
                 }
             }
+        }
+    }
+
+    fun changeIsContentView(bool: Boolean) {
+        CoroutineScope(Dispatchers.Main).launch {
+            _isContentView.value = bool
         }
     }
 }

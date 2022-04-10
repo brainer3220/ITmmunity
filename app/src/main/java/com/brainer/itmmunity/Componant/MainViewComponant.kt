@@ -116,7 +116,10 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
                 .height(125.dp)
                 .fillMaxWidth()
                 .background(Color.White)
-                .clickable { expanded = !expanded }) {
+                .clickable {
+                    expanded = !expanded
+                    mainViewModel.changeIsContentView(true)
+                }) {
             Row(modifier = modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 if (aNews.image != null) {
                     Log.i("Thumbnail", "Thumbnail load success")

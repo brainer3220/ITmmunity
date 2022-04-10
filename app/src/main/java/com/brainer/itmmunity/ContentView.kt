@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -54,7 +55,7 @@ class ContentView : ComponentActivity() {
                         color = MaterialTheme.colorScheme.background
                     ) {
                         if (aNews != null) {
-                            ContentView(aNews, viewModel)
+                            ContentView(viewModel)
                         }
                     }
                 }
@@ -66,8 +67,9 @@ class ContentView : ComponentActivity() {
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun ContentView(aNews: Croll.Content, viewModel: MainViewModel) {
+fun ContentView(viewModel: MainViewModel) {
     val isDarkMode = isSystemInDarkTheme()
+    val aNews by viewModel.aNews.observeAsState()
     val contentHtml by viewModel.contentHtml.observeAsState()
     val listState = rememberScrollState()
 
@@ -82,60 +84,62 @@ fun ContentView(aNews: Croll.Content, viewModel: MainViewModel) {
     viewModel.getHtml()
 
     Surface(Modifier.fillMaxSize(), shape = RoundedCornerShape(25.dp)) {
-        if (contentHtml == null || contentHtml!!.isEmpty()) {
-            BoxWithConstraints(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 10.dp, bottom = 10.dp)
-            ) {
-                LoadingView()
-            }
-        } else {
-            Column {
-                Row {
-                    SmallTopAppBar(title = {
-                        Text(
-                            text = aNews.title,
-                            fontSize = 20.sp,
-                            textAlign = TextAlign.Left,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    },
-                        actions = {
-                            val context = LocalContext.current
-                            Icon(
-                                Icons.Filled.Share,
-                                contentDescription = "공유",
-                                Modifier.clickable {
-                                    val sendIntent: Intent = Intent().apply {
-                                        action = Intent.ACTION_SEND
-                                        putExtra(Intent.EXTRA_TITLE, aNews.title)
-                                        putExtra(Intent.EXTRA_SUBJECT, "Powered by ITmmunity")
-                                        putExtra(Intent.EXTRA_TEXT, aNews.url)
-                                        type = "text/plain"
-                                    }
-
-                                    val shareIntent = Intent.createChooser(sendIntent, null)
-                                    context.startActivity(shareIntent)
-                                })
-                        })
-                    Spacer(modifier = Modifier.padding(4.dp))
+        Crossfade(targetState = contentHtml) {
+            if (it == null || it.isEmpty()) {
+                BoxWithConstraints(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 10.dp, bottom = 10.dp)
+                ) {
+                    LoadingView()
                 }
-
-                kotlin.runCatching {
-                    SelectionContainer(Modifier.fillMaxSize()) {
-                        Column(Modifier.verticalScroll(listState)) {
-                            MarkdownText(
-                                modifier = Modifier.padding(8.dp),
-                                markdown = contentHtml!!,
-                                color = textColor
+            } else {
+                Column {
+                    Row {
+                        SmallTopAppBar(title = {
+                            Text(
+                                text = aNews!!.title,
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Left,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
                             )
-                            Log.v("contentHtml", contentHtml.toString())
-                        }
+                        },
+                            actions = {
+                                val context = LocalContext.current
+                                Icon(
+                                    Icons.Filled.Share,
+                                    contentDescription = "공유",
+                                    Modifier.clickable {
+                                        val sendIntent: Intent = Intent().apply {
+                                            action = Intent.ACTION_SEND
+                                            putExtra(Intent.EXTRA_TITLE, aNews!!.title)
+                                            putExtra(Intent.EXTRA_SUBJECT, "Powered by ITmmunity")
+                                            putExtra(Intent.EXTRA_TEXT, aNews!!.url)
+                                            type = "text/plain"
+                                        }
+
+                                        val shareIntent = Intent.createChooser(sendIntent, null)
+                                        context.startActivity(shareIntent)
+                                    })
+                            })
+                        Spacer(modifier = Modifier.padding(4.dp))
                     }
-                }.onFailure {
-                    Log.w("contentHtml", contentHtml.toString())
+
+                    kotlin.runCatching {
+                        SelectionContainer(Modifier.fillMaxSize()) {
+                            Column(Modifier.verticalScroll(listState)) {
+                                MarkdownText(
+                                    modifier = Modifier.padding(8.dp),
+                                    markdown = it!!,
+                                    color = textColor
+                                )
+                                Log.v("contentHtml", it.toString())
+                            }
+                        }
+                    }.onFailure {
+                        Log.w("contentHtml", it.toString())
+                    }
                 }
             }
         }
