@@ -84,7 +84,7 @@ fun NewsCard(
         LazyColumn(state = listState, contentPadding = paddingValues) {
             itemsIndexed(news) { index, item ->
                 NewsListOf(item, mainViewModel = mainViewModel)
-                if (index == news.lastIndex) {
+                if (index == news.lastIndex-15) {
                     this@LazyColumn.item {
                         Box(
                             Modifier
