@@ -90,8 +90,7 @@ class MainViewModel : ViewModel() {
                     KGNewsContent().returnData(_underKgNextPage.value!! + 1)
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
-                        _unifiedList.value = _unifiedList.value!! + it
-                        _unifiedList.value = _unifiedList.value?.toSet()?.toList()
+                        _unifiedList.value = _unifiedList.value!!.union(it).toList()
                         _underKgNextPage.value = _underKgNextPage.value?.plus(1)
                     }
                 }
@@ -100,8 +99,8 @@ class MainViewModel : ViewModel() {
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
                         _unifiedList.value =
-                            _unifiedList.value?.plus(it.slice(meecoNewsSliceValue until it.size))
-                        _unifiedList.value = _unifiedList.value?.toSet()?.toList()
+                            _unifiedList.value?.union(it.slice(meecoNewsSliceValue until it.size))
+                                ?.toList()
                         _meecoNextPage.value = _meecoNextPage.value?.plus(1)
                     }
                 }
