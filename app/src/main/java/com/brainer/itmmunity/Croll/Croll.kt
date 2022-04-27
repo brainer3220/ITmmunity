@@ -18,16 +18,17 @@ open class Croll {
         var numComment: Int?,
         var url: String
     ) : Parcelable {
-        fun returnContent(content: Content): Pair<Elements?, Elements?> {
+        fun returnContent(content: Content): Pair<String?, Elements?> {
             when {
                 content.url.contains("meeco.kr") -> {
                     Log.d("Meeco_URL", content.url)
                     val aItemList = MeecoNews().getHTML(content.url)?.select("article > div")
                     val aCommentList = MeecoNews().getHTML(content.url)?.select("#comment")
+                    val aItems = aItemList.toString().replace("//img.meeco.kr/", "https://img.meeco.kr/")
 
-                    Log.d("MeecoNews_Content", "$aItemList")
+                    Log.d("MeecoNews_Content", aItems)
                     Log.d("MeecoNews_Comment", "$aCommentList")
-                    return Pair(aItemList, aCommentList)
+                    return Pair(aItems, aCommentList)
                 }
                 content.url.contains("underkg.co.kr") -> {
                     val aItemList = KGNewsContent().getItem(
@@ -38,7 +39,7 @@ open class Croll {
 
                     Log.d("KGNews_Content", "$aItemList")
                     Log.d("KGNews_Comment", "$aCommentList")
-                    return Pair(aItemList, aCommentList)
+                    return Pair(aItemList.toString(), aCommentList)
                 }
                 else -> {
                     Log.d("Failed_URL", content.url)
