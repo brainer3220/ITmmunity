@@ -37,7 +37,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
-val TABLET_UI_WIDTH = 480.dp
+const val TABLET_UI_WIDTH = 480
 const val ANIMATION_DURATION = 700
 const val ANIMATION_INIT_OFFSET_Y = 800
 const val ANIMATION_TARGET_OFFSET_Y = 5000
@@ -192,7 +192,7 @@ fun MainView(
                     }
                 }
 
-                if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH) {
+                if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH.dp) {
                     viewModel.changeTabletUi(true)
                     Box(modifier = Modifier.weight(1f)) {
                         Crossfade(targetState = aNews) {
