@@ -10,7 +10,7 @@ import kotlinx.coroutines.*
 
 /**
  * @author brainer
- * @param context   Context
+ * @param context Context
  */
 class BackGroundViewModel(context: Context) : ViewModel() {
     private var _context = MutableLiveData(context)
