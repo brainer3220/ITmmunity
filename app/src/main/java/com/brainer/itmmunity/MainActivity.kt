@@ -38,6 +38,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
 val TABLET_UI_WIDTH = 480.dp
+const val ANIMATION_DURATION = 700
 lateinit var APPLICATION_CONTEXT: Context
 
 class MainActivity : ComponentActivity() {
@@ -88,28 +89,28 @@ fun MainCompose(
                 enterTransition = {
                     when (initialState.destination.route) {
                         "Red" ->
-                            slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(700))
+                            slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(ANIMATION_DURATION))
                         else -> null
                     }
                 },
                 exitTransition = {
                     when (targetState.destination.route) {
                         "Blue" ->
-                            slideOutOfContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(700))
+                            slideOutOfContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(ANIMATION_DURATION))
                         else -> null
                     }
                 },
                 popEnterTransition = {
                     when (initialState.destination.route) {
                         "Blue" ->
-                            slideIntoContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(700))
+                            slideIntoContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(ANIMATION_DURATION))
                         else -> null
                     }
                 },
                 popExitTransition = {
                     when (targetState.destination.route) {
                         "Blue" ->
-                            slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(700))
+                            slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(ANIMATION_DURATION))
                         else -> null
                     }
                 }) {
