@@ -48,9 +48,9 @@ open class Croll {
             }
         }
 
-        open fun htmlToMarkdown(html: String): String? {
+        open fun htmlToMarkdown(content: Content): String? {
             val converter = CopyDown()
-            return converter.convert(html)
+            return converter.convert(returnContent(content).toString())
         }
     }
 
