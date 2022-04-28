@@ -60,15 +60,15 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
                 scrollBehavior = scrollBehavior
             )
         },
-        bottomBar = {
-            BottomNavigation() {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
+//        bottomBar = {
+//            BottomNavigation() {
+//                val navBackStackEntry by navController.currentBackStackEntryAsState()
+//                val currentDestination = navBackStackEntry?.destination
 //                BottomNavigationItem(selected = 0, onClick = { /*TODO*/ }) {
 //                    /*TODO*/
 //                }
-            }
-        },
+//            }
+//        },
         content = {
             contentView()
         })
