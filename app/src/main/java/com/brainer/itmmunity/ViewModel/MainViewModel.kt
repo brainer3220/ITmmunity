@@ -133,9 +133,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
                 kotlin.runCatching {
-                    aNews.value!!.htmlToMarkdown(
-                        aNews.value!!.returnContent(aNews.value!!).toString()
-                    )
+                    aNews.value!!.htmlToMarkdown(aNews.value!!)
                 }.onSuccess {
                     val contentHtmlTmp = it!!.slice(2 until it.length - 1)
                     changeHtml(contentHtmlTmp)
