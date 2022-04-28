@@ -1,6 +1,7 @@
 package com.brainer.itmmunity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -36,6 +37,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
 val TABLET_UI_WIDTH = 480.dp
+lateinit var APPLICATION_CONTEXT: Context
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,14 +60,18 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+        APPLICATION_CONTEXT = applicationContext
         setContent {
             ITmmunity_AndroidTheme {
                 // A surface container using the 'background' color from the theme
                 Surface {
-                    MainView(
-                        networkViewModel = BackGroundViewModel(applicationContext)
-                    )
+                    MainCompose(networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT))
                 }
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalAnimationApi::class)
 @Preview
 @Composable
@@ -130,12 +136,14 @@ fun MainCompose(
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedCrossfadeTargetStateParameter")
 @Composable
 fun MainView(
     viewModel: MainViewModel = remember { MainViewModel() },
-    networkViewModel: BackGroundViewModel
+    networkViewModel: BackGroundViewModel,
+    navController: NavHostController
 ) {
     val backHandlingEnabled by remember { mutableStateOf(true) }
 
