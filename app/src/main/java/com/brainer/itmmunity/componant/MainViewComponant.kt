@@ -119,7 +119,11 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
                 .background(Color.White)
                 .clickable {
                     expanded = !expanded
-                    mainViewModel.changeIsContentView(true)
+                    if (mainViewModel.isTabletUi.value == false) {
+                        navController.navigate("ContentView")
+                    } else {
+                        navController.navigate("MainView")
+                    }
                 }) {
             Row(modifier = modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 if (aNews.image != null) {
@@ -159,7 +163,6 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
         if (expanded) {
             CoroutineScope(Dispatchers.Main).launch {
                 kotlin.runCatching {
-                    mainViewModel.changeAnews(null)
                     mainViewModel.changeAnews(aNews)
                 }
             }
