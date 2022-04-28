@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.Componant
+package com.brainer.itmmunity.componant
 
 import androidx.compose.animation.*
 import androidx.compose.material.BottomNavigation

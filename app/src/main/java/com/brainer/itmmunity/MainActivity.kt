@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.brainer.itmmunity.Componant.AppBar
-import com.brainer.itmmunity.Componant.LoadingView
-import com.brainer.itmmunity.Componant.NewsCard
+import com.brainer.itmmunity.componant.AppBar
+import com.brainer.itmmunity.componant.LoadingView
+import com.brainer.itmmunity.componant.NewsCard
 import com.brainer.itmmunity.ViewModel.BackGroundViewModel
 import com.brainer.itmmunity.ViewModel.MainViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
