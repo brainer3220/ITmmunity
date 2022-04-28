@@ -89,28 +89,40 @@ fun MainCompose(
                 enterTransition = {
                     when (initialState.destination.route) {
                         "Red" ->
-                            slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(ANIMATION_DURATION))
+                            slideIntoContainer(
+                                AnimatedContentScope.SlideDirection.Left,
+                                animationSpec = tween(ANIMATION_DURATION)
+                            )
                         else -> null
                     }
                 },
                 exitTransition = {
                     when (targetState.destination.route) {
                         "Blue" ->
-                            slideOutOfContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(ANIMATION_DURATION))
+                            slideOutOfContainer(
+                                AnimatedContentScope.SlideDirection.Left,
+                                animationSpec = tween(ANIMATION_DURATION)
+                            )
                         else -> null
                     }
                 },
                 popEnterTransition = {
                     when (initialState.destination.route) {
                         "Blue" ->
-                            slideIntoContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(ANIMATION_DURATION))
+                            slideIntoContainer(
+                                AnimatedContentScope.SlideDirection.Right,
+                                animationSpec = tween(ANIMATION_DURATION)
+                            )
                         else -> null
                     }
                 },
                 popExitTransition = {
                     when (targetState.destination.route) {
                         "Blue" ->
-                            slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(ANIMATION_DURATION))
+                            slideOutOfContainer(
+                                AnimatedContentScope.SlideDirection.Right,
+                                animationSpec = tween(ANIMATION_DURATION)
+                            )
                         else -> null
                     }
                 }) {
@@ -126,13 +138,13 @@ fun MainCompose(
                     slideInVertically(initialOffsetY = { 800 }) + fadeIn()
                 },
                 exitTransition = {
-                     slideOutVertically(targetOffsetY = {5000}) + fadeOut()
+                    slideOutVertically(targetOffsetY = { 5000 }) + fadeOut()
                 },
                 popEnterTransition = {
                     slideInVertically(initialOffsetY = { 800 }) + fadeIn()
                 },
                 popExitTransition = {
-                    slideOutVertically(targetOffsetY = {5000}) + fadeOut()
+                    slideOutVertically(targetOffsetY = { 5000 }) + fadeOut()
                 }) { ContentView(viewModel = viewModel) }
         }
     }
