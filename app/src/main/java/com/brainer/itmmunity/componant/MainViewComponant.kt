@@ -23,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -77,13 +78,13 @@ fun LoadingView(lottieURL: String? = DEFAULT_LOTTIE_VIEW_URL, spaceWeight: Float
 fun NewsCard(
     news: List<Croll.Content>,
     mainViewModel: MainViewModel,
-    paddingValues: PaddingValues
+    navController: NavController
 ) {
     val listState = rememberLazyListState()
     Surface(shape = RoundedCornerShape(25.dp)) {
-        LazyColumn(state = listState, contentPadding = paddingValues) {
+        LazyColumn(state = listState) {
             itemsIndexed(news) { index, item ->
-                NewsListOf(item, mainViewModel = mainViewModel)
+                NewsListOf(item, mainViewModel = mainViewModel, navController = navController)
                 if (index == news.lastIndex-15) {
                     this@LazyColumn.item {
                         Box(
@@ -107,7 +108,7 @@ const val LOTTIE__IMG_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_
 @DelicateCoroutinesApi
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Modifier = Modifier) {
+fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Modifier = Modifier, navController: NavController) {
     var expanded by remember { mutableStateOf(false) }
 
     Column {
