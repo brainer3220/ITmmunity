@@ -18,21 +18,26 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.brainer.itmmunity.Componant.LoadingView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.ViewModel.MainViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -68,12 +73,17 @@ class ContentView : ComponentActivity() {
 
 
 @OptIn(ExperimentalAnimationApi::class)
+@Preview
 @Composable
-fun ContentView(viewModel: MainViewModel) {
+fun ContentView(
+    viewModel: MainViewModel = MainViewModel(),
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+) {
     val isDarkMode = isSystemInDarkTheme()
     val aNews by viewModel.aNews.observeAsState()
     val contentHtml by viewModel.contentHtml.observeAsState()
     val listState = rememberScrollState()
+    val swipeRefreshState by remember { mutableStateOf(true) }
 
     var textColor = Color(255, 255, 255)
     if (isDarkMode) {
@@ -120,32 +130,37 @@ fun ContentView(viewModel: MainViewModel) {
                     })
                 Spacer(modifier = Modifier.padding(4.dp))
             }
-            AnimatedContent(targetState = contentHtml) { targetHtml ->
-                if (targetHtml == null || targetHtml.isEmpty()) {
-                    BoxWithConstraints(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = 10.dp, bottom = 10.dp)
-                    ) {
-                        LoadingView()
-                    }
-                } else {
-                    kotlin.runCatching {
-                        SelectionContainer(Modifier.fillMaxSize()) {
-                            Column(Modifier.verticalScroll(listState)) {
-                                MarkdownText(
-                                    modifier = Modifier.padding(8.dp),
-                                    markdown = targetHtml,
-                                    color = textColor
-                                )
-                                Log.v("contentHtml", targetHtml.toString())
-                            }
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                onRefresh = { viewModel.getHtml() }) {
+                AnimatedContent(targetState = contentHtml) { targetHtml ->
+                    if (targetHtml == null || targetHtml.isEmpty()) {
+                        BoxWithConstraints(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 10.dp, bottom = 10.dp)
+                        ) {
+                            LoadingView()
                         }
-                    }.onFailure {
-                        Log.w("contentHtml", it.toString())
+                    } else {
+                        kotlin.runCatching {
+                            SelectionContainer(Modifier.fillMaxSize()) {
+                                Column(Modifier.verticalScroll(listState)) {
+                                    MarkdownText(
+                                        modifier = Modifier.padding(8.dp),
+                                        markdown = targetHtml,
+                                        color = textColor
+                                    )
+                                    Log.v("contentHtml", targetHtml.toString())
+                                }
+                            }
+                        }.onFailure {
+                            Log.w("contentHtml", it.toString())
+                        }
                     }
                 }
             }
         }
     }
+}
 }
