@@ -192,6 +192,8 @@ fun MainView(
                             }
                         }
                     }
+                } else {
+                    viewModel.changeTabletUi(false)
                 }
             }
         }

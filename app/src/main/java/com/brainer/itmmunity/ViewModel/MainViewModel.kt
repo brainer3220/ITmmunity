@@ -25,8 +25,8 @@ class MainViewModel : ViewModel() {
     private var _meecoNextPage = MutableLiveData(0)
     val meecoNextPage: LiveData<Int> = _meecoNextPage
 
-    private var _isContentView = MutableLiveData(false)
-    val isContentView : LiveData<Boolean> = _isContentView
+    private var _isTabletUi = MutableLiveData(false)
+    val isTabletUi : LiveData<Boolean> = _isTabletUi
 
     var meecoNewsSliceValue = 0
 
@@ -147,9 +147,11 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun changeIsContentView(bool: Boolean) {
+    fun changeTabletUi(bool: Boolean) {
         CoroutineScope(Dispatchers.Main).launch {
-            _isContentView.value = bool
+            _isTabletUi.value = bool
+        }
+    }
         }
     }
 }
