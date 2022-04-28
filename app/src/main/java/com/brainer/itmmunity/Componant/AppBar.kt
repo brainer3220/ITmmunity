@@ -18,6 +18,12 @@ import androidx.navigation.compose.rememberNavController
 import com.brainer.itmmunity.ViewModel.MainViewModel
 
 
+/**
+ * AppBar is reusable and app based Comopse
+ * @author brainer
+ * @param viewModel MainViewModel
+ * @param contentView content parameter for Scaffold
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Preview
 @Composable
