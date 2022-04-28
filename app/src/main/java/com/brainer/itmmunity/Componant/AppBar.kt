@@ -29,7 +29,6 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
     val titleString by viewModel.titleString.observeAsState()
     val navController = rememberNavController()
 
-
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
