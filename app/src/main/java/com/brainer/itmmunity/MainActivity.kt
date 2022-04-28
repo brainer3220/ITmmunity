@@ -145,8 +145,6 @@ fun MainView(
     networkViewModel: BackGroundViewModel,
     navController: NavHostController
 ) {
-    val backHandlingEnabled by remember { mutableStateOf(true) }
-
     val unifiedList by viewModel.unifiedList.observeAsState(arrayListOf())
     val aNews by viewModel.aNews.observeAsState()
 
