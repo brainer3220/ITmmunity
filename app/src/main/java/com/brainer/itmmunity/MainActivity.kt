@@ -5,11 +5,13 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -17,7 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -154,89 +155,46 @@ fun MainView(
 
     Log.d("Unified_List", unifiedList.toString())
 
-    val decayAnimationSpec = rememberSplineBasedDecay<Float>()
-
-    val editable by viewModel.isContentView.observeAsState()
-
-    val scrollBehavior = remember(decayAnimationSpec) {
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
-    }
 
     if (isConnection) {
-        Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                LargeTopAppBar(
-                    title = {
-                        Text("ITmmunity")
-                    },
-//                navigationIcon = {
-//                        IconButton(
-//                            onClick = {
-////                                scope.launch {  }
-//                            }
-//                        ) {
-//                            Icon(Icons.Filled.Menu, contentDescription = "Localized description")
-//                        }
-//                }
-                    scrollBehavior = scrollBehavior
-                )
-            },
-            content = {
-                BoxWithConstraints(Modifier.fillMaxSize()) {
-                    val boxWithConstraintsScope = this
-                    Row(Modifier.fillMaxSize()) {
-                        SwipeRefresh(
-                            modifier = Modifier.weight(1f),
-                            state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                            onRefresh = { viewModel.getRefresh() }) {
-                            if (unifiedList.isNotEmpty()) {
-                                Column {
-                                    NewsCard(unifiedList, viewModel, it)
-                                }
-                            } else {
-                                LoadingView()
-                            }
+        BoxWithConstraints(Modifier.fillMaxSize()) {
+            val boxWithConstraintsScope = this
+            Row(Modifier.fillMaxSize()) {
+                SwipeRefresh(
+                    modifier = Modifier.weight(1f),
+                    state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                    onRefresh = { viewModel.getRefresh() }) {
+                    if (unifiedList.isNotEmpty()) {
+                        Column {
+                            NewsCard(
+                                unifiedList,
+                                viewModel,
+                                navController = navController
+                            )
                         }
+                    } else {
+                        LoadingView()
+                    }
+                }
 
-                        if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH) {
-                            Box(modifier = Modifier.weight(1f)) {
-                                Crossfade(targetState = aNews) {
-                                    if (it != null) {
-                                        ContentView(viewModel = viewModel)
-                                    } else {
-                                        Text(
-                                            modifier = Modifier.fillMaxSize(),
-                                            text = "컨텐츠를 클릭해 보세요.",
-                                            textAlign = TextAlign.Center
-                                        )
-                                    }
-                                }
-                            }
-                        } else {
-                            AnimatedVisibility(
-                                visible = editable!!,
-                                enter = scaleIn(),
-                                exit = scaleOut() + fadeOut()
-                            ) {
-                                Box(modifier = Modifier.fillMaxSize()) {
-                                    ContentView(viewModel = viewModel)
-                                }
-                            }
-
-                            Log.d("editable", editable.toString())
-                            if (editable == true) {
-                                BackHandler(backHandlingEnabled) {
-                                    viewModel.changeIsContentView(false)
-                                }
-                            }
-                            else {
-                                viewModel.changeHtml(null)
+                if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH) {
+                    viewModel.changeTabletUi(true)
+                    Box(modifier = Modifier.weight(1f)) {
+                        Crossfade(targetState = aNews) {
+                            if (it != null) {
+                                ContentView(viewModel = viewModel)
+                            } else {
+                                Text(
+                                    modifier = Modifier.fillMaxSize(),
+                                    text = "컨텐츠를 클릭해 보세요.",
+                                    textAlign = TextAlign.Center
+                                )
                             }
                         }
                     }
                 }
-            })
+            }
+        }
     } else {
         Box(Modifier.fillMaxSize()) {
             Column(
