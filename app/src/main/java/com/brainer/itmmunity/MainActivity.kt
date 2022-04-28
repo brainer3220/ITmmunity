@@ -77,6 +77,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * @author brainer
+ * @param viewModel MainViewModel
+ * @param networkViewModel BackGroundViewModel
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Preview
 @Composable
