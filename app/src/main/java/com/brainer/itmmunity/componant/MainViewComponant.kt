@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.Componant
+package com.brainer.itmmunity.componant
 
 import android.annotation.SuppressLint
 import android.util.Log
