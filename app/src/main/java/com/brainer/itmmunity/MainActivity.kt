@@ -39,6 +39,8 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
 val TABLET_UI_WIDTH = 480.dp
 const val ANIMATION_DURATION = 700
+const val ANIMATION_INIT_OFFSET_Y = 800
+const val ANIMATION_TARGET_OFFSET_Y = 5000
 lateinit var APPLICATION_CONTEXT: Context
 
 class MainActivity : ComponentActivity() {
@@ -135,16 +137,16 @@ fun MainCompose(
 
             composable(route = "ContentView",
                 enterTransition = {
-                    slideInVertically(initialOffsetY = { 800 }) + fadeIn()
+                    slideInVertically(initialOffsetY = { ANIMATION_INIT_OFFSET_Y }) + fadeIn()
                 },
                 exitTransition = {
-                    slideOutVertically(targetOffsetY = { 5000 }) + fadeOut()
+                    slideOutVertically(targetOffsetY = { ANIMATION_TARGET_OFFSET_Y }) + fadeOut()
                 },
                 popEnterTransition = {
-                    slideInVertically(initialOffsetY = { 800 }) + fadeIn()
+                    slideInVertically(initialOffsetY = { ANIMATION_INIT_OFFSET_Y }) + fadeIn()
                 },
                 popExitTransition = {
-                    slideOutVertically(targetOffsetY = { 5000 }) + fadeOut()
+                    slideOutVertically(targetOffsetY = { ANIMATION_TARGET_OFFSET_Y }) + fadeOut()
                 }) { ContentView(viewModel = viewModel) }
         }
     }
