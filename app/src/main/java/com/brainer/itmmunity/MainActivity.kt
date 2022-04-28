@@ -19,11 +19,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.brainer.itmmunity.Componant.AppBar
 import com.brainer.itmmunity.Componant.LoadingView
 import com.brainer.itmmunity.Componant.NewsCard
 import com.brainer.itmmunity.ViewModel.BackGroundViewModel
 import com.brainer.itmmunity.ViewModel.MainViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.firebase.ktx.Firebase
@@ -61,7 +66,66 @@ class MainActivity : ComponentActivity() {
                         networkViewModel = BackGroundViewModel(applicationContext)
                     )
                 }
+@OptIn(ExperimentalAnimationApi::class)
+@Preview
+@Composable
+fun MainCompose(
+    viewModel: MainViewModel = remember { MainViewModel() },
+    networkViewModel: BackGroundViewModel = BackGroundViewModel(context = APPLICATION_CONTEXT)
+) {
+    val navController = rememberAnimatedNavController()
+
+    AppBar(viewModel = viewModel) {
+        AnimatedNavHost(navController = navController, startDestination = "MainList") {
+            composable(route = "MainList",
+                enterTransition = {
+                    when (initialState.destination.route) {
+                        "Red" ->
+                            slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(700))
+                        else -> null
+                    }
+                },
+                exitTransition = {
+                    when (targetState.destination.route) {
+                        "Blue" ->
+                            slideOutOfContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(700))
+                        else -> null
+                    }
+                },
+                popEnterTransition = {
+                    when (initialState.destination.route) {
+                        "Blue" ->
+                            slideIntoContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(700))
+                        else -> null
+                    }
+                },
+                popExitTransition = {
+                    when (targetState.destination.route) {
+                        "Blue" ->
+                            slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(700))
+                        else -> null
+                    }
+                }) {
+                MainView(
+                    viewModel = viewModel,
+                    networkViewModel = networkViewModel,
+                    navController = navController
+                )
             }
+
+            composable(route = "ContentView",
+                enterTransition = {
+                    slideInVertically(initialOffsetY = { 800 }) + fadeIn()
+                },
+                exitTransition = {
+                     slideOutVertically(targetOffsetY = {5000}) + fadeOut()
+                },
+                popEnterTransition = {
+                    slideInVertically(initialOffsetY = { 800 }) + fadeIn()
+                },
+                popExitTransition = {
+                    slideOutVertically(targetOffsetY = {5000}) + fadeOut()
+                }) { ContentView(viewModel = viewModel) }
         }
     }
 }
