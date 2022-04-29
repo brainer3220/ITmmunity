@@ -22,6 +22,12 @@ class BackGroundViewModel(context: Context) : ViewModel() {
         getConnectState()
     }
 
+    /**
+     * This is internet connection check.
+     * Checking the internet connect every 3 sec.
+     * @author bariner
+     * @return NO RETURN
+     */
     @OptIn(DelicateCoroutinesApi::class)
     fun getConnectState() {
         CoroutineScope(Dispatchers.Default).launch {
