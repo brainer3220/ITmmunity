@@ -145,6 +145,12 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    /**
+     * This function determines whether the View generates a Tablet UI.
+     * @author brainer
+     * @param Boolean type
+     * @return NO RETURN
+     */
     fun changeTabletUi(bool: Boolean) {
         CoroutineScope(Dispatchers.Main).launch {
             _isTabletUi.value = bool
