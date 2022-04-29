@@ -15,6 +15,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+const val CONFIG_STR = "Config"
+
 class MainViewModel : ViewModel() {
     private var _unifiedList = MutableLiveData(listOf<Croll.Content>())
     val unifiedList: LiveData<List<Croll.Content>> = _unifiedList
@@ -49,10 +51,10 @@ class MainViewModel : ViewModel() {
                 if (task.isSuccessful) {
                     val updated = task.result
                     meecoNewsSliceValue = remoteConfig.getLong("meecoNewsSlice").toInt()
-                    Log.d("Config", "Config params updated: $updated")
-                    Log.d("Config", "Fetch and activate succeeded")
+                    Log.d(CONFIG_STR, "Config params updated: $updated")
+                    Log.d(CONFIG_STR, "Fetch and activate succeeded")
                 } else {
-                    Log.d("Config", "Fetch failed")
+                    Log.d(CONFIG_STR, "Fetch failed")
                 }
             }
     }

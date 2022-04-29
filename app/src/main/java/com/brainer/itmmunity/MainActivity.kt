@@ -27,6 +27,7 @@ import com.brainer.itmmunity.componant.AppBar
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.NewsCard
 import com.brainer.itmmunity.ViewModel.BackGroundViewModel
+import com.brainer.itmmunity.ViewModel.CONFIG_STR
 import com.brainer.itmmunity.ViewModel.MainViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -59,10 +60,10 @@ class MainActivity : ComponentActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val updated = task.result
-                    Log.d("Config", "MainActivity Config params updated: $updated")
-                    Log.d("Config", "MainActivity Fetch and activate succeeded")
+                    Log.d(CONFIG_STR, "MainActivity Config params updated: $updated")
+                    Log.d(CONFIG_STR, "MainActivity Fetch and activate succeeded")
                 } else {
-                    Log.d("Config", "Fetch failed")
+                    Log.d(CONFIG_STR, "Fetch failed")
                 }
             }
 
