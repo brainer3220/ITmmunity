@@ -14,6 +14,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.stream.Collectors.toList
 
 class MainViewModel : ViewModel() {
     private var _unifiedList = MutableLiveData(listOf<Croll.Content>())
@@ -102,8 +103,7 @@ class MainViewModel : ViewModel() {
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
                         _unifiedList.value =
-                            _unifiedList.value?.union(it.slice(meecoNewsSliceValue until it.size))
-                                ?.toList()
+                            _unifiedList.value?.union(it.slice(meecoNewsSliceValue until it.size))?.toList()
                         _meecoNextPage.value = _meecoNextPage.value?.plus(1)
                     }
                 }
