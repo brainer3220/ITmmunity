@@ -163,4 +163,9 @@ fun ContentView(
         }
     }
 }
+
+@Preview
+@Composable
+fun ContentViewTest() {
+    ContentView(MainViewModel())
 }
