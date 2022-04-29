@@ -120,6 +120,12 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    /**
+     * ContentView is referenced contentHtml for drawing View
+     * @author brainer
+     * @param html String type. html HTML String
+     * @return NO RETURN
+     */
     fun changeHtml(html: String?) {
         CoroutineScope(Dispatchers.Main).launch {
             _contentHtml.value = html
