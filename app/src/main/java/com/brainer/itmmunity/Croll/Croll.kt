@@ -8,6 +8,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 
+const val UNDERKG_URL = "undekg.co.kr"
 
 open class Croll {
     @Parcelize
@@ -30,7 +31,7 @@ open class Croll {
                     Log.d("MeecoNews_Comment", "$aCommentList")
                     return Pair(aItems, aCommentList)
                 }
-                content.url.contains("underkg.co.kr") -> {
+                content.url.contains(UNDERKG_URL) -> {
                     val aItemList = KGNewsContent().getItem(
                         content.url,
                         "body > div.user_layout > div.body > div.content > div > div.docInner > div.read_body"
