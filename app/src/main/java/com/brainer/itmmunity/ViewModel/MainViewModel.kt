@@ -28,6 +28,9 @@ class MainViewModel : ViewModel() {
     private var _isTabletUi = MutableLiveData(false)
     val isTabletUi : LiveData<Boolean> = _isTabletUi
 
+    private var _titleString = MutableLiveData("ITmmunity")
+    val titleString : LiveData<String> = _titleString
+
     var meecoNewsSliceValue = 0
 
     init {
@@ -162,6 +165,16 @@ class MainViewModel : ViewModel() {
             _isTabletUi.value = bool
         }
     }
+
+    /**
+     * AppBar Title value
+     * @author brainer
+     * @param target String type
+     * @return NO RETURN
+     */
+    fun changeTitle(target: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            _titleString.value = target
         }
     }
 }
