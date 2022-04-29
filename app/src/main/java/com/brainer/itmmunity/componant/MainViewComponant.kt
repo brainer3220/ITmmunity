@@ -38,6 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 const val DEFAULT_LOTTIE_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_wfsunjgd.json"
+const val LOTTIE_IMG_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_6odgh2c6.json"
 const val DEFAULT_SPACE_WEIGHT = 5F
 
 @Preview
@@ -102,8 +103,6 @@ fun NewsCard(
     }
 }
 
-const val LOTTIE__IMG_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_6odgh2c6.json"
-
 @SuppressLint("SetJavaScriptEnabled", "CoroutineCreationDuringComposition")
 @DelicateCoroutinesApi
 @OptIn(ExperimentalAnimationApi::class)
@@ -137,7 +136,7 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
                             imageModel = aNews.image,
                             contentScale = ContentScale.FillWidth,
                             loading = {
-                                      LoadingView(LOTTIE__IMG_VIEW_URL, spaceWeight = 0F)
+                                      LoadingView(LOTTIE_IMG_VIEW_URL, spaceWeight = 0F)
                             },
                             contentDescription = stringResource(id = R.string.main_thumbnail),
                             circularReveal = CircularReveal(duration = 350),
