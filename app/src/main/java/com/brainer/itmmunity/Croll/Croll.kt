@@ -54,6 +54,11 @@ open class Croll {
         }
     }
 
+    /**
+     * @author brainer
+     * @param url String type
+     * @return Document type
+     */
     fun getHTML(url: String): Document? {
         val doc = Jsoup.connect(url).get()
         Log.d("getHTML", doc.toString())
