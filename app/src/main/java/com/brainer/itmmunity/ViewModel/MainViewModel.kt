@@ -23,10 +23,10 @@ class MainViewModel : ViewModel() {
     val unifiedList: LiveData<List<Croll.Content>> = _unifiedList
 
     private var _underKgNextPage = MutableLiveData(0)
-    val underKgNextPage: LiveData<Int> = _underKgNextPage
+//    val underKgNextPage: LiveData<Int> = _underKgNextPage
 
     private var _meecoNextPage = MutableLiveData(0)
-    val meecoNextPage: LiveData<Int> = _meecoNextPage
+//    val meecoNextPage: LiveData<Int> = _meecoNextPage
 
     private var _isTabletUi = MutableLiveData(false)
     val isTabletUi : LiveData<Boolean> = _isTabletUi
