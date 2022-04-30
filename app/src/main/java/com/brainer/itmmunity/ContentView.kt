@@ -93,6 +93,7 @@ fun ContentView(
     }
 
     LaunchedEffect(aNews) {
+        viewModel.changeHtml(null)
         viewModel.getHtml()
     }
 
