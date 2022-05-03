@@ -21,7 +21,7 @@ class MeecoNews : Croll() {
             itemList.add(
                 Content(
                     title = i.select("td.title > a > span").text(),
-                    url = ("https://meeco.kr" + i.select("td.title > a").attr("href")),
+                    url = ("https://$MEECO_URL" + i.select("td.title > a").attr("href")),
                     numComment = i.toggleClass("num").select("span")[1].text().toInt(),
                     hit = i.toggleClass("num").select("span")[2].text().toInt(),
                     image = null
@@ -33,7 +33,7 @@ class MeecoNews : Croll() {
 
     override fun returnData(page: Int): ArrayList<Content> {
         val itemList = this.getItem(
-            "https://meeco.kr/index.php?mid=news&page=${page}",
+            "https://$MEECO_URL/index.php?mid=news&page=${page}",
             "#bBd > div.bBox > div > table > tbody > tr"
         )
 
