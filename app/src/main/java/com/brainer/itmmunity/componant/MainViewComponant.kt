@@ -29,7 +29,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
-import com.brainer.itmmunity.ViewModel.MainViewModel
+import com.brainer.itmmunity.viewmodel.MainViewModel
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.CoroutineScope
