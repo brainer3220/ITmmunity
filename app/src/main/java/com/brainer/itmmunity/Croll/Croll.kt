@@ -8,7 +8,8 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 
-const val UNDERKG_URL = "undekg.co.kr"
+const val UNDERKG_URL = "underkg.co.kr"
+const val MEECO_URL = "meeco.kr"
 
 open class Croll {
     @Parcelize
@@ -19,9 +20,10 @@ open class Croll {
         var numComment: Int?,
         var url: String
     ) : Parcelable {
-        fun returnContent(content: Content): Pair<String?, Elements?> {
+        private fun returnContent(): Pair<String?, Elements?> {
+            val content = this
             when {
-                content.url.contains("meeco.kr") -> {
+                content.url.contains(MEECO_URL) -> {
                     Log.d("Meeco_URL", content.url)
                     val aItemList = MeecoNews().getHTML(content.url)?.select("article > div")
                     val aCommentList = MeecoNews().getHTML(content.url)?.select("#comment")
@@ -49,9 +51,9 @@ open class Croll {
             }
         }
 
-        open fun htmlToMarkdown(content: Content): String? {
+        fun htmlToMarkdown(): String? {
             val converter = CopyDown()
-            return converter.convert(returnContent(content).toString())
+            return converter.convert(returnContent().toString())
         }
     }
 
