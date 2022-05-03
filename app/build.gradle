@@ -9,6 +9,8 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion 31
@@ -61,6 +63,9 @@ dependencies {
     implementation 'androidx.navigation:navigation-compose:2.4.2'
     implementation "com.google.accompanist:accompanist-navigation-animation:0.24.6-alpha"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+
+    implementation "com.google.dagger:hilt-android:2.28-alpha"
+    kapt "com.google.dagger:hilt-android-compiler:2.28-alpha"
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:29.1.0')
