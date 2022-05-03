@@ -8,7 +8,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 
-const val UNDERKG_URL = "undekg.co.kr"
+const val UNDERKG_URL = "underkg.co.kr"
 
 open class Croll {
     @Parcelize
