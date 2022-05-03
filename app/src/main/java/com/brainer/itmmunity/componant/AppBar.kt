@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.brainer.itmmunity.ViewModel.MainViewModel
+import com.brainer.itmmunity.viewmodel.MainViewModel
 
 
 /**

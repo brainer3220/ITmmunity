@@ -34,7 +34,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.Croll.Croll
-import com.brainer.itmmunity.ViewModel.MainViewModel
+import com.brainer.itmmunity.viewmodel.MainViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState

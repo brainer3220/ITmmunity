@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.ViewModel
+package com.brainer.itmmunity.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -14,7 +14,6 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.stream.Collectors.toList
 
 const val CONFIG_STR = "Config"
 
@@ -144,7 +143,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
                 kotlin.runCatching {
-                    aNews.value!!.htmlToMarkdown(aNews.value!!)
+                    aNews.value!!.htmlToMarkdown()
                 }.onSuccess {
                     val contentHtmlTmp = it!!.slice(2 until it.length - 1)
                     changeHtml(contentHtmlTmp)
@@ -159,7 +158,7 @@ class MainViewModel : ViewModel() {
     /**
      * This function determines whether the View generates a Tablet UI.
      * @author brainer
-     * @param Boolean type
+     * @param boool If Tablet UI, true, else false.
      * @return NO RETURN
      */
     fun changeTabletUi(bool: Boolean) {

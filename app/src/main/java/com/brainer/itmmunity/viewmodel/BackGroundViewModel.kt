@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.ViewModel
+package com.brainer.itmmunity.viewmodel
 
 import android.content.Context
 import android.util.Log
