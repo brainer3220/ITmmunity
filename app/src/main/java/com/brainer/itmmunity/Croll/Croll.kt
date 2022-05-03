@@ -9,6 +9,7 @@ import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 
 const val UNDERKG_URL = "underkg.co.kr"
+const val MEECO_URL = "meeco.kr"
 
 open class Croll {
     @Parcelize
@@ -21,7 +22,7 @@ open class Croll {
     ) : Parcelable {
         fun returnContent(content: Content): Pair<String?, Elements?> {
             when {
-                content.url.contains("meeco.kr") -> {
+                content.url.contains(MEECO_URL) -> {
                     Log.d("Meeco_URL", content.url)
                     val aItemList = MeecoNews().getHTML(content.url)?.select("article > div")
                     val aCommentList = MeecoNews().getHTML(content.url)?.select("#comment")
