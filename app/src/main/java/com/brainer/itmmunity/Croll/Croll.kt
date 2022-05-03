@@ -20,7 +20,8 @@ open class Croll {
         var numComment: Int?,
         var url: String
     ) : Parcelable {
-        fun returnContent(content: Content): Pair<String?, Elements?> {
+        private fun returnContent(): Pair<String?, Elements?> {
+            val content = this
             when {
                 content.url.contains(MEECO_URL) -> {
                     Log.d("Meeco_URL", content.url)
@@ -50,9 +51,9 @@ open class Croll {
             }
         }
 
-        open fun htmlToMarkdown(content: Content): String? {
+        fun htmlToMarkdown(): String? {
             val converter = CopyDown()
-            return converter.convert(returnContent(content).toString())
+            return converter.convert(returnContent().toString())
         }
     }
 
