@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 const val DEFAULT_LOTTIE_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_wfsunjgd.json"
 const val LOTTIE_IMG_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_6odgh2c6.json"
 const val DEFAULT_SPACE_WEIGHT = 5F
-const val ROUNDED_VALUE = 25
+const val ROUNDED_VALUE = 26
 
 @Preview
 @Composable
