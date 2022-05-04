@@ -34,6 +34,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.componant.RoundedSurface
 import com.brainer.itmmunity.viewmodel.MainViewModel
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -97,40 +98,40 @@ fun ContentView(
         viewModel.getHtml()
     }
 
-    Surface(Modifier.fillMaxSize(), shape = RoundedCornerShape(25.dp)) {
-        Column {
-            Row {
-                SmallTopAppBar(title = {
-                    aNews?.let {
-                        Text(
-                            text = it.title,
-                            fontSize = 20.sp,
-                            textAlign = TextAlign.Left,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                },
-                    actions = {
-                        val context = LocalContext.current
-                        Icon(
-                            Icons.Filled.Share,
-                            contentDescription = "공유",
-                            Modifier.clickable {
-                                val sendIntent: Intent = Intent().apply {
-                                    action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TITLE, aNews!!.title)
-                                    putExtra(Intent.EXTRA_SUBJECT, "Powered by ITmmunity")
-                                    putExtra(Intent.EXTRA_TEXT, aNews!!.url)
-                                    type = "text/plain"
-                                }
+    Column {
+        Row {
+            SmallTopAppBar(title = {
+                aNews?.let {
+                    Text(
+                        text = it.title,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Left,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            },
+                actions = {
+                    val context = LocalContext.current
+                    Icon(
+                        Icons.Filled.Share,
+                        contentDescription = "공유",
+                        Modifier.clickable {
+                            val sendIntent: Intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TITLE, aNews!!.title)
+                                putExtra(Intent.EXTRA_SUBJECT, "Powered by ITmmunity")
+                                putExtra(Intent.EXTRA_TEXT, aNews!!.url)
+                                type = "text/plain"
+                            }
 
-                                val shareIntent = Intent.createChooser(sendIntent, null)
-                                context.startActivity(shareIntent)
-                            })
-                    })
-                Spacer(modifier = Modifier.padding(4.dp))
-            }
+                            val shareIntent = Intent.createChooser(sendIntent, null)
+                            context.startActivity(shareIntent)
+                        })
+                })
+            Spacer(modifier = Modifier.padding(4.dp))
+        }
+        RoundedSurface {
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
                 onRefresh = { viewModel.getHtml() }) {
