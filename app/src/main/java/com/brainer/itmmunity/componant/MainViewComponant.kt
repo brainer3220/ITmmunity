@@ -171,6 +171,10 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
     }
 }
 
+/**
+ * @author brainer
+ * @param contentView is Composable parameter
+ */
 @Composable
 fun RoundedSurface(contentView: @Composable () -> Unit = {}) {
     Surface(shape = RoundedCornerShape(ROUNDED_VALUE.dp)) {
