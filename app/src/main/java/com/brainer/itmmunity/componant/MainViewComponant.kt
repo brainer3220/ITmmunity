@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 const val DEFAULT_LOTTIE_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_wfsunjgd.json"
 const val LOTTIE_IMG_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_6odgh2c6.json"
 const val DEFAULT_SPACE_WEIGHT = 5F
+const val ROUNDED_VALUE = 25
 
 @Preview
 @Composable
@@ -82,7 +83,7 @@ fun NewsCard(
     navController: NavController
 ) {
     val listState = rememberLazyListState()
-    Surface(shape = RoundedCornerShape(25.dp)) {
+    RoundedSurface {
         LazyColumn(state = listState) {
             itemsIndexed(news) { index, item ->
                 NewsListOf(item, mainViewModel = mainViewModel, navController = navController)
@@ -167,5 +168,16 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
             }
             expanded = !expanded
         }
+    }
+}
+
+/**
+ * @author brainer
+ * @param contentView is Composable parameter
+ */
+@Composable
+fun RoundedSurface(contentView: @Composable () -> Unit = {}) {
+    Surface(shape = RoundedCornerShape(ROUNDED_VALUE.dp)) {
+        contentView()
     }
 }
