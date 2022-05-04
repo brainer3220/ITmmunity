@@ -82,7 +82,7 @@ fun NewsCard(
     navController: NavController
 ) {
     val listState = rememberLazyListState()
-    Surface(shape = RoundedCornerShape(25.dp)) {
+    RoundedSurface {
         LazyColumn(state = listState) {
             itemsIndexed(news) { index, item ->
                 NewsListOf(item, mainViewModel = mainViewModel, navController = navController)
@@ -167,5 +167,12 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
             }
             expanded = !expanded
         }
+    }
+}
+
+@Composable
+fun RoundedSurface(contentView: @Composable () -> Unit = {}) {
+    Surface(shape = RoundedCornerShape(25.dp)) {
+        contentView()
     }
 }
