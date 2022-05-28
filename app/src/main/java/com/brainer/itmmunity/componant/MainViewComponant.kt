@@ -121,8 +121,6 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
                     expanded = !expanded
                     if (mainViewModel.isTabletUi.value == false) {
                         navController.navigate("ContentView")
-                    } else {
-                        navController.navigate("MainView")
                     }
                 }) {
             Row(modifier = modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
