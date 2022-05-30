@@ -26,10 +26,10 @@ import androidx.navigation.NavHostController
 import com.brainer.itmmunity.componant.AppBar
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.NewsCard
+import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.viewmodel.BackGroundViewModel
 import com.brainer.itmmunity.viewmodel.CONFIG_STR
 import com.brainer.itmmunity.viewmodel.MainViewModel
-import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController

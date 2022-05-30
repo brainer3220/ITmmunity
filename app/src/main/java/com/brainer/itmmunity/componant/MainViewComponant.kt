@@ -44,7 +44,10 @@ const val ROUNDED_VALUE = 26
 
 @Preview
 @Composable
-fun LoadingView(lottieURL: String? = DEFAULT_LOTTIE_VIEW_URL, spaceWeight: Float = DEFAULT_SPACE_WEIGHT) {
+fun LoadingView(
+    lottieURL: String? = DEFAULT_LOTTIE_VIEW_URL,
+    spaceWeight: Float = DEFAULT_SPACE_WEIGHT
+) {
     val composition by rememberLottieComposition(LottieCompositionSpec.Url(lottieURL!!))
 
     Column {
@@ -60,12 +63,14 @@ fun LoadingView(lottieURL: String? = DEFAULT_LOTTIE_VIEW_URL, spaceWeight: Float
                 CircularProgressIndicator(
                     Modifier
                         .align(Alignment.Center)
-                        .fillMaxWidth())
-            }
-            else {
-                LottieAnimation(composition, modifier = Modifier
-                    .align(Alignment.Center)
-                    .fillMaxSize())
+                        .fillMaxWidth()
+                )
+            } else {
+                LottieAnimation(
+                    composition, modifier = Modifier
+                        .align(Alignment.Center)
+                        .fillMaxSize()
+                )
             }
         }
         if (spaceWeight != 0F) {
@@ -87,7 +92,7 @@ fun NewsCard(
         LazyColumn(state = listState) {
             itemsIndexed(news) { index, item ->
                 NewsListOf(item, mainViewModel = mainViewModel, navController = navController)
-                if (index == news.lastIndex-15) {
+                if (index == news.lastIndex - 15) {
                     this@LazyColumn.item {
                         Box(
                             Modifier
@@ -108,7 +113,12 @@ fun NewsCard(
 @DelicateCoroutinesApi
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Modifier = Modifier, navController: NavController) {
+fun NewsListOf(
+    aNews: Croll.Content,
+    mainViewModel: MainViewModel,
+    modifier: Modifier = Modifier,
+    navController: NavController
+) {
     var expanded by remember { mutableStateOf(false) }
 
     Column {
@@ -127,15 +137,17 @@ fun NewsListOf(aNews: Croll.Content, mainViewModel: MainViewModel, modifier: Mod
                 if (aNews.image != null) {
                     Log.i("Thumbnail", "Thumbnail load success")
                     Log.d("Thumbnail", "Thumbnail: " + aNews.image)
-                    Box(modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(8.dp))) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(8.dp))
+                    ) {
                         GlideImage(
                             modifier = Modifier.fillMaxSize(),
                             imageModel = aNews.image,
                             contentScale = ContentScale.FillWidth,
                             loading = {
-                                      LoadingView(LOTTIE_IMG_VIEW_URL, spaceWeight = 0F)
+                                LoadingView(LOTTIE_IMG_VIEW_URL, spaceWeight = 0F)
                             },
                             contentDescription = stringResource(id = R.string.main_thumbnail),
                             circularReveal = CircularReveal(duration = 350),
