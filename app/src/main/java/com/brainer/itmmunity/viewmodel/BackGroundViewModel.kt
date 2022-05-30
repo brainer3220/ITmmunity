@@ -2,11 +2,14 @@ package com.brainer.itmmunity.viewmodel
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.brainer.itmmunity.Utility.NetworkConnectCheck
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 /**
  * @author brainer
@@ -15,8 +18,8 @@ import kotlinx.coroutines.*
 class BackGroundViewModel(context: Context) : ViewModel() {
     private var _context = MutableLiveData(context)
 
-    private var _isConnect = MutableLiveData<Boolean>(true)
-    val isConnect: LiveData<Boolean> = _isConnect
+    private var _isConnect = MutableStateFlow<Boolean>(true)
+    val isConnect = _isConnect.asStateFlow()
 
     init {
         getConnectState()
