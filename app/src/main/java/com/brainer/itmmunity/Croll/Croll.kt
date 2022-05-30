@@ -27,7 +27,8 @@ open class Croll {
                     Log.d("Meeco_URL", content.url)
                     val aItemList = MeecoNews().getHTML(content.url)?.select("article > div")
                     val aCommentList = MeecoNews().getHTML(content.url)?.select("#comment")
-                    val aItems = aItemList.toString().replace("//img.$MEECO_URL/", "https://img.$MEECO_URL/")
+                    val aItems =
+                        aItemList.toString().replace("//img.$MEECO_URL/", "https://img.$MEECO_URL/")
 
                     Log.d("MeecoNews_Content", aItems)
                     Log.d("MeecoNews_Comment", "$aCommentList")

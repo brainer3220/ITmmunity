@@ -28,10 +28,10 @@ class MainViewModel : ViewModel() {
 //    val meecoNextPage: LiveData<Int> = _meecoNextPage
 
     private var _isTabletUi = MutableLiveData(false)
-    val isTabletUi : LiveData<Boolean> = _isTabletUi
+    val isTabletUi: LiveData<Boolean> = _isTabletUi
 
     private var _titleString = MutableLiveData("ITmmunity")
-    val titleString : LiveData<String> = _titleString
+    val titleString: LiveData<String> = _titleString
 
     var meecoNewsSliceValue = 0
 
@@ -104,7 +104,8 @@ class MainViewModel : ViewModel() {
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
                         _unifiedList.value =
-                            _unifiedList.value?.union(it.slice(meecoNewsSliceValue until it.size))?.toList()
+                            _unifiedList.value?.union(it.slice(meecoNewsSliceValue until it.size))
+                                ?.toList()
                         _meecoNextPage.value = _meecoNextPage.value?.plus(1)
                     }
                 }

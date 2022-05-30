@@ -12,11 +12,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -26,10 +23,10 @@ import androidx.navigation.NavHostController
 import com.brainer.itmmunity.componant.AppBar
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.NewsCard
+import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.viewmodel.BackGroundViewModel
 import com.brainer.itmmunity.viewmodel.CONFIG_STR
 import com.brainer.itmmunity.viewmodel.MainViewModel
-import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -172,7 +169,7 @@ fun MainView(
     val unifiedList by viewModel.unifiedList.observeAsState(arrayListOf())
     val aNews by viewModel.aNews.observeAsState()
 
-    val isConnection by networkViewModel.isConnect.observeAsState(true)
+    val isConnection by networkViewModel.isConnect.collectAsState()
 
     val swipeRefreshState by remember { mutableStateOf(true) }
 
