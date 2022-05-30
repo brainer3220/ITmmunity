@@ -158,7 +158,6 @@ fun MainCompose(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedCrossfadeTargetStateParameter")
 @Composable
 fun MainView(
@@ -166,7 +165,7 @@ fun MainView(
     networkViewModel: BackGroundViewModel,
     navController: NavHostController
 ) {
-    val unifiedList by viewModel.unifiedList.observeAsState(arrayListOf())
+    val unifiedList by viewModel.unifiedList.collectAsState()
     val aNews by viewModel.aNews.observeAsState()
 
     val isConnection by networkViewModel.isConnect.collectAsState()

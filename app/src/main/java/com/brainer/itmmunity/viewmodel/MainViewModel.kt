@@ -1,6 +1,7 @@
 package com.brainer.itmmunity.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,25 +14,27 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 const val CONFIG_STR = "Config"
 
 class MainViewModel : ViewModel() {
-    private var _unifiedList = MutableLiveData(listOf<Croll.Content>())
-    val unifiedList: LiveData<List<Croll.Content>> = _unifiedList
+    private var _unifiedList = MutableStateFlow(listOf<Croll.Content>())
+    val unifiedList = _unifiedList.asStateFlow()
 
     private var _underKgNextPage = MutableLiveData(0)
 //    val underKgNextPage: LiveData<Int> = _underKgNextPage
 
-    private var _meecoNextPage = MutableLiveData(0)
+    private var _meecoNextPage = MutableStateFlow(0)
 //    val meecoNextPage: LiveData<Int> = _meecoNextPage
 
-    private var _isTabletUi = MutableLiveData(false)
-    val isTabletUi: LiveData<Boolean> = _isTabletUi
+    private var _isTabletUi = MutableStateFlow(false)
+    val isTabletUi= _isTabletUi.asStateFlow()
 
-    private var _titleString = MutableLiveData("ITmmunity")
-    val titleString: LiveData<String> = _titleString
+    private var _titleString = MutableStateFlow("ITmmunity")
+    val titleString= _titleString.asStateFlow()
 
     var meecoNewsSliceValue = 0
 
@@ -70,7 +73,7 @@ class MainViewModel : ViewModel() {
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
                         _unifiedList.value = _unifiedList.value!! + it
-                        _unifiedList.value = _unifiedList.value?.toSet()?.toList()
+                        _unifiedList.value = _unifiedList.value.toSet().toList()
                         _underKgNextPage.value = 1
                     }
                 }
@@ -79,8 +82,8 @@ class MainViewModel : ViewModel() {
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
                         _unifiedList.value =
-                            _unifiedList.value?.plus(it.slice(meecoNewsSliceValue until it.size))
-                        _unifiedList.value = _unifiedList.value?.toSet()?.toList()
+                            _unifiedList.value.plus(it.slice(meecoNewsSliceValue until it.size))
+                        _unifiedList.value = _unifiedList.value.toSet().toList()
                         _meecoNextPage.value = 1
                     }
                 }
@@ -104,9 +107,9 @@ class MainViewModel : ViewModel() {
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
                         _unifiedList.value =
-                            _unifiedList.value?.union(it.slice(meecoNewsSliceValue until it.size))
-                                ?.toList()
-                        _meecoNextPage.value = _meecoNextPage.value?.plus(1)
+                            _unifiedList.value.union(it.slice(meecoNewsSliceValue until it.size))
+                                .toList()
+                        _meecoNextPage.value = _meecoNextPage.value.plus(1)
                     }
                 }
             }

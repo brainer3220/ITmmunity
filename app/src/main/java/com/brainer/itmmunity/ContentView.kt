@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -68,6 +69,7 @@ class ContentView : ComponentActivity() {
 }
 
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalAnimationApi::class)
 @Preview
 @Composable
@@ -76,8 +78,10 @@ fun ContentView(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
     val isDarkMode = isSystemInDarkTheme()
-    val aNews by viewModel.aNews.observeAsState()
-    val contentHtml by viewModel.contentHtml.observeAsState()
+    val aNewsState by mutableStateOf(viewModel.aNews.observeAsState())
+    val aNews by rememberSaveable { aNewsState }
+    val contentHtmlState by mutableStateOf(viewModel.contentHtml.observeAsState())
+    val contentHtml by rememberSaveable { contentHtmlState}
     val listState = rememberScrollState()
     val swipeRefreshState by remember { mutableStateOf(true) }
 
