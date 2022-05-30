@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
@@ -29,7 +30,7 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
     val scrollBehavior = remember(decayAnimationSpec) {
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
     }
-    val titleString by viewModel.titleString.observeAsState()
+    val titleString by viewModel.titleString.collectAsState()
     val navController = rememberNavController()
 
     Scaffold(
