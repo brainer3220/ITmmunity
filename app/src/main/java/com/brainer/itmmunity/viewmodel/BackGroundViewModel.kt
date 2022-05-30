@@ -28,7 +28,6 @@ class BackGroundViewModel(context: Context) : ViewModel() {
      * @author bariner
      * @return NO RETURN
      */
-    @OptIn(DelicateCoroutinesApi::class)
     fun getConnectState() {
         CoroutineScope(Dispatchers.Default).launch {
             while (true) {
@@ -47,6 +46,5 @@ class BackGroundViewModel(context: Context) : ViewModel() {
                 }
             }
         }
-
     }
 }
