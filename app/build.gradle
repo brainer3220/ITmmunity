@@ -88,7 +88,7 @@ dependencies {
     implementation 'com.github.skydoves:landscapist-glide:1.5.2'
 
     // Lottie
-    implementation "com.airbnb.android:lottie-compose:5.0.3"
+    implementation 'com.airbnb.android:lottie-compose:5.2.0'
 
     implementation 'io.github.furstenheim:copy_down:1.0'
     implementation 'com.github.jeziellago:compose-markdown:0.2.9'
