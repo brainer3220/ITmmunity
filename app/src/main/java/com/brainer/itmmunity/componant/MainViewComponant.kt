@@ -29,6 +29,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
+import com.brainer.itmmunity.navcontrol.NavScreen.ContentView.passNewsUrl
 import com.brainer.itmmunity.viewmodel.MainViewModel
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
@@ -129,8 +130,17 @@ fun NewsListOf(
                 .background(Color.White)
                 .clickable {
                     expanded = !expanded
-                    if (mainViewModel.isTabletUi.value == false) {
-                        navController.navigate("ContentView")
+                    if (!mainViewModel.isTabletUi.value) {
+                        navController.navigate(
+                            route = passNewsUrl(
+                                aNews.url
+                                    .substring(
+                                        7,
+                                        aNews.url.length
+                                    )
+                                    .replace("/", "")
+                            )
+                        )
                     }
                 }) {
             Row(modifier = modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {

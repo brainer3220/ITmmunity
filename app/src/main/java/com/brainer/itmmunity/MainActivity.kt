@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,12 +22,11 @@ import androidx.navigation.NavHostController
 import com.brainer.itmmunity.componant.AppBar
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.NewsCard
+import com.brainer.itmmunity.navcontrol.NavGraph
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.viewmodel.BackGroundViewModel
 import com.brainer.itmmunity.viewmodel.CONFIG_STR
 import com.brainer.itmmunity.viewmodel.MainViewModel
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -95,69 +94,7 @@ fun MainCompose(
     val navController = rememberAnimatedNavController()
 
     AppBar(viewModel = viewModel) {
-        AnimatedNavHost(navController = navController, startDestination = "MainList") {
-            composable(route = "MainList",
-                enterTransition = {
-                    when (initialState.destination.route) {
-                        "Red" ->
-                            slideIntoContainer(
-                                AnimatedContentScope.SlideDirection.Left,
-                                animationSpec = tween(ANIMATION_DURATION)
-                            )
-                        else -> null
-                    }
-                },
-                exitTransition = {
-                    when (targetState.destination.route) {
-                        "Blue" ->
-                            slideOutOfContainer(
-                                AnimatedContentScope.SlideDirection.Left,
-                                animationSpec = tween(ANIMATION_DURATION)
-                            )
-                        else -> null
-                    }
-                },
-                popEnterTransition = {
-                    when (initialState.destination.route) {
-                        "Blue" ->
-                            slideIntoContainer(
-                                AnimatedContentScope.SlideDirection.Right,
-                                animationSpec = tween(ANIMATION_DURATION)
-                            )
-                        else -> null
-                    }
-                },
-                popExitTransition = {
-                    when (targetState.destination.route) {
-                        "Blue" ->
-                            slideOutOfContainer(
-                                AnimatedContentScope.SlideDirection.Right,
-                                animationSpec = tween(ANIMATION_DURATION)
-                            )
-                        else -> null
-                    }
-                }) {
-                MainView(
-                    viewModel = viewModel,
-                    networkViewModel = networkViewModel,
-                    navController = navController
-                )
-            }
-
-            composable(route = "ContentView",
-                enterTransition = {
-                    slideInVertically(initialOffsetY = { ANIMATION_INIT_OFFSET_Y }) + fadeIn()
-                },
-                exitTransition = {
-                    slideOutVertically(targetOffsetY = { ANIMATION_TARGET_OFFSET_Y }) + fadeOut()
-                },
-                popEnterTransition = {
-                    slideInVertically(initialOffsetY = { ANIMATION_INIT_OFFSET_Y }) + fadeIn()
-                },
-                popExitTransition = {
-                    slideOutVertically(targetOffsetY = { ANIMATION_TARGET_OFFSET_Y }) + fadeOut()
-                }) { ContentView(viewModel = viewModel) }
-        }
+        NavGraph(navController, viewModel, networkViewModel)
     }
 }
 
