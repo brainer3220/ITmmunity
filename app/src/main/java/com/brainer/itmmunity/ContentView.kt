@@ -2,10 +2,7 @@ package com.brainer.itmmunity
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
@@ -16,7 +13,9 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,43 +29,38 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
-import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.RoundedSurface
-import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.viewmodel.MainViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dev.jeziellago.compose.markdowntext.MarkdownText
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
-class ContentView : ComponentActivity() {
-    @SuppressLint("CoroutineCreationDuringComposition")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val viewModel = MainViewModel()
-        val aNews = intent.getParcelableExtra<Croll.Content>("content")
-
-        CoroutineScope(Dispatchers.Main).launch {
-            setContent {
-                ITmmunity_AndroidTheme {
-                    // A surface container using the 'background' color from the theme
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
-                        if (aNews != null) {
-                            ContentView(viewModel)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+//class ContentView : ComponentActivity() {
+//    @SuppressLint("CoroutineCreationDuringComposition")
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//        val viewModel = MainViewModel()
+//        val aNews = intent.getParcelableExtra<Croll.Content>("content")
+//
+//        CoroutineScope(Dispatchers.Main).launch {
+//            setContent {
+//                ITmmunity_AndroidTheme {
+//                    // A surface container using the 'background' color from the theme
+//                    Surface(
+//                        modifier = Modifier.fillMaxSize(),
+//                        color = MaterialTheme.colorScheme.background
+//                    ) {
+//                        if (aNews != null) {
+//                            ContentView(viewModel)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 
 @SuppressLint("UnrememberedMutableState")
@@ -81,7 +75,7 @@ fun ContentView(
     val aNewsState by mutableStateOf(viewModel.aNews.observeAsState())
     val aNews by rememberSaveable { aNewsState }
     val contentHtmlState by mutableStateOf(viewModel.contentHtml.observeAsState())
-    val contentHtml by rememberSaveable { contentHtmlState}
+    val contentHtml by rememberSaveable { contentHtmlState }
     val listState = rememberScrollState()
     val swipeRefreshState by remember { mutableStateOf(true) }
 

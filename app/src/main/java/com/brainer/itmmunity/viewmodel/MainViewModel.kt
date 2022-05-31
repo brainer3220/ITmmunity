@@ -1,7 +1,6 @@
 package com.brainer.itmmunity.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,10 +30,10 @@ class MainViewModel : ViewModel() {
 //    val meecoNextPage: LiveData<Int> = _meecoNextPage
 
     private var _isTabletUi = MutableStateFlow(false)
-    val isTabletUi= _isTabletUi.asStateFlow()
+    val isTabletUi = _isTabletUi.asStateFlow()
 
     private var _titleString = MutableStateFlow("ITmmunity")
-    val titleString= _titleString.asStateFlow()
+    val titleString = _titleString.asStateFlow()
 
     var meecoNewsSliceValue = 0
 
