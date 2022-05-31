@@ -9,7 +9,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -44,6 +43,8 @@ const val ANIMATION_TARGET_OFFSET_Y = 5000
 lateinit var APPLICATION_CONTEXT: Context
 
 class MainActivity : ComponentActivity() {
+    private val mainvViewModel = MainViewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -69,7 +70,10 @@ class MainActivity : ComponentActivity() {
             ITmmunity_AndroidTheme {
                 // A surface container using the 'background' color from the theme
                 Surface {
-                    MainCompose(networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT))
+                    MainCompose(
+                        viewModel = mainvViewModel,
+                        networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT)
+                    )
                 }
             }
         }
