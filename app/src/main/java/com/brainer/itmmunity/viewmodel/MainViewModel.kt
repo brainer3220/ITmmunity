@@ -121,42 +121,9 @@ class MainViewModel : ViewModel() {
     fun changeAnews(news: Croll.Content?) {
         CoroutineScope(Dispatchers.Main).launch {
             _aNews.value = news
-            if (news == null) {
-                changeHtml(null)
-            }
         }
     }
 
-    /**
-     * ContentView is referenced contentHtml for drawing View
-     * @author brainer
-     * @param html String type. html HTML String
-     * @return NO RETURN
-     */
-    fun changeHtml(html: String?) {
-        CoroutineScope(Dispatchers.Main).launch {
-            _contentHtml.value = html
-        }
-    }
-
-    private var _contentHtml = MutableLiveData("")
-    val contentHtml: LiveData<String> = _contentHtml
-
-    fun getHtml() {
-        viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                kotlin.runCatching {
-                    aNews.value!!.htmlToMarkdown()
-                }.onSuccess {
-                    val contentHtmlTmp = it!!.slice(2 until it.length - 1)
-                    changeHtml(contentHtmlTmp)
-                    Log.d("getHtmlViewModel", contentHtmlTmp)
-                }.onFailure {
-                    Log.w("getHtmlViewModel", "Failed")
-                }
-            }
-        }
-    }
 
     /**
      * This function determines whether the View generates a Tablet UI.
