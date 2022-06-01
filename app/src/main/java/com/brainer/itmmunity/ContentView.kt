@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.RoundedSurface
+import com.brainer.itmmunity.viewmodel.ContentViewModel
 import com.brainer.itmmunity.viewmodel.MainViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -69,12 +70,14 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 @Composable
 fun ContentView(
     viewModel: MainViewModel = MainViewModel(),
+    contentViewModel: ContentViewModel = ContentViewModel(),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
     val isDarkMode = isSystemInDarkTheme()
+//    val isTabletUi by viewModel.isTabletUi.collectAsState()
     val aNewsState by mutableStateOf(viewModel.aNews.observeAsState())
     val aNews by rememberSaveable { aNewsState }
-    val contentHtmlState by mutableStateOf(viewModel.contentHtml.observeAsState())
+    val contentHtmlState by mutableStateOf(contentViewModel.contentHtml.collectAsState())
     val contentHtml by rememberSaveable { contentHtmlState }
     val listState = rememberScrollState()
     val swipeRefreshState by remember { mutableStateOf(true) }
@@ -86,7 +89,7 @@ fun ContentView(
         textColor = Color(23, 23, 23)
     }
 
-    LaunchedEffect(aNews) {
+    contentViewModel.setContent(aNews)
         viewModel.changeHtml(null)
         viewModel.getHtml()
     }
@@ -127,9 +130,9 @@ fun ContentView(
         RoundedSurface {
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                onRefresh = { viewModel.getHtml() }) {
+                    onRefresh = { contentViewModel.getHtml() }) {
                 AnimatedContent(targetState = contentHtml) { targetHtml ->
-                    if (targetHtml == null || targetHtml.isEmpty()) {
+                        if (targetHtml.isEmpty()) {
                         BoxWithConstraints(
                             modifier = Modifier
                                 .fillMaxSize()
