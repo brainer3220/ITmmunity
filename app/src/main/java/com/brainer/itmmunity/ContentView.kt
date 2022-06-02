@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -99,76 +98,82 @@ fun ContentView(
 //
 //    }
 
-    BoxWithConstraints(Modifier.fillMaxSize()) {
-        val boxWithConstraintsScope = this
-        Column {
-            Row {
-                SmallTopAppBar(title = {
-                    aNews?.let {
-                        Text(
-                            text = it.title,
-                            fontSize = 20.sp,
-                            textAlign = TextAlign.Left,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                },
-                    actions = {
-                        val context = LocalContext.current
-                        Icon(
-                            Icons.Filled.Share,
-                            contentDescription = "공유",
-                            Modifier.clickable {
-                                val sendIntent: Intent = Intent().apply {
-                                    action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TITLE, aNews!!.title)
-                                    putExtra(Intent.EXTRA_SUBJECT, "Powered by ITmmunity")
-                                    putExtra(Intent.EXTRA_TEXT, aNews!!.url)
-                                    type = "text/plain"
-                                }
 
-                                val shareIntent = Intent.createChooser(sendIntent, null)
-                                context.startActivity(shareIntent)
-                            })
-                    })
-                Spacer(modifier = Modifier.padding(4.dp))
-            }
-            RoundedSurface {
-                SwipeRefresh(
-                    state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                    onRefresh = { contentViewModel.getHtml() }) {
-                    AnimatedContent(targetState = contentHtml) { targetHtml ->
-                        if (targetHtml.isEmpty()) {
-                            BoxWithConstraints(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(top = 10.dp, bottom = 10.dp)
-                            ) {
-                                LoadingView()
-                            }
-                        } else {
-                            kotlin.runCatching {
-                                SelectionContainer(Modifier.fillMaxSize()) {
-                                    Column(Modifier.verticalScroll(listState)) {
-                                        MarkdownText(
-                                            modifier = Modifier.padding(8.dp),
-                                            markdown = targetHtml,
-                                            color = textColor
-                                        )
-                                        Log.v("contentHtml", targetHtml)
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        RoundedSurface() {
+            val boxWithConstraintsScope = this
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                onRefresh = { contentViewModel.getHtml() }) {
+                AnimatedContent(targetState = contentHtml) { targetHtml ->
+                    if (targetHtml.isEmpty()) {
+                        BoxWithConstraints(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            LoadingView()
+                        }
+                    } else {
+                        kotlin.runCatching {
+                            SelectionContainer(Modifier.fillMaxSize()) {
+                                Column(Modifier.verticalScroll(listState)) {
+                                    Row(
+                                        Modifier
+                                            .height(64.dp)
+                                            .fillMaxWidth()
+                                            .padding(16.dp)
+                                    ) {
+                                        aNews?.let {
+                                            Text(
+                                                modifier = Modifier.weight(9f),
+                                                text = it.title,
+                                                fontSize = 20.sp,
+                                                textAlign = TextAlign.Left,
+                                                maxLines = 2,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        }
+
+                                        val context = LocalContext.current
+                                        Icon(
+                                            Icons.Filled.Share,
+                                            contentDescription = "공유",
+                                            Modifier
+                                                .weight(1f)
+                                                .clickable {
+                                                    val sendIntent: Intent = Intent().apply {
+                                                        action = Intent.ACTION_SEND
+                                                        putExtra(Intent.EXTRA_TITLE, aNews!!.title)
+                                                        putExtra(
+                                                            Intent.EXTRA_SUBJECT,
+                                                            "Powered by ITmmunity"
+                                                        )
+                                                        putExtra(Intent.EXTRA_TEXT, aNews!!.url)
+                                                        type = "text/plain"
+                                                    }
+
+                                                    val shareIntent =
+                                                        Intent.createChooser(sendIntent, null)
+                                                    context.startActivity(shareIntent)
+                                                })
                                     }
+
+                                    MarkdownText(
+                                        modifier = Modifier.padding(8.dp),
+                                        markdown = targetHtml,
+                                        color = textColor
+                                    )
+                                    Log.v("contentHtml", targetHtml)
                                 }
-                            }.onFailure {
-                                Log.w("contentHtml", it.toString())
                             }
+                        }.onFailure {
+                            Log.w("contentHtml", it.toString())
                         }
                     }
                 }
             }
         }
     }
-
 }
 
 @Preview
