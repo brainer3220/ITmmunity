@@ -90,76 +90,85 @@ fun ContentView(
     }
 
     contentViewModel.setContent(aNews)
-        viewModel.changeHtml(null)
-        viewModel.getHtml()
-    }
 
-    Column {
-        Row {
-            SmallTopAppBar(title = {
-                aNews?.let {
-                    Text(
-                        text = it.title,
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Left,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            },
-                actions = {
-                    val context = LocalContext.current
-                    Icon(
-                        Icons.Filled.Share,
-                        contentDescription = "공유",
-                        Modifier.clickable {
-                            val sendIntent: Intent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TITLE, aNews!!.title)
-                                putExtra(Intent.EXTRA_SUBJECT, "Powered by ITmmunity")
-                                putExtra(Intent.EXTRA_TEXT, aNews!!.url)
-                                type = "text/plain"
-                            }
+//    LaunchedEffect(aNews) {
+//        contentViewModel.getHtml()
+//    }
 
-                            val shareIntent = Intent.createChooser(sendIntent, null)
-                            context.startActivity(shareIntent)
-                        })
-                })
-            Spacer(modifier = Modifier.padding(4.dp))
-        }
-        RoundedSurface {
-            SwipeRefresh(
-                state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                    onRefresh = { contentViewModel.getHtml() }) {
-                AnimatedContent(targetState = contentHtml) { targetHtml ->
-                        if (targetHtml.isEmpty()) {
-                        BoxWithConstraints(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(top = 10.dp, bottom = 10.dp)
-                        ) {
-                            LoadingView()
-                        }
-                    } else {
-                        kotlin.runCatching {
-                            SelectionContainer(Modifier.fillMaxSize()) {
-                                Column(Modifier.verticalScroll(listState)) {
-                                    MarkdownText(
-                                        modifier = Modifier.padding(8.dp),
-                                        markdown = targetHtml,
-                                        color = textColor
-                                    )
-                                    Log.v("contentHtml", targetHtml.toString())
+//    LaunchedEffect(isTabletUi) {
+//
+//    }
+
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        val boxWithConstraintsScope = this
+        Column {
+            Row {
+                SmallTopAppBar(title = {
+                    aNews?.let {
+                        Text(
+                            text = it.title,
+                            fontSize = 20.sp,
+                            textAlign = TextAlign.Left,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                },
+                    actions = {
+                        val context = LocalContext.current
+                        Icon(
+                            Icons.Filled.Share,
+                            contentDescription = "공유",
+                            Modifier.clickable {
+                                val sendIntent: Intent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TITLE, aNews!!.title)
+                                    putExtra(Intent.EXTRA_SUBJECT, "Powered by ITmmunity")
+                                    putExtra(Intent.EXTRA_TEXT, aNews!!.url)
+                                    type = "text/plain"
                                 }
+
+                                val shareIntent = Intent.createChooser(sendIntent, null)
+                                context.startActivity(shareIntent)
+                            })
+                    })
+                Spacer(modifier = Modifier.padding(4.dp))
+            }
+            RoundedSurface {
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                    onRefresh = { contentViewModel.getHtml() }) {
+                    AnimatedContent(targetState = contentHtml) { targetHtml ->
+                        if (targetHtml.isEmpty()) {
+                            BoxWithConstraints(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(top = 10.dp, bottom = 10.dp)
+                            ) {
+                                LoadingView()
                             }
-                        }.onFailure {
-                            Log.w("contentHtml", it.toString())
+                        } else {
+                            kotlin.runCatching {
+                                SelectionContainer(Modifier.fillMaxSize()) {
+                                    Column(Modifier.verticalScroll(listState)) {
+                                        MarkdownText(
+                                            modifier = Modifier.padding(8.dp),
+                                            markdown = targetHtml,
+                                            color = textColor
+                                        )
+                                        Log.v("contentHtml", targetHtml)
+                                    }
+                                }
+                            }.onFailure {
+                                Log.w("contentHtml", it.toString())
+                            }
                         }
                     }
                 }
             }
         }
     }
+
 }
 
 @Preview

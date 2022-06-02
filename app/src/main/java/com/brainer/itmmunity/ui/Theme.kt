@@ -7,17 +7,24 @@ import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import com.brainer.ITmmunity.ui.theme.Primary
-import com.brainer.ITmmunity.ui.theme.themeOFDarkPrimary
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
+
 
 private val DarkColorPalette = darkColors(
-    primary = themeOFDarkPrimary
+    primary = Color(3, 129, 254),
+    surface = Black,
+    background = LightGray
 //    primaryVariant = purple700,
 //    secondary = DarkWhite
 )
 
 private val LightColorPalette = lightColors(
-    primary = Primary
+    primary = Color(62, 145, 255),
+    surface = LightGray,
+    background = White
 //    primaryVariant = purple700,
 //    secondary = AllWhite
 
