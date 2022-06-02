@@ -1,6 +1,10 @@
 package com.brainer.itmmunity.componant
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -11,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
 import com.brainer.itmmunity.viewmodel.MainViewModel
 
 
@@ -21,7 +24,8 @@ import com.brainer.itmmunity.viewmodel.MainViewModel
  * @param viewModel MainViewModel
  * @param contentView content parameter for Scaffold
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@ExperimentalAnimationApi
+@ExperimentalMaterial3Api
 @Preview
 @Composable
 fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable () -> Unit = {}) {
@@ -30,7 +34,6 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec)
     }
     val titleString by viewModel.titleString.collectAsState()
-    val navController = rememberNavController()
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -49,7 +52,7 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
                                 SizeTransform(clip = false)
                             )
                         }) { targetTitle ->
-                        Text(targetTitle!!)
+                        Text(targetTitle)
                     }
                 },
                 actions = {
@@ -72,6 +75,8 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
 //            }
 //        },
         content = {
-            contentView()
+            Box(Modifier.fillMaxSize().padding(it)) {
+                contentView()
+            }
         })
 }
