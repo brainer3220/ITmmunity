@@ -22,6 +22,7 @@ import androidx.navigation.NavHostController
 import com.brainer.itmmunity.componant.AppBar
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.NewsCard
+import com.brainer.itmmunity.componant.RoundedSurface
 import com.brainer.itmmunity.navcontrol.NavGraph
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.viewmodel.BackGroundViewModel
@@ -144,11 +145,13 @@ fun MainView(
                             if (it != null) {
                                 ContentView(viewModel = viewModel)
                             } else {
-                                Text(
-                                    modifier = Modifier.fillMaxSize(),
-                                    text = "컨텐츠를 클릭해 보세요.",
-                                    textAlign = TextAlign.Center
-                                )
+                                RoundedSurface {
+                                    Text(
+                                        modifier = Modifier.fillMaxSize(),
+                                        text = "컨텐츠를 클릭해 보세요.",
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                         }
                     }
