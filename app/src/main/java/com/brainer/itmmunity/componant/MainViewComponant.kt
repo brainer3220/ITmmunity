@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -51,37 +52,41 @@ fun LoadingView(
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.Url(lottieURL!!))
 
-    Column {
-        if (spaceWeight != 0F) {
-            Spacer(modifier = Modifier.weight(spaceWeight))
-        }
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
-            if (composition == null) {
-                CircularProgressIndicator(
+    RoundedSurface {
+        Surface(Modifier.fillMaxSize()) {
+            Column {
+                if (spaceWeight != 0F) {
+                    Spacer(modifier = Modifier.weight(spaceWeight))
+                }
+                Box(
                     Modifier
-                        .align(Alignment.Center)
                         .fillMaxWidth()
-                )
-            } else {
-                LottieAnimation(
-                    composition, modifier = Modifier
-                        .align(Alignment.Center)
-                        .fillMaxSize()
-                )
+                        .weight(1f)
+                ) {
+                    if (composition == null) {
+                        CircularProgressIndicator(
+                            Modifier
+                                .align(Alignment.Center)
+                                .fillMaxWidth()
+                        )
+                    } else {
+                        LottieAnimation(
+                            composition, modifier = Modifier
+                                .align(Alignment.Center)
+                                .fillMaxSize()
+                        )
+                    }
+                }
+                if (spaceWeight != 0F) {
+                    Spacer(modifier = Modifier.weight(spaceWeight))
+                }
             }
-        }
-        if (spaceWeight != 0F) {
-            Spacer(modifier = Modifier.weight(spaceWeight))
         }
     }
 }
 
 
-@OptIn(DelicateCoroutinesApi::class)
+@DelicateCoroutinesApi
 @Composable
 fun NewsCard(
     news: List<Croll.Content>,
@@ -197,7 +202,16 @@ fun NewsListOf(
  */
 @Composable
 fun RoundedSurface(contentView: @Composable () -> Unit = {}) {
-    Surface(shape = RoundedCornerShape(ROUNDED_VALUE.dp)) {
-        contentView()
+    val backGroundColor = if (isSystemInDarkTheme()) {
+        Color.Black
+    } else {
+        Color(245, 244, 244)
+    }
+    Box {
+        Surface(color = backGroundColor) {
+            Surface(shape = RoundedCornerShape(ROUNDED_VALUE.dp)) {
+                contentView()
+            }
+        }
     }
 }

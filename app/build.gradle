@@ -81,6 +81,9 @@ dependencies {
     //noinspection GradleCompatible
 //    implementation 'com.android.support:appcompat-v7:28.0.0'
 
+//    NestedScrollView
+    implementation "com.github.Tlaster:NestedScrollView:0.7.0"
+
     // Jsoup
     implementation 'org.jsoup:jsoup:1.15.1'
 

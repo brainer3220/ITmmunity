@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -22,6 +23,7 @@ import androidx.navigation.NavHostController
 import com.brainer.itmmunity.componant.AppBar
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.NewsCard
+import com.brainer.itmmunity.componant.RoundedSurface
 import com.brainer.itmmunity.navcontrol.NavGraph
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.viewmodel.BackGroundViewModel
@@ -44,6 +46,7 @@ lateinit var APPLICATION_CONTEXT: Context
 class MainActivity : ComponentActivity() {
     private val mainvViewModel = MainViewModel()
 
+    @ExperimentalMaterial3Api
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -84,6 +87,7 @@ class MainActivity : ComponentActivity() {
  * @param viewModel MainViewModel
  * @param networkViewModel BackGroundViewModel
  */
+@ExperimentalMaterial3Api
 @OptIn(ExperimentalAnimationApi::class)
 @Preview
 @Composable
@@ -144,11 +148,13 @@ fun MainView(
                             if (it != null) {
                                 ContentView(viewModel = viewModel)
                             } else {
-                                Text(
-                                    modifier = Modifier.fillMaxSize(),
-                                    text = "컨텐츠를 클릭해 보세요.",
-                                    textAlign = TextAlign.Center
-                                )
+                                RoundedSurface {
+                                    Text(
+                                        modifier = Modifier.fillMaxSize(),
+                                        text = "컨텐츠를 클릭해 보세요.",
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                         }
                     }

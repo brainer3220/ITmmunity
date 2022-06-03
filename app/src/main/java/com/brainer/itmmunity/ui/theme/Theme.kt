@@ -10,12 +10,13 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColorScheme(
     primary = Color.Blue,
-//    primaryVariant = Color.Blue,
+    background = Color.Black,
     secondary = Color.Blue
 )
 
 private val LightColorPalette = lightColorScheme(
     primary = Color.Blue,
+    background = Color.White,
 //    primaryVariant = Color.Blue,
     secondary = Color.Blue
 )
