@@ -2,6 +2,7 @@ package com.brainer.itmmunity.navcontrol
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -48,6 +49,6 @@ fun NavGraph(
             popEnterTransition = ComposableTransition.ContentView.popEnterTransition,
             popExitTransition = ComposableTransition.ContentView.popExitTransition
         )
-        { ContentView(viewModel = viewModel) }
+        { viewModel.aNews.collectAsState().value?.let { it1 -> ContentView(aNews = it1) } }
     }
 }
