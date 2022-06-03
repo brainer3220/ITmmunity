@@ -85,13 +85,6 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
             }
         },
         containerColor = containerColor,
-        content = {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .padding(it)
-            ) {
-                contentView()
-            }
-        })
+        content = {}
+    )
 }
