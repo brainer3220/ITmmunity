@@ -31,8 +31,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -80,6 +80,9 @@ dependencies {
 
     //noinspection GradleCompatible
 //    implementation 'com.android.support:appcompat-v7:28.0.0'
+
+//    NestedScrollView
+    implementation "com.github.Tlaster:NestedScrollView:0.7.0"
 
     // Jsoup
     implementation 'org.jsoup:jsoup:1.15.1'
