@@ -2,7 +2,6 @@ package com.brainer.itmmunity.componant
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -115,9 +114,7 @@ fun NewsCard(
     }
 }
 
-@SuppressLint("SetJavaScriptEnabled", "CoroutineCreationDuringComposition")
-@DelicateCoroutinesApi
-@OptIn(ExperimentalAnimationApi::class)
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun NewsListOf(
     aNews: Croll.Content,
@@ -135,18 +132,6 @@ fun NewsListOf(
                 .background(Color.White)
                 .clickable {
                     expanded = !expanded
-                    if (!mainViewModel.isTabletUi.value) {
-                        navController.navigate(
-                            route = passNewsUrl(
-                                aNews.url
-                                    .substring(
-                                        7,
-                                        aNews.url.length
-                                    )
-                                    .replace("/", "")
-                            )
-                        )
-                    }
                 }) {
             Row(modifier = modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 if (aNews.image != null) {
@@ -187,6 +172,18 @@ fun NewsListOf(
 
         if (expanded) {
             CoroutineScope(Dispatchers.Main).launch {
+                if (!mainViewModel.isTabletUi.value) {
+                    navController.navigate(
+                        route = passNewsUrl(
+                            aNews.url
+                                .substring(
+                                    7,
+                                    aNews.url.length
+                                )
+                                .replace("/", "")
+                        )
+                    )
+                }
                 kotlin.runCatching {
                     mainViewModel.changeAnews(aNews)
                 }

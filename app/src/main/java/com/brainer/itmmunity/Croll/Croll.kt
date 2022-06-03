@@ -15,9 +15,9 @@ open class Croll {
     @Parcelize
     data class Content(
         var title: String,
-        var image: String?,
+        var image: String? = null,
         var hit: Int,
-        var numComment: Int?,
+        var numComment: Int? = null,
         var url: String
     ) : Parcelable {
         private fun returnContent(): Pair<String?, Elements?> {

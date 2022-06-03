@@ -1,8 +1,6 @@
 package com.brainer.itmmunity.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.brainer.itmmunity.Croll.Croll
@@ -23,7 +21,7 @@ class MainViewModel : ViewModel() {
     private var _unifiedList = MutableStateFlow(listOf<Croll.Content>())
     val unifiedList = _unifiedList.asStateFlow()
 
-    private var _underKgNextPage = MutableLiveData(0)
+    private var _underKgNextPage = MutableStateFlow(0)
 //    val underKgNextPage: LiveData<Int> = _underKgNextPage
 
     private var _meecoNextPage = MutableStateFlow(0)
@@ -115,8 +113,8 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private var _aNews = MutableLiveData<Croll.Content>(null)
-    val aNews: LiveData<Croll.Content> = _aNews
+    private var _aNews = MutableStateFlow<Croll.Content?>(null)
+    val aNews: MutableStateFlow<Croll.Content?> = _aNews
 
     fun changeAnews(news: Croll.Content?) {
         CoroutineScope(Dispatchers.Main).launch {
