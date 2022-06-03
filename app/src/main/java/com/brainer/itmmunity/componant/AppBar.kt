@@ -76,13 +76,7 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
             )
         },
         bottomBar = {
-            val backgroundColor = if (isSystemInDarkTheme()) {
-                Black
-            } else {
-                Color(245, 244, 244)
-            }
-
-            BottomNavigation(modifier = Modifier.height(62.dp), backgroundColor = backgroundColor) {
+            BottomNavigation(modifier = Modifier.height(62.dp), backgroundColor = containerColor) {
 //                val navBackStackEntry by navController.currentBackStackEntryAsState()
 //                val currentDestination = navBackStackEntry?.destination
 //                BottomNavigationItem(selected = 0, onClick = { /*TODO*/ }) {
