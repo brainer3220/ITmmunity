@@ -47,81 +47,73 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
 //    val topBarState = nestedScrollViewState.offset
     val smallTopAppBarAlpha by animateFloatAsState(1f)
 
-    Scaffold(
-        topBar = {
-            VerticalNestedScrollView(
-                state = nestedScrollViewState,
-                header = {
-                    Box(
-                        modifier = Modifier.height(SCROLL_HEIGHT.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            Modifier
-                                .graphicsLayer(alpha = smallTopAppBarAlpha)
-                                .fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "ITmmunity",
-                                fontSize = 32.sp,
-                            )
-                        }
-                    }
-                },
-                content = {
-                    Column {
-                        SmallTopAppBar(
-                            title = {
-                                AnimatedContent(
-                                    targetState = titleString,
-                                    transitionSpec = {
-                                        if (titleString != "ITmmunity") {
-                                            slideInVertically { height -> height } + fadeIn() with
-                                                    slideOutVertically { height -> -height } + fadeOut()
-                                        } else {
-                                            slideInVertically { height -> -height } + fadeIn() with
-                                                    slideOutVertically { height -> height } + fadeOut()
-                                        }.using(
-                                            SizeTransform(clip = false)
-                                        )
-                                    }) { targetTitle ->
-                                    Text(
-                                        text = targetTitle,
-                                        modifier = Modifier.graphicsLayer(alpha = smallTopAppBarAlpha)
-                                    )
-                                }
-                            },
-                            actions = {
-                                IconButton(
-                                    onClick = { }
-                                ) {
-                                    Icon(Icons.Filled.Search, contentDescription = "Search button")
-                                }
-                            },
-                            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor)
-                        )
-                        Box(
-                            Modifier
-                                .fillMaxSize()
-                        ) {
-                            contentView()
-                        }
-                    }
+    VerticalNestedScrollView(
+        state = nestedScrollViewState,
+        header = {
+            Box(
+                modifier = Modifier.height(SCROLL_HEIGHT.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    Modifier
+                        .graphicsLayer(alpha = smallTopAppBarAlpha)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "ITmmunity",
+                        fontSize = 32.sp,
+                    )
                 }
-            )
-        },
-        bottomBar = {
-            BottomNavigation(modifier = Modifier.height(62.dp), backgroundColor = containerColor) {
-//                val navBackStackEntry by navController.currentBackStackEntryAsState()
-//                val currentDestination = navBackStackEntry?.destination
-//                BottomNavigationItem(selected = 0, onClick = { /*TODO*/ }) {
-//                    /*TODO*/
-//                }
             }
         },
-        containerColor = containerColor,
-        content = {}
+        content = {
+            Column {
+                SmallTopAppBar(
+                    title = {
+                        AnimatedContent(
+                            targetState = titleString,
+                            transitionSpec = {
+                                if (titleString != "ITmmunity") {
+                                    slideInVertically { height -> height } + fadeIn() with
+                                            slideOutVertically { height -> -height } + fadeOut()
+                                } else {
+                                    slideInVertically { height -> -height } + fadeIn() with
+                                            slideOutVertically { height -> height } + fadeOut()
+                                }.using(
+                                    SizeTransform(clip = false)
+                                )
+                            }) { targetTitle ->
+                            Text(
+                                text = targetTitle,
+                                modifier = Modifier.graphicsLayer(alpha = smallTopAppBarAlpha)
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = { }
+                        ) {
+                            Icon(Icons.Filled.Search, contentDescription = "Search button")
+                        }
+                    },
+                    colors = TopAppBarDefaults.smallTopAppBarColors(containerColor)
+                )
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                ) {
+                    contentView()
+                }
+                BottomNavigation(modifier = Modifier.height(62.dp), backgroundColor = containerColor) {
+    //                val navBackStackEntry by navController.currentBackStackEntryAsState()
+    //                val currentDestination = navBackStackEntry?.destination
+    //                BottomNavigationItem(selected = 0, onClick = { /*TODO*/ }) {
+    //                    /*TODO*/
+    //                }
+                }
+            }
+        }
     )
 }
