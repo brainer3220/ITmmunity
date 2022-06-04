@@ -1,16 +1,17 @@
 package com.brainer.itmmunity.componant
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,9 +32,7 @@ const val SCROLL_HEIGHT = 295f
  * @param viewModel MainViewModel
  * @param contentView content parameter for Scaffold
  */
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalAnimationApi
-@ExperimentalMaterial3Api
 @Composable
 fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable () -> Unit = {}) {
     val containerColor = if (isSystemInDarkTheme()) {
@@ -51,8 +50,8 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
         state = nestedScrollViewState,
         header = {
             Box(
-                modifier = Modifier.height(SCROLL_HEIGHT.dp),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.height(SCROLL_HEIGHT.dp).background(containerColor),
+                contentAlignment = Alignment.Center,
             ) {
                 Column(
                     Modifier
@@ -106,14 +105,29 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
                 ) {
                     contentView()
                 }
-                BottomNavigation(modifier = Modifier.height(62.dp), backgroundColor = containerColor) {
-    //                val navBackStackEntry by navController.currentBackStackEntryAsState()
-    //                val currentDestination = navBackStackEntry?.destination
-    //                BottomNavigationItem(selected = 0, onClick = { /*TODO*/ }) {
-    //                    /*TODO*/
-    //                }
+                BottomNavigation(
+                    modifier = Modifier.height(62.dp),
+                    backgroundColor = containerColor
+                ) {
+                    //                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    //                val currentDestination = navBackStackEntry?.destination
+                    //                BottomNavigationItem(selected = 0, onClick = { /*TODO*/ }) {
+                    //                    /*TODO*/
+                    //                }
                 }
             }
+        }
+    )
+}
+
+@ExperimentalMaterial3Api
+@ExperimentalAnimationApi
+@Preview
+@Composable
+fun AppBarPreview() {
+    AppBar(
+        contentView = {
+            Text("Hello")
         }
     )
 }
