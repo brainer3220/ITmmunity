@@ -14,11 +14,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.brainer.itmmunity.componant.AppBar
 import com.brainer.itmmunity.componant.LoadingView
@@ -35,6 +37,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import kotlinx.coroutines.DelicateCoroutinesApi
 
 const val TABLET_UI_WIDTH = 480
 const val FIREBASE_MINIMUM_FETCH_SEC = 3600L
@@ -43,10 +46,11 @@ const val ANIMATION_INIT_OFFSET_Y = 800
 const val ANIMATION_TARGET_OFFSET_Y = 5000
 lateinit var APPLICATION_CONTEXT: Context
 
+@ExperimentalAnimationApi
+@ExperimentalMaterial3Api
 class MainActivity : ComponentActivity() {
     private val mainvViewModel = MainViewModel()
 
-    @ExperimentalMaterial3Api
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -87,8 +91,8 @@ class MainActivity : ComponentActivity() {
  * @param viewModel MainViewModel
  * @param networkViewModel BackGroundViewModel
  */
+@ExperimentalAnimationApi
 @ExperimentalMaterial3Api
-@OptIn(ExperimentalAnimationApi::class)
 @Preview
 @Composable
 fun MainCompose(
@@ -103,6 +107,7 @@ fun MainCompose(
 }
 
 
+@DelicateCoroutinesApi
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedCrossfadeTargetStateParameter")
 @Composable
 fun MainView(
@@ -111,9 +116,11 @@ fun MainView(
     navController: NavHostController
 ) {
     val unifiedList by viewModel.unifiedList.collectAsState()
-    val aNews by viewModel.aNews.observeAsState()
+    val aNewsState = MutableLiveData(viewModel.aNews.collectAsState())
+    val aNews by rememberSaveable { aNewsState.value!! }
 
     val isConnection by networkViewModel.isConnect.collectAsState()
+    val isTabletUi by viewModel.isTabletUi.collectAsState()
 
     val swipeRefreshState by remember { mutableStateOf(true) }
 
@@ -146,7 +153,7 @@ fun MainView(
                     Box(modifier = Modifier.weight(1f)) {
                         Crossfade(targetState = aNews) {
                             if (it != null) {
-                                ContentView(viewModel = viewModel)
+                                ContentView(aNews = aNews!!)
                             } else {
                                 RoundedSurface {
                                     Text(
@@ -181,7 +188,7 @@ fun MainView(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
+@ExperimentalAnimationApi
 @Preview
 @Composable
 fun MainViewTest() {

@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,10 +27,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
+import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.RoundedSurface
 import com.brainer.itmmunity.viewmodel.ContentViewModel
-import com.brainer.itmmunity.viewmodel.MainViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dev.jeziellago.compose.markdowntext.MarkdownText
@@ -65,17 +64,16 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalAnimationApi::class)
-@Preview
 @Composable
 fun ContentView(
-    viewModel: MainViewModel = MainViewModel(),
+    aNews: Croll.Content,
     contentViewModel: ContentViewModel = ContentViewModel(),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
     val isDarkMode = isSystemInDarkTheme()
 //    val isTabletUi by viewModel.isTabletUi.collectAsState()
-    val aNewsState by mutableStateOf(viewModel.aNews.observeAsState())
-    val aNews by rememberSaveable { aNewsState }
+//    val aNewsState by mutableStateOf(viewModel.aNews.collectAsState())
+//    val aNews by rememberSaveable { aNewsState }
     val contentHtmlState by mutableStateOf(contentViewModel.contentHtml.collectAsState())
     val contentHtml by rememberSaveable { contentHtmlState }
     val listState = rememberScrollState()
@@ -97,7 +95,6 @@ fun ContentView(
 //    LaunchedEffect(isTabletUi) {
 //
 //    }
-
 
     BoxWithConstraints(Modifier.fillMaxSize()) {
         RoundedSurface() {
@@ -123,7 +120,7 @@ fun ContentView(
                                             .fillMaxWidth()
                                             .padding(16.dp)
                                     ) {
-                                        aNews?.let {
+                                        aNews.let {
                                             Text(
                                                 modifier = Modifier.weight(9f),
                                                 text = it.title,
@@ -178,6 +175,10 @@ fun ContentView(
 
 @Preview
 @Composable
-fun ContentViewTest() {
-    ContentView(MainViewModel())
+fun ContentViewPreview() {
+    ContentView(Croll.Content(
+        title = "안녕하세요",
+        hit = 0,
+        url = "http://underkg.co.kr/news/2897268"
+    ))
 }
