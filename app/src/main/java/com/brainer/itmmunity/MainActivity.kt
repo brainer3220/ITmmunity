@@ -47,6 +47,7 @@ const val ANIMATION_TARGET_OFFSET_Y = 5000
 lateinit var APPLICATION_CONTEXT: Context
 
 
+@ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
     private val mainvViewModel = MainViewModel()
 

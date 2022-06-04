@@ -97,7 +97,7 @@ fun ContentView(
 //    }
 
     BoxWithConstraints(Modifier.fillMaxSize()) {
-        RoundedSurface() {
+        RoundedSurface {
             val boxWithConstraintsScope = this
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
@@ -176,10 +176,12 @@ fun ContentView(
 @ExperimentalAnimationApi
 @Preview
 @Composable
-fun ContentViewPreview() {
-    ContentView(Croll.Content(
-        title = "안녕하세요",
-        hit = 0,
-        url = "http://underkg.co.kr/news/2897268"
-    ))
+fun ContentViewTest() {
+    ContentView(
+        Croll.Content(
+            title = "안녕하세요",
+            url = "https://www.google.com",
+            hit = 0
+        )
+    )
 }

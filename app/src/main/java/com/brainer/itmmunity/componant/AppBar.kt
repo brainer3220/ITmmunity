@@ -104,14 +104,29 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
                 ) {
                     contentView()
                 }
-                BottomNavigation(modifier = Modifier.height(62.dp), backgroundColor = containerColor) {
-    //                val navBackStackEntry by navController.currentBackStackEntryAsState()
-    //                val currentDestination = navBackStackEntry?.destination
-    //                BottomNavigationItem(selected = 0, onClick = { /*TODO*/ }) {
-    //                    /*TODO*/
-    //                }
+                BottomNavigation(
+                    modifier = Modifier.height(62.dp),
+                    backgroundColor = containerColor
+                ) {
+                    //                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    //                val currentDestination = navBackStackEntry?.destination
+                    //                BottomNavigationItem(selected = 0, onClick = { /*TODO*/ }) {
+                    //                    /*TODO*/
+                    //                }
                 }
             }
+        }
+    )
+}
+
+@ExperimentalMaterial3Api
+@ExperimentalAnimationApi
+@Preview
+@Composable
+fun AppBarPreview() {
+    AppBar(
+        contentView = {
+            Text("Hello")
         }
     )
 }
