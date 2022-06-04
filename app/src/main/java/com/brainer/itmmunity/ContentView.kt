@@ -64,7 +64,6 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalAnimationApi::class)
-//@Preview
 @Composable
 fun ContentView(
     aNews: Croll.Content,
@@ -176,6 +175,10 @@ fun ContentView(
 
 @Preview
 @Composable
-fun ContentViewTest() {
-    ContentView(MainViewModel())
+fun ContentViewPreview() {
+    ContentView(Croll.Content(
+        title = "안녕하세요",
+        hit = 0,
+        url = "http://underkg.co.kr/news/2897268"
+    ))
 }
