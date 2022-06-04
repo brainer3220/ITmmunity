@@ -2,6 +2,7 @@ package com.brainer.itmmunity.componant
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomNavigation
@@ -49,8 +50,8 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
         state = nestedScrollViewState,
         header = {
             Box(
-                modifier = Modifier.height(SCROLL_HEIGHT.dp),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.height(SCROLL_HEIGHT.dp).background(containerColor),
+                contentAlignment = Alignment.Center,
             ) {
                 Column(
                     Modifier
