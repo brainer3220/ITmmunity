@@ -62,8 +62,8 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 //}
 
 
+@ExperimentalAnimationApi
 @SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ContentView(
     aNews: Croll.Content,
@@ -173,6 +173,7 @@ fun ContentView(
     }
 }
 
+@ExperimentalAnimationApi
 @Preview
 @Composable
 fun ContentViewPreview() {
