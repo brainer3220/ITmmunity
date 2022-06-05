@@ -25,6 +25,7 @@ import moe.tlaster.nestedscrollview.VerticalNestedScrollView
 import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
 
 const val SCROLL_HEIGHT = 295f
+const val SCROLL_TABLET_HEIGHT = 155f
 
 /**
  * AppBar is reusable and app based Comopse
@@ -45,12 +46,15 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
     val nestedScrollViewState = rememberNestedScrollViewState()
 //    val topBarState = nestedScrollViewState.offset
     val smallTopAppBarAlpha by animateFloatAsState(1f)
+    val isTabletUi by viewModel.isTabletUi.collectAsState()
 
     VerticalNestedScrollView(
         state = nestedScrollViewState,
         header = {
             Box(
-                modifier = Modifier.height(SCROLL_HEIGHT.dp).background(containerColor),
+                modifier = Modifier
+                    .height(isTabletUi.let { if (it) SCROLL_TABLET_HEIGHT.dp else SCROLL_HEIGHT.dp })
+                    .background(containerColor),
                 contentAlignment = Alignment.Center,
             ) {
                 Column(
