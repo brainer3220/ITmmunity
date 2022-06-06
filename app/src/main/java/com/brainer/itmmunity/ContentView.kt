@@ -35,32 +35,6 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
-//class ContentView : ComponentActivity() {
-//    @SuppressLint("CoroutineCreationDuringComposition")
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        val viewModel = MainViewModel()
-//        val aNews = intent.getParcelableExtra<Croll.Content>("content")
-//
-//        CoroutineScope(Dispatchers.Main).launch {
-//            setContent {
-//                ITmmunity_AndroidTheme {
-//                    // A surface container using the 'background' color from the theme
-//                    Surface(
-//                        modifier = Modifier.fillMaxSize(),
-//                        color = MaterialTheme.colorScheme.background
-//                    ) {
-//                        if (aNews != null) {
-//                            ContentView(viewModel)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-
 
 @ExperimentalAnimationApi
 @SuppressLint("UnrememberedMutableState")
