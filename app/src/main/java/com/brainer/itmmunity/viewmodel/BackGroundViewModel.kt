@@ -32,7 +32,7 @@ class BackGroundViewModel(context: Context) : ViewModel() {
      * @author bariner
      * @return NO RETURN
      */
-    fun getConnectState() {
+    private fun getConnectState() {
         CoroutineScope(Dispatchers.Default).launch {
             while (true) {
                 delay(3000L)
