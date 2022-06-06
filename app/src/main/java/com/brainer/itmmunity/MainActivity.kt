@@ -46,8 +46,8 @@ const val ANIMATION_INIT_OFFSET_Y = 800
 const val ANIMATION_TARGET_OFFSET_Y = 5000
 lateinit var APPLICATION_CONTEXT: Context
 
+
 @ExperimentalAnimationApi
-@ExperimentalMaterial3Api
 class MainActivity : ComponentActivity() {
     private val mainvViewModel = MainViewModel()
 
@@ -92,7 +92,6 @@ class MainActivity : ComponentActivity() {
  * @param networkViewModel BackGroundViewModel
  */
 @ExperimentalAnimationApi
-@ExperimentalMaterial3Api
 @Preview
 @Composable
 fun MainCompose(
@@ -107,8 +106,7 @@ fun MainCompose(
 }
 
 
-@DelicateCoroutinesApi
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedCrossfadeTargetStateParameter")
+@ExperimentalAnimationApi
 @Composable
 fun MainView(
     viewModel: MainViewModel = remember { MainViewModel() },

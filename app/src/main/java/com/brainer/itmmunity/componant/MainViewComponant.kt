@@ -85,7 +85,6 @@ fun LoadingView(
 }
 
 
-@DelicateCoroutinesApi
 @Composable
 fun NewsCard(
     news: List<Croll.Content>,

@@ -62,9 +62,8 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 //}
 
 
+@ExperimentalAnimationApi
 @SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalAnimationApi::class)
-//@Preview
 @Composable
 fun ContentView(
     aNews: Croll.Content,
@@ -98,7 +97,7 @@ fun ContentView(
 //    }
 
     BoxWithConstraints(Modifier.fillMaxSize()) {
-        RoundedSurface() {
+        RoundedSurface {
             val boxWithConstraintsScope = this
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
@@ -174,8 +173,15 @@ fun ContentView(
     }
 }
 
+@ExperimentalAnimationApi
 @Preview
 @Composable
 fun ContentViewTest() {
-    ContentView(MainViewModel())
+    ContentView(
+        Croll.Content(
+            title = "안녕하세요",
+            url = "https://www.google.com",
+            hit = 0
+        )
+    )
 }
