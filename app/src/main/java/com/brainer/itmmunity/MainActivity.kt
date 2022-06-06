@@ -1,6 +1,5 @@
 package com.brainer.itmmunity
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -9,11 +8,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +34,6 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
-import kotlinx.coroutines.DelicateCoroutinesApi
 
 const val TABLET_UI_WIDTH = 480
 const val FIREBASE_MINIMUM_FETCH_SEC = 3600L
