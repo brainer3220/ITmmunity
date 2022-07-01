@@ -77,7 +77,7 @@ dependencies {
 
     //system-ui accompanist library
     implementation 'com.google.accompanist:accompanist-systemuicontroller:0.24.11-rc'
-    
+
 //    NestedScrollView
     implementation "com.github.Tlaster:NestedScrollView:0.7.0"
 
