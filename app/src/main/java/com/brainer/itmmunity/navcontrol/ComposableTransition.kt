@@ -1,11 +1,12 @@
 package com.brainer.itmmunity.navcontrol
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.navigation.NavBackStackEntry
 import com.brainer.itmmunity.ANIMATION_DURATION
-import com.brainer.itmmunity.ANIMATION_INIT_OFFSET_Y
-import com.brainer.itmmunity.ANIMATION_TARGET_OFFSET_Y
 
 @ExperimentalAnimationApi
 sealed class ComposableTransition(
@@ -16,64 +17,55 @@ sealed class ComposableTransition(
 ) {
     object Main : ComposableTransition(
         enterTransition = {
-            when (initialState.destination.route) {
-                "Red" ->
-                    slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Left,
-                        animationSpec = tween(ANIMATION_DURATION)
-                    )
-                else -> {
-                    slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Left,
-                        animationSpec = tween(ANIMATION_DURATION)
-                    )
-                }
-            }
+            slideIntoContainer(
+                AnimatedContentScope.SlideDirection.Left,
+                animationSpec = tween(ANIMATION_DURATION)
+            )
         },
         exitTransition = {
-            when (targetState.destination.route) {
-                "Blue" ->
-                    slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Left,
-                        animationSpec = tween(ANIMATION_DURATION)
-                    )
-                else -> null
-            }
+            slideOutOfContainer(
+                AnimatedContentScope.SlideDirection.Left,
+                animationSpec = tween(ANIMATION_DURATION)
+            )
         },
         popEnterTransition = {
-            when (initialState.destination.route) {
-                "Blue" ->
-                    slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Right,
-                        animationSpec = tween(ANIMATION_DURATION)
-                    )
-                else -> null
-            }
+            slideIntoContainer(
+                AnimatedContentScope.SlideDirection.Right,
+                animationSpec = tween(ANIMATION_DURATION)
+            )
         },
         popExitTransition = {
-            when (targetState.destination.route) {
-                "Blue" ->
-                    slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Right,
-                        animationSpec = tween(ANIMATION_DURATION)
-                    )
-                else -> null
-            }
+            slideOutOfContainer(
+                AnimatedContentScope.SlideDirection.Right,
+                animationSpec = tween(ANIMATION_DURATION)
+            )
         }
     )
 
     object ContentView : ComposableTransition(
         enterTransition = {
-            slideInVertically(initialOffsetY = { ANIMATION_INIT_OFFSET_Y }) + fadeIn()
+            slideIntoContainer(
+                AnimatedContentScope.SlideDirection.Left,
+                animationSpec = tween(ANIMATION_DURATION)
+            )
         },
         exitTransition = {
-            slideOutVertically(targetOffsetY = { ANIMATION_TARGET_OFFSET_Y }) + fadeOut()
+            slideOutOfContainer(
+                AnimatedContentScope.SlideDirection.Left,
+                animationSpec = tween(ANIMATION_DURATION)
+            )
         },
         popEnterTransition = {
-            slideInVertically(initialOffsetY = { ANIMATION_INIT_OFFSET_Y }) + fadeIn()
+            slideIntoContainer(
+                AnimatedContentScope.SlideDirection.Right,
+                animationSpec = tween(ANIMATION_DURATION)
+            )
         },
         popExitTransition = {
-            slideOutVertically(targetOffsetY = { ANIMATION_TARGET_OFFSET_Y }) + fadeOut()
+            slideOutOfContainer(
+                AnimatedContentScope.SlideDirection.Right,
+                animationSpec = tween(ANIMATION_DURATION)
+            )
         }
     )
 }
