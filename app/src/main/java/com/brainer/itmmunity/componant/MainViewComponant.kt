@@ -202,9 +202,13 @@ fun RoundedSurface(contentView: @Composable () -> Unit = {}) {
     } else {
         Color(245, 244, 244)
     }
-    Box {
-        Surface(color = backGroundColor) {
-            Surface(shape = RoundedCornerShape(ROUNDED_VALUE.dp)) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(backGroundColor)
+    ) {
+        Surface(shape = RoundedCornerShape(ROUNDED_VALUE.dp)) {
+            Box(Modifier.padding(bottom = 8.dp)) {
                 contentView()
             }
         }
