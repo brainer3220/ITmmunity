@@ -89,7 +89,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.15.2'
 
     // Image load lib
-    implementation 'com.github.skydoves:landscapist-glide:1.5.2'
+    implementation 'com.github.skydoves:landscapist-glide:1.5.3'
 
     // Lottie
     implementation 'com.airbnb.android:lottie-compose:5.2.0'
