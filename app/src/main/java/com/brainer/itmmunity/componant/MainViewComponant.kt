@@ -1,7 +1,9 @@
 package com.brainer.itmmunity.componant
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -20,16 +22,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.core.content.ContextCompat.startActivity
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.brainer.itmmunity.ContentActivity
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
-import com.brainer.itmmunity.navcontrol.NavScreen.ContentView.passNewsUrl
 import com.brainer.itmmunity.viewmodel.MainViewModel
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
@@ -87,14 +91,13 @@ fun LoadingView(
 @Composable
 fun NewsCard(
     news: List<Croll.Content>,
-    mainViewModel: MainViewModel,
-    navController: NavController
+    mainViewModel: MainViewModel
 ) {
     val listState = rememberLazyListState()
     RoundedSurface {
         LazyColumn(state = listState) {
             itemsIndexed(news) { index, item ->
-                NewsListOf(item, mainViewModel = mainViewModel, navController = navController)
+                NewsListOf(item, mainViewModel = mainViewModel)
                 if (index == news.lastIndex - 15) {
                     this@LazyColumn.item {
                         Box(
@@ -112,13 +115,13 @@ fun NewsCard(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun NewsListOf(
     aNews: Croll.Content,
     mainViewModel: MainViewModel,
     modifier: Modifier = Modifier,
-    navController: NavController
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -156,7 +159,10 @@ fun NewsListOf(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(4f), text = aNews.title, style = MaterialTheme.typography.titleLarge
+                        .weight(4f),
+                    text = aNews.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 
@@ -169,21 +175,18 @@ fun NewsListOf(
         }
 
         if (expanded) {
+            val context = LocalContext.current
+
             CoroutineScope(Dispatchers.Main).launch {
                 if (!mainViewModel.isTabletUi.value) {
-                    navController.navigate(
-                        route = passNewsUrl(
-                            aNews.url
-                                .substring(
-                                    7,
-                                    aNews.url.length
-                                )
-                                .replace("/", "")
-                        )
-                    )
-                }
-                kotlin.runCatching {
-                    mainViewModel.changeAnews(aNews)
+                    val intent = Intent(context, ContentActivity::class.java).apply {
+                        putExtra("content", aNews)
+                    }
+                    startActivity(context, intent, null)
+                } else {
+                    kotlin.runCatching {
+                        mainViewModel.changeAnews(aNews)
+                    }
                 }
             }
             expanded = !expanded
