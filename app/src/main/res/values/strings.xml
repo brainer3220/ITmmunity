@@ -3,4 +3,5 @@
     <string name="main_thumbnail">Main Thumb Nail</string>
     <string name="title_activity_settings_view">SettingsView</string>
     <string name="title_activity_content_view">ContentView</string>
+    <string name="title_activity_content">ContentActivity</string>
 </resources>
