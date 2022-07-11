@@ -1,13 +1,19 @@
 package com.brainer.itmmunity.componant
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,6 +26,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.viewmodel.MainViewModel
 import moe.tlaster.nestedscrollview.VerticalNestedScrollView
 import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
@@ -44,7 +51,6 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
 
     val titleString by viewModel.titleString.collectAsState()
     val nestedScrollViewState = rememberNestedScrollViewState()
-//    val topBarState = nestedScrollViewState.offset
     val smallTopAppBarAlpha by animateFloatAsState(1f)
     val isTabletUi by viewModel.isTabletUi.collectAsState()
 
@@ -122,6 +128,60 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
             }
         }
     )
+}
+
+@Composable
+fun AppBar(content: Croll.Content, context: Context, contentView: @Composable () -> Unit = {}) {
+    val containerColor = if (isSystemInDarkTheme()) {
+        Black
+    } else {
+        Color(245, 244, 244)
+    }
+
+    Column {
+        SmallTopAppBar(
+            title = {
+//                Text(
+//                    text = "ITmmunity",
+//                    fontSize = 32.sp,
+//                )
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    val activity = (context as? Activity)
+                    activity?.finish()
+                }) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back button")
+                }
+            },
+            actions = {
+                Icon(
+                    Icons.Filled.Share,
+                    contentDescription = "공유",
+                    Modifier
+                        .padding(end = 16.dp)
+                        .clickable {
+                            val sendIntent: Intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TITLE, content.title)
+                                putExtra(
+                                    Intent.EXTRA_SUBJECT,
+                                    "Powered by ITmmunity"
+                                )
+                                putExtra(Intent.EXTRA_TEXT, content.url)
+                                type = "text/plain"
+                            }
+
+                            val shareIntent =
+                                Intent.createChooser(sendIntent, null)
+                            context.startActivity(shareIntent)
+                        }
+                )
+            },
+            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor)
+        )
+        contentView()
+    }
 }
 
 @ExperimentalMaterial3Api
