@@ -34,8 +34,7 @@ fun NavGraph(
         ) {
             MainView(
                 viewModel = viewModel,
-                networkViewModel = networkViewModel,
-                navController = navController
+                networkViewModel = networkViewModel
             )
         }
 

@@ -1,32 +1,26 @@
 package com.brainer.itmmunity
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LifecycleOwner
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.RoundedSurface
@@ -41,8 +35,7 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 @Composable
 fun ContentView(
     aNews: Croll.Content,
-    contentViewModel: ContentViewModel = ContentViewModel(),
-    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+    contentViewModel: ContentViewModel = ContentViewModel()
 ) {
     val isDarkMode = isSystemInDarkTheme()
 //    val isTabletUi by viewModel.isTabletUi.collectAsState()
@@ -62,17 +55,8 @@ fun ContentView(
 
     contentViewModel.setContent(aNews)
 
-//    LaunchedEffect(aNews) {
-//        contentViewModel.getHtml()
-//    }
-
-//    LaunchedEffect(isTabletUi) {
-//
-//    }
-
-    BoxWithConstraints(Modifier.fillMaxSize()) {
+    BoxWithConstraints(Modifier) {
         RoundedSurface {
-            val boxWithConstraintsScope = this
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
                 onRefresh = { contentViewModel.getHtml() }) {
@@ -86,51 +70,20 @@ fun ContentView(
                         }
                     } else {
                         kotlin.runCatching {
-                            SelectionContainer(Modifier.fillMaxSize()) {
-                                Column(Modifier.verticalScroll(listState)) {
-                                    Row(
-                                        Modifier
-                                            .height(64.dp)
-                                            .fillMaxWidth()
-                                            .padding(16.dp)
-                                    ) {
-                                        aNews.let {
-                                            Text(
-                                                modifier = Modifier.weight(9f),
-                                                text = it.title,
-                                                fontSize = 20.sp,
-                                                textAlign = TextAlign.Left,
-                                                maxLines = 2,
-                                                overflow = TextOverflow.Ellipsis
-                                            )
-                                        }
-
-                                        val context = LocalContext.current
-                                        Icon(
-                                            Icons.Filled.Share,
-                                            contentDescription = "공유",
-                                            Modifier
-                                                .weight(1f)
-                                                .clickable {
-                                                    val sendIntent: Intent = Intent().apply {
-                                                        action = Intent.ACTION_SEND
-                                                        putExtra(Intent.EXTRA_TITLE, aNews.title)
-                                                        putExtra(
-                                                            Intent.EXTRA_SUBJECT,
-                                                            "Powered by ITmmunity"
-                                                        )
-                                                        putExtra(Intent.EXTRA_TEXT, aNews.url)
-                                                        type = "text/plain"
-                                                    }
-
-                                                    val shareIntent =
-                                                        Intent.createChooser(sendIntent, null)
-                                                    context.startActivity(shareIntent)
-                                                })
-                                    }
+                            SelectionContainer(Modifier) {
+                                Column(
+                                    Modifier
+                                        .verticalScroll(listState)
+                                        .padding(20.dp)
+                                ) {
+                                    Text(
+                                        text = aNews.title,
+                                        fontSize = 20.sp,
+                                        textAlign = TextAlign.Left
+                                    )
 
                                     MarkdownText(
-                                        modifier = Modifier.padding(8.dp),
+                                        modifier = Modifier.padding(top = 16.dp),
                                         markdown = targetHtml,
                                         color = textColor
                                     )
