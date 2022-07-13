@@ -69,7 +69,7 @@ fun LoadingView(
                         CircularProgressIndicator(
                             Modifier
                                 .align(Alignment.Center)
-                                .fillMaxWidth()
+                                .fillMaxSize()
                         )
                     } else {
                         LottieAnimation(
@@ -125,46 +125,45 @@ fun NewsListOf(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Column {
-        Surface(
-            Modifier
-                .height(125.dp)
-                .fillMaxWidth()
-                .background(Color.White)
-                .clickable {
-                    expanded = !expanded
-                }) {
-            Row(modifier = modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                if (aNews.image != null) {
-                    Log.i("Thumbnail", "Thumbnail load success")
-                    Log.d("Thumbnail", "Thumbnail: " + aNews.image)
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(8.dp))
-                    ) {
-                        GlideImage(
-                            modifier = Modifier.fillMaxSize(),
-                            imageModel = aNews.image,
-                            contentScale = ContentScale.FillWidth,
-                            loading = {
-                                LoadingView(LOTTIE_IMG_VIEW_URL, spaceWeight = 0F)
-                            },
-                            contentDescription = stringResource(id = R.string.main_thumbnail),
-                            circularReveal = CircularReveal(duration = 350),
-                        )
-                    }
-                    Spacer(modifier = Modifier.padding(5.dp))
-                }
-                Text(
+    Surface(
+        Modifier
+            .height(125.dp)
+            .fillMaxWidth()
+            .background(Color.White)
+            .clickable {
+                expanded = !expanded
+            }) {
+        Row(modifier = modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            if (aNews.image != null) {
+                Log.i("Thumbnail", "Thumbnail load success")
+                Log.d("Thumbnail", "Thumbnail: " + aNews.image)
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(4f),
-                    text = aNews.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    overflow = TextOverflow.Ellipsis
-                )
+                        .weight(1f)
+                        .clip(RoundedCornerShape(8.dp))
+                ) {
+                    GlideImage(
+                        modifier = Modifier.fillMaxSize(),
+                        imageModel = aNews.image,
+                        contentScale = ContentScale.FillWidth,
+                        loading = {
+                            LoadingView(LOTTIE_IMG_VIEW_URL, spaceWeight = 0F)
+                        },
+                        contentDescription = stringResource(id = R.string.main_thumbnail),
+                        circularReveal = CircularReveal(duration = 350),
+                    )
+                }
+                Spacer(modifier = Modifier.padding(5.dp))
             }
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(4f),
+                text = aNews.title,
+                style = MaterialTheme.typography.titleLarge,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
 
 //        Row {
 //            Text(text = "조회수: " +aNews.hit.toString(), style = MaterialTheme.typography.body1)
@@ -172,25 +171,24 @@ fun NewsListOf(
 //            Text(text = aNews.numComment.toString(), style = MaterialTheme.typography.body1)
 //        }
 //        Divider(Modifier.padding(top = 12.dp, bottom = 0.dp))
-        }
+    }
 
-        if (expanded) {
-            val context = LocalContext.current
+    if (expanded) {
+        val context = LocalContext.current
 
-            CoroutineScope(Dispatchers.Main).launch {
-                if (!mainViewModel.isTabletUi.value) {
-                    val intent = Intent(context, ContentActivity::class.java).apply {
-                        putExtra("content", aNews)
-                    }
-                    startActivity(context, intent, null)
-                } else {
-                    kotlin.runCatching {
-                        mainViewModel.changeAnews(aNews)
-                    }
+        CoroutineScope(Dispatchers.Main).launch {
+            if (!mainViewModel.isTabletUi.value) {
+                val intent = Intent(context, ContentActivity::class.java).apply {
+                    putExtra("content", aNews)
+                }
+                startActivity(context, intent, null)
+            } else {
+                kotlin.runCatching {
+                    mainViewModel.changeAnews(aNews)
                 }
             }
-            expanded = !expanded
         }
+        expanded = !expanded
     }
 }
 

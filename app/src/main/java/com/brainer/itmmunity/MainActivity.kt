@@ -171,7 +171,9 @@ fun MainView(
             }
         }
     } else {
-        Box(Modifier.fillMaxSize()) {
+        Box(
+            Modifier.fillMaxSize()
+        ) {
             Column(
                 Modifier
                     .fillMaxSize()
