@@ -6,7 +6,6 @@ import android.content.Intent
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomNavigation
@@ -166,28 +165,24 @@ fun AppBar(content: Croll.Content, context: Context, contentView: @Composable ()
                 CircleButton {
                     IconButton(
                         onClick = {
+                            val sendIntent: Intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TITLE, content.title)
+                                putExtra(
+                                    Intent.EXTRA_SUBJECT,
+                                    "Powered by ITmmunity"
+                                )
+                                putExtra(Intent.EXTRA_TEXT, content.url)
+                                type = "text/plain"
+                            }
 
+                            val shareIntent =
+                                Intent.createChooser(sendIntent, null)
+                            context.startActivity(shareIntent)
                         }) {
                         Icon(
                             Icons.Filled.Share,
                             contentDescription = "공유",
-                            Modifier
-                                .clickable {
-                                    val sendIntent: Intent = Intent().apply {
-                                        action = Intent.ACTION_SEND
-                                        putExtra(Intent.EXTRA_TITLE, content.title)
-                                        putExtra(
-                                            Intent.EXTRA_SUBJECT,
-                                            "Powered by ITmmunity"
-                                        )
-                                        putExtra(Intent.EXTRA_TEXT, content.url)
-                                        type = "text/plain"
-                                    }
-
-                                    val shareIntent =
-                                        Intent.createChooser(sendIntent, null)
-                                    context.startActivity(shareIntent)
-                                }
                         )
                     }
                 }
