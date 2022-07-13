@@ -40,6 +40,9 @@ import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import me.nikhilchaudhari.library.neumorphic
+import me.nikhilchaudhari.library.shapes.NeuShape
+import me.nikhilchaudhari.library.shapes.Punched
 
 const val DEFAULT_LOTTIE_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_wfsunjgd.json"
 const val LOTTIE_IMG_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_6odgh2c6.json"
@@ -213,5 +216,22 @@ fun RoundedSurface(contentView: @Composable () -> Unit = {}) {
                 contentView()
             }
         }
+    }
+}
+
+@Composable
+fun CircleButton(
+    neuShape: NeuShape = Punched.Rounded(360.dp),
+    shapeValue: Int = ROUNDED_VALUE,
+    content: @Composable () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .neumorphic(
+                neuShape = neuShape
+            ),
+        shape = RoundedCornerShape(shapeValue.dp)
+    ) {
+        content()
     }
 }
