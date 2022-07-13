@@ -107,6 +107,9 @@ fun NewsCard(
                             Modifier
                                 .fillMaxWidth()
                                 .height(32.dp)
+                                .neumorphic(
+                                    neuShape = Punched.Rounded(ROUNDED_VALUE.dp)
+                                )
                         ) {
                             LoadingView(spaceWeight = 0F)
                         }
