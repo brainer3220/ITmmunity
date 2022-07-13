@@ -19,7 +19,6 @@ class ContentViewModel : ViewModel() {
             numComment = null
         )
     )
-//    val aNews = _aNews.asStateFlow()
 
     private var _contentHtml = MutableStateFlow<String>("")
     val contentHtml: MutableStateFlow<String> = _contentHtml
@@ -52,9 +51,9 @@ class ContentViewModel : ViewModel() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
                 kotlin.runCatching {
-                    _aNews.value!!.htmlToMarkdown()
+                    _aNews.value.htmlToMarkdown()
                 }.onSuccess {
-                    val contentHtmlTmp = it!!.slice(2 until it.length - 1)
+                    val contentHtmlTmp = it!!.slice(2 until it.length -1)
                     changeHtml(contentHtmlTmp)
                     Log.d("getHtmlViewModel", contentHtmlTmp)
                 }.onFailure {
