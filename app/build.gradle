@@ -107,5 +107,6 @@ dependencies {
 
     implementation 'io.github.furstenheim:copy_down:1.0'
     implementation 'com.github.jeziellago:compose-markdown:0.3.0'
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
 }
