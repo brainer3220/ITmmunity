@@ -101,10 +101,15 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
                         }
                     },
                     actions = {
-                        IconButton(
-                            onClick = { }
-                        ) {
-                            Icon(Icons.Filled.Search, contentDescription = "Search button")
+                        CircleButton {
+                            IconButton(
+                                onClick = { }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Search,
+                                    contentDescription = "Search button"
+                                )
+                            }
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor)
@@ -147,36 +152,45 @@ fun AppBar(content: Croll.Content, context: Context, contentView: @Composable ()
 //                )
             },
             navigationIcon = {
-                IconButton(onClick = {
-                    val activity = (context as? Activity)
-                    activity?.finish()
-                }) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back button")
+                CircleButton {
+                    IconButton(
+                        onClick = {
+                            val activity = (context as? Activity)
+                            activity?.finish()
+                        }) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back button")
+                    }
                 }
             },
             actions = {
-                Icon(
-                    Icons.Filled.Share,
-                    contentDescription = "공유",
-                    Modifier
-                        .padding(end = 16.dp)
-                        .clickable {
-                            val sendIntent: Intent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TITLE, content.title)
-                                putExtra(
-                                    Intent.EXTRA_SUBJECT,
-                                    "Powered by ITmmunity"
-                                )
-                                putExtra(Intent.EXTRA_TEXT, content.url)
-                                type = "text/plain"
-                            }
+                CircleButton {
+                    IconButton(
+                        onClick = {
 
-                            val shareIntent =
-                                Intent.createChooser(sendIntent, null)
-                            context.startActivity(shareIntent)
-                        }
-                )
+                        }) {
+                        Icon(
+                            Icons.Filled.Share,
+                            contentDescription = "공유",
+                            Modifier
+                                .clickable {
+                                    val sendIntent: Intent = Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        putExtra(Intent.EXTRA_TITLE, content.title)
+                                        putExtra(
+                                            Intent.EXTRA_SUBJECT,
+                                            "Powered by ITmmunity"
+                                        )
+                                        putExtra(Intent.EXTRA_TEXT, content.url)
+                                        type = "text/plain"
+                                    }
+
+                                    val shareIntent =
+                                        Intent.createChooser(sendIntent, null)
+                                    context.startActivity(shareIntent)
+                                }
+                        )
+                    }
+                }
             },
             colors = TopAppBarDefaults.smallTopAppBarColors(containerColor)
         )
