@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.componant.AdMobCompose
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.RoundedSurface
 import com.brainer.itmmunity.viewmodel.ContentViewModel
@@ -83,6 +84,14 @@ fun ContentView(
                                         modifier = Modifier.padding(top = 16.dp),
                                         markdown = targetHtml,
                                         color = textColor
+                                    )
+
+                                    AdMobCompose(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(250.dp)
+                                            .padding(top = 50.dp),
+                                        adId = "ca-app-pub-1000428004132415/8906506129"
                                     )
                                     Log.v("contentHtml", targetHtml)
                                 }
