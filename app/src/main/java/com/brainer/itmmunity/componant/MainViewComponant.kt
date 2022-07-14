@@ -1,7 +1,9 @@
 package com.brainer.itmmunity.componant
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -20,16 +22,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.core.content.ContextCompat.startActivity
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.brainer.itmmunity.ContentActivity
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
-import com.brainer.itmmunity.navcontrol.NavScreen.ContentView.passNewsUrl
 import com.brainer.itmmunity.viewmodel.MainViewModel
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
@@ -65,7 +69,7 @@ fun LoadingView(
                         CircularProgressIndicator(
                             Modifier
                                 .align(Alignment.Center)
-                                .fillMaxWidth()
+                                .fillMaxSize()
                         )
                     } else {
                         LottieAnimation(
@@ -87,14 +91,13 @@ fun LoadingView(
 @Composable
 fun NewsCard(
     news: List<Croll.Content>,
-    mainViewModel: MainViewModel,
-    navController: NavController
+    mainViewModel: MainViewModel
 ) {
     val listState = rememberLazyListState()
     RoundedSurface {
         LazyColumn(state = listState) {
             itemsIndexed(news) { index, item ->
-                NewsListOf(item, mainViewModel = mainViewModel, navController = navController)
+                NewsListOf(item, mainViewModel = mainViewModel)
                 if (index == news.lastIndex - 15) {
                     this@LazyColumn.item {
                         Box(
@@ -112,53 +115,55 @@ fun NewsCard(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun NewsListOf(
     aNews: Croll.Content,
     mainViewModel: MainViewModel,
     modifier: Modifier = Modifier,
-    navController: NavController
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Column {
-        Surface(
-            Modifier
-                .height(125.dp)
-                .fillMaxWidth()
-                .background(Color.White)
-                .clickable {
-                    expanded = !expanded
-                }) {
-            Row(modifier = modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                if (aNews.image != null) {
-                    Log.i("Thumbnail", "Thumbnail load success")
-                    Log.d("Thumbnail", "Thumbnail: " + aNews.image)
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(8.dp))
-                    ) {
-                        GlideImage(
-                            modifier = Modifier.fillMaxSize(),
-                            imageModel = aNews.image,
-                            contentScale = ContentScale.FillWidth,
-                            loading = {
-                                LoadingView(LOTTIE_IMG_VIEW_URL, spaceWeight = 0F)
-                            },
-                            contentDescription = stringResource(id = R.string.main_thumbnail),
-                            circularReveal = CircularReveal(duration = 350),
-                        )
-                    }
-                    Spacer(modifier = Modifier.padding(5.dp))
-                }
-                Text(
+    Surface(
+        Modifier
+            .height(125.dp)
+            .fillMaxWidth()
+            .background(Color.White)
+            .clickable {
+                expanded = !expanded
+            }) {
+        Row(modifier = modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            if (aNews.image != null) {
+                Log.i("Thumbnail", "Thumbnail load success")
+                Log.d("Thumbnail", "Thumbnail: " + aNews.image)
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(4f), text = aNews.title, style = MaterialTheme.typography.titleLarge
-                )
+                        .weight(1f)
+                        .clip(RoundedCornerShape(8.dp))
+                ) {
+                    GlideImage(
+                        modifier = Modifier.fillMaxSize(),
+                        imageModel = aNews.image,
+                        contentScale = ContentScale.FillWidth,
+                        loading = {
+                            LoadingView(LOTTIE_IMG_VIEW_URL, spaceWeight = 0F)
+                        },
+                        contentDescription = stringResource(id = R.string.main_thumbnail),
+                        circularReveal = CircularReveal(duration = 350),
+                    )
+                }
+                Spacer(modifier = Modifier.padding(5.dp))
             }
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(4f),
+                text = aNews.title,
+                style = MaterialTheme.typography.titleLarge,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
 
 //        Row {
 //            Text(text = "조회수: " +aNews.hit.toString(), style = MaterialTheme.typography.body1)
@@ -166,28 +171,24 @@ fun NewsListOf(
 //            Text(text = aNews.numComment.toString(), style = MaterialTheme.typography.body1)
 //        }
 //        Divider(Modifier.padding(top = 12.dp, bottom = 0.dp))
-        }
+    }
 
-        if (expanded) {
-            CoroutineScope(Dispatchers.Main).launch {
-                if (!mainViewModel.isTabletUi.value) {
-                    navController.navigate(
-                        route = passNewsUrl(
-                            aNews.url
-                                .substring(
-                                    7,
-                                    aNews.url.length
-                                )
-                                .replace("/", "")
-                        )
-                    )
+    if (expanded) {
+        val context = LocalContext.current
+
+        CoroutineScope(Dispatchers.Main).launch {
+            if (!mainViewModel.isTabletUi.value) {
+                val intent = Intent(context, ContentActivity::class.java).apply {
+                    putExtra("content", aNews)
                 }
+                startActivity(context, intent, null)
+            } else {
                 kotlin.runCatching {
                     mainViewModel.changeAnews(aNews)
                 }
             }
-            expanded = !expanded
         }
+        expanded = !expanded
     }
 }
 
@@ -202,9 +203,13 @@ fun RoundedSurface(contentView: @Composable () -> Unit = {}) {
     } else {
         Color(245, 244, 244)
     }
-    Box {
-        Surface(color = backGroundColor) {
-            Surface(shape = RoundedCornerShape(ROUNDED_VALUE.dp)) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(backGroundColor)
+    ) {
+        Surface(shape = RoundedCornerShape(ROUNDED_VALUE.dp)) {
+            Box(Modifier.padding(bottom = 8.dp)) {
                 contentView()
             }
         }

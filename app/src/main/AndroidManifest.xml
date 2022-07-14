@@ -6,19 +6,16 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-configuration android:reqTouchScreen="finger" />
+
     <uses-feature
         android:name="android.hardware.touchscreen"
-        android:required="true" />
-
-    <!-- Version < 3.0. DeX Mode and Screen Mirroring support -->
+        android:required="true" /> <!-- Version < 3.0. DeX Mode and Screen Mirroring support -->
     <meta-data
         android:name="com.samsung.android.keepalive.density"
-        android:value="true" />
-    <!-- Version >= 3.0. DeX Dual Mode support -->
+        android:value="true" /> <!-- Version >= 3.0. DeX Dual Mode support -->
     <meta-data
         android:name="com.samsung.android.multidisplay.keep_process_alive"
         android:value="true" />
-
 
     <application
         android:allowBackup="true"
@@ -28,6 +25,11 @@
         android:supportsRtl="true"
         android:theme="@style/OneUITheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ContentActivity"
+            android:exported="false"
+            android:label="@string/title_activity_content"
+            android:theme="@style/OneUITheme" />
         <activity
             android:name=".SettingsView"
             android:exported="true"

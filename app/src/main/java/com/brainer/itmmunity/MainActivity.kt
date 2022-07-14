@@ -1,6 +1,7 @@
 package com.brainer.itmmunity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -18,17 +19,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.NavHostController
 import com.brainer.itmmunity.componant.AppBar
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.NewsCard
 import com.brainer.itmmunity.componant.RoundedSurface
-import com.brainer.itmmunity.navcontrol.NavGraph
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.viewmodel.BackGroundViewModel
 import com.brainer.itmmunity.viewmodel.CONFIG_STR
 import com.brainer.itmmunity.viewmodel.MainViewModel
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.firebase.ktx.Firebase
@@ -37,7 +35,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
 const val TABLET_UI_WIDTH = 480
 const val FIREBASE_MINIMUM_FETCH_SEC = 3600L
-const val ANIMATION_DURATION = 700
+const val ANIMATION_DURATION = 350
 const val ANIMATION_INIT_OFFSET_Y = 800
 const val ANIMATION_TARGET_OFFSET_Y = 5000
 lateinit var APPLICATION_CONTEXT: Context
@@ -80,6 +78,16 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.d("MainActivity", "onActivityResult")
+
+//        if (requestCode == REQUEST_CODE) {
+//            Log.d("MainActivity", "onActivityResult REQUEST_INITIAL_ROUTE")
+//        }
+    }
 }
 
 /**
@@ -94,10 +102,12 @@ fun MainCompose(
     viewModel: MainViewModel = remember { MainViewModel() },
     networkViewModel: BackGroundViewModel = BackGroundViewModel(context = APPLICATION_CONTEXT)
 ) {
-    val navController = rememberAnimatedNavController()
-
     AppBar(viewModel = viewModel) {
-        NavGraph(navController, viewModel, networkViewModel)
+        MainView(
+            viewModel = viewModel,
+            networkViewModel = networkViewModel
+        )
+//        NavGraph(navController, viewModel, networkViewModel)
     }
 }
 
@@ -106,15 +116,14 @@ fun MainCompose(
 @Composable
 fun MainView(
     viewModel: MainViewModel = remember { MainViewModel() },
-    networkViewModel: BackGroundViewModel,
-    navController: NavHostController
+    networkViewModel: BackGroundViewModel
 ) {
     val unifiedList by viewModel.unifiedList.collectAsState()
     val aNewsState = MutableLiveData(viewModel.aNews.collectAsState())
     val aNews by rememberSaveable { aNewsState.value!! }
 
     val isConnection by networkViewModel.isConnect.collectAsState()
-    val isTabletUi by viewModel.isTabletUi.collectAsState()
+//    val isTabletUi by viewModel.isTabletUi.collectAsState()
 
     val swipeRefreshState by remember { mutableStateOf(true) }
 
@@ -130,13 +139,10 @@ fun MainView(
                     state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
                     onRefresh = { viewModel.getRefresh() }) {
                     if (unifiedList.isNotEmpty()) {
-                        Column {
-                            NewsCard(
-                                unifiedList,
-                                viewModel,
-                                navController = navController
-                            )
-                        }
+                        NewsCard(
+                            unifiedList,
+                            viewModel
+                        )
                     } else {
                         LoadingView()
                     }
@@ -165,7 +171,9 @@ fun MainView(
             }
         }
     } else {
-        Box(Modifier.fillMaxSize()) {
+        Box(
+            Modifier.fillMaxSize()
+        ) {
             Column(
                 Modifier
                     .fillMaxSize()
@@ -186,9 +194,7 @@ fun MainView(
 @Preview
 @Composable
 fun MainViewTest() {
-    val navController = rememberAnimatedNavController()
     MainView(
-        networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT),
-        navController = navController
+        networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT)
     )
 }
