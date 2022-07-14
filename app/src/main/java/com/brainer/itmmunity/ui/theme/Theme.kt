@@ -28,16 +28,16 @@ fun ITmmunity_AndroidTheme(
 ) {
     val systemUiController = rememberSystemUiController()
     val colors = if (darkTheme) {
-//        systemUiController.setSystemBarsColor(
-//            //Set app bar color for dark theme
-//            color = Color.Red
-//        )
+        systemUiController.setSystemBarsColor(
+            //Set app bar color for dark theme
+            color = Color.Black
+        )
         DarkColorPalette
     } else {
-//        systemUiController.setSystemBarsColor(
-//            //Set app bar color for light theme
-//            color = Color.Blue
-//        )
+        systemUiController.setSystemBarsColor(
+            //Set app bar color for light theme
+            color = Color(245, 244, 244)
+        )
         LightColorPalette
     }
 

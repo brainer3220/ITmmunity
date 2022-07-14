@@ -106,7 +106,8 @@ dependencies {
     implementation 'com.airbnb.android:lottie-compose:5.2.0'
 
     implementation 'io.github.furstenheim:copy_down:1.0'
-    implementation 'com.github.jeziellago:compose-markdown:0.2.9'
+    implementation 'com.github.jeziellago:compose-markdown:0.3.0'
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
     implementation("me.nikhilchaudhari:composeNeumorphism:1.0.0-alpha02")
 }
