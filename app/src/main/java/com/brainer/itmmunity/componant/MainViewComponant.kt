@@ -98,7 +98,13 @@ fun NewsCard(
         LazyColumn(state = listState) {
             itemsIndexed(news) { index, item ->
                 NewsListOf(item, mainViewModel = mainViewModel)
-                if (index == news.lastIndex - 15) {
+                if (index % 10 == 0) {
+                    AdMobCompose(
+                        modifier = Modifier
+                            .height(125.dp)
+                            .fillMaxWidth()
+                    )
+                } else if (index == news.lastIndex - 15) {
                     this@LazyColumn.item {
                         Box(
                             Modifier
