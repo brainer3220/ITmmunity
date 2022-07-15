@@ -18,7 +18,10 @@ import com.google.android.gms.ads.AdSize.getCurrentOrientationAnchoredAdaptiveBa
 import com.google.android.gms.ads.AdView
 
 @Composable
-fun AdMobCompose(modifier: Modifier = Modifier, adId: String = "ca-app-pub-1000428004132415/8906506129") {
+fun AdMobCompose(
+    modifier: Modifier = Modifier,
+    adId: String = "ca-app-pub-1000428004132415/8906506129"
+) {
     val isInEditMode = LocalInspectionMode.current
     if (isInEditMode) {
         Text(
