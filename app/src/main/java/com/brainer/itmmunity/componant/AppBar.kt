@@ -159,28 +159,27 @@ fun AppBar(content: Croll.Content, context: Context, contentView: @Composable ()
                 }
             },
             actions = {
-                Icon(
-                    painterResource(R.drawable.ic_baseline_oui_share_24),
-                    contentDescription = "공유",
-                    Modifier
-                        .padding(end = 16.dp)
-                        .clickable {
-                            val sendIntent: Intent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TITLE, content.title)
-                                putExtra(
-                                    Intent.EXTRA_SUBJECT,
-                                    "Powered by ITmmunity"
-                                )
-                                putExtra(Intent.EXTRA_TEXT, content.url)
-                                type = "text/plain"
-                            }
+                IconButton(onClick = {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TITLE, content.title)
+                        putExtra(
+                            Intent.EXTRA_SUBJECT,
+                            "Powered by ITmmunity"
+                        )
+                        putExtra(Intent.EXTRA_TEXT, content.url)
+                        type = "text/plain"
+                    }
 
-                            val shareIntent =
-                                Intent.createChooser(sendIntent, null)
-                            context.startActivity(shareIntent)
-                        }
-                )
+                    val shareIntent =
+                        Intent.createChooser(sendIntent, null)
+                    context.startActivity(shareIntent)
+                }) {
+                    Icon(
+                        painterResource(R.drawable.ic_baseline_oui_share_24),
+                        contentDescription = R.string.share.toString(),
+                    )
+                }
             },
             colors = TopAppBarDefaults.smallTopAppBarColors(containerColor)
         )
