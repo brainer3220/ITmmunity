@@ -10,10 +10,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomNavigation
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,10 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.R
 import com.brainer.itmmunity.viewmodel.MainViewModel
 import moe.tlaster.nestedscrollview.VerticalNestedScrollView
 import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
@@ -104,7 +102,10 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
                         IconButton(
                             onClick = { }
                         ) {
-                            Icon(Icons.Filled.Search, contentDescription = "Search button")
+                            Icon(
+                                painterResource(R.drawable.ic_baseline_oui_search_24),
+                                contentDescription = "Search button"
+                            )
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor)
@@ -151,12 +152,15 @@ fun AppBar(content: Croll.Content, context: Context, contentView: @Composable ()
                     val activity = (context as? Activity)
                     activity?.finish()
                 }) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back button")
+                    Icon(
+                        painterResource(R.drawable.ic_baseline_oui_keyboard_arrow_left_24),
+                        contentDescription = "Back button"
+                    )
                 }
             },
             actions = {
                 Icon(
-                    Icons.Filled.Share,
+                    painterResource(R.drawable.ic_baseline_oui_share_24),
                     contentDescription = "공유",
                     Modifier
                         .padding(end = 16.dp)
