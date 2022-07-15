@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -104,7 +105,7 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
                         ) {
                             Icon(
                                 painterResource(R.drawable.ic_baseline_oui_search_24),
-                                contentDescription = "Search button"
+                                contentDescription = stringResource(R.string.search)
                             )
                         }
                     },
@@ -154,7 +155,7 @@ fun AppBar(content: Croll.Content, context: Context, contentView: @Composable ()
                 }) {
                     Icon(
                         painterResource(R.drawable.ic_baseline_oui_keyboard_arrow_left_24),
-                        contentDescription = "Back button"
+                        contentDescription = stringResource(R.string.back)
                     )
                 }
             },
@@ -177,7 +178,7 @@ fun AppBar(content: Croll.Content, context: Context, contentView: @Composable ()
                 }) {
                     Icon(
                         painterResource(R.drawable.ic_baseline_oui_share_24),
-                        contentDescription = R.string.share.toString(),
+                        contentDescription = stringResource(R.string.share),
                     )
                 }
             },
