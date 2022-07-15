@@ -89,7 +89,6 @@ fun ContentView(
                                     AdMobCompose(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .height(250.dp)
                                             .padding(top = 50.dp),
                                         adId = "ca-app-pub-1000428004132415/8906506129"
                                     )

@@ -14,10 +14,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize
 import com.google.android.gms.ads.AdView
 
 @Composable
-fun AdMobCompose(modifier: Modifier = Modifier, adId: String = "ca-app-pub-1000428004132415/8906506129") {
+fun AdMobCompose(
+    modifier: Modifier = Modifier,
+    adId: String = "ca-app-pub-1000428004132415/8906506129"
+) {
     val isInEditMode = LocalInspectionMode.current
     if (isInEditMode) {
         Text(
@@ -37,6 +41,7 @@ fun AdMobCompose(modifier: Modifier = Modifier, adId: String = "ca-app-pub-10004
                 AdView(context).apply {
                     setAdSize(AdSize.FULL_BANNER)
                     adUnitId = adId
+                    getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, this.width)
                     loadAd(AdRequest.Builder().build())
                 }
             }
