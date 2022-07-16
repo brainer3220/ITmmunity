@@ -53,8 +53,8 @@ fun ContentView(
 
     contentViewModel.setContent(aNews)
 
-    BoxWithConstraints(Modifier) {
-        RoundedSurface {
+    RoundedSurface {
+        BoxWithConstraints(Modifier) {
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
                 onRefresh = { contentViewModel.getHtml() }) {
