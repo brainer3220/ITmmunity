@@ -135,7 +135,6 @@ fun NewsListOf(
         Modifier
             .height(125.dp)
             .fillMaxWidth()
-            .background(Color.White)
             .clickable {
                 expanded = !expanded
             }) {
