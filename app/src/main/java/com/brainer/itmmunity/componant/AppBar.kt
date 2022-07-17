@@ -6,7 +6,6 @@ import android.content.Intent
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomNavigation
@@ -188,7 +187,6 @@ fun AppBar(content: Croll.Content, context: Context, contentView: @Composable ()
     }
 }
 
-@ExperimentalMaterial3Api
 @ExperimentalAnimationApi
 @Preview
 @Composable
