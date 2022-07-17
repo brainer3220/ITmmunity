@@ -112,10 +112,6 @@ fun ContentView(
 @Composable
 fun ContentViewTest() {
     ContentView(
-        Croll.Content(
-            title = "안녕하세요",
-            url = "https://www.google.com",
-            hit = 0
-        )
+        dummies[0]
     )
 }
