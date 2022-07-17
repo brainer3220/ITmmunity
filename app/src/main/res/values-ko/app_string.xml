@@ -3,4 +3,5 @@
     <string name="search">검색</string>
     <string name="share">공유</string>
     <string name="back">뒤로가기</string>
+    <string name="connect_faild">연결실패</string>
 </resources>

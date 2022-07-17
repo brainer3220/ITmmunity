@@ -12,10 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +20,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -218,5 +217,24 @@ fun RoundedSurface(contentView: @Composable () -> Unit = {}) {
                 contentView()
             }
         }
+@Preview
+@Composable
+fun ConnectErrorView() {
+    Box {
+        Row(Modifier.align(Alignment.Center)) {
+            Icon(
+                painterResource(R.drawable.ic_baseline_oui_error_24),
+                modifier = Modifier.align(Alignment.CenterVertically),
+                contentDescription = stringResource(R.string.connect_faild)
+            )
+            Spacer(modifier = Modifier.padding(2.dp))
+            Text(
+                text = "인터넷이 연결돼있지 않아요.\n인터넷 연결을 확인해주세요.",
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
     }
 }

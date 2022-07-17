@@ -3,4 +3,5 @@
     <string name="search">Search</string>
     <string name="share">Share</string>
     <string name="back">Back</string>
+    <string name="connect_faild">Connect failed</string>
 </resources>

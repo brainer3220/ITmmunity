@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import com.brainer.itmmunity.componant.AppBar
 import com.brainer.itmmunity.componant.LoadingView
-import com.brainer.itmmunity.componant.NewsCard
+import com.brainer.itmmunity.componant.*
 import com.brainer.itmmunity.componant.RoundedSurface
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.viewmodel.BackGroundViewModel
@@ -112,72 +112,75 @@ fun MainCompose(
 }
 
 
-@ExperimentalAnimationApi
-@Composable
-fun MainView(
-    viewModel: MainViewModel = remember { MainViewModel() },
-    networkViewModel: BackGroundViewModel
-) {
-    val unifiedList by viewModel.unifiedList.collectAsState()
-    val aNewsState = MutableLiveData(viewModel.aNews.collectAsState())
-    val aNews by rememberSaveable { aNewsState.value!! }
+    @ExperimentalAnimationApi
+    @Composable
+    fun MainView(
+        viewModel: MainViewModel = remember { MainViewModel() },
+        networkViewModel: BackGroundViewModel
+    ) {
+        val unifiedList by viewModel.unifiedList.collectAsState()
+        val aNewsState = MutableLiveData(viewModel.aNews.collectAsState())
+        val aNews by rememberSaveable { aNewsState.value!! }
 
-    val isConnection by networkViewModel.isConnect.collectAsState()
+        val isConnection by networkViewModel.isConnect.collectAsState()
 //    val isTabletUi by viewModel.isTabletUi.collectAsState()
 
-    val swipeRefreshState by remember { mutableStateOf(true) }
+        val swipeRefreshState by remember { mutableStateOf(true) }
 
-    Log.d("Unified_List", unifiedList.toString())
+        Log.d("Unified_List", unifiedList.toString())
 
 
-    if (isConnection) {
-        BoxWithConstraints(Modifier.fillMaxSize()) {
-            val boxWithConstraintsScope = this
-            Row(Modifier.fillMaxSize()) {
-                SwipeRefresh(
-                    modifier = Modifier.weight(1f),
-                    state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                    onRefresh = { viewModel.getRefresh() }) {
-                    if (unifiedList.isNotEmpty()) {
-                        NewsCard(
-                            unifiedList,
-                            viewModel
-                        )
-                    } else {
-                        LoadingView()
+        if (isConnection) {
+            BoxWithConstraints(Modifier.fillMaxSize()) {
+                val boxWithConstraintsScope = this
+                Row(Modifier.fillMaxSize()) {
+                    SwipeRefresh(
+                        modifier = Modifier.weight(1f),
+                        state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                        onRefresh = { viewModel.getRefresh() }) {
+                        if (unifiedList.isNotEmpty()) {
+                            NewsCard(
+                                unifiedList,
+                                viewModel
+                            )
+                        } else {
+                            LoadingView()
+                        }
                     }
-                }
 
-                if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH.dp) {
-                    viewModel.changeTabletUi(true)
-                    Box(modifier = Modifier.weight(1f)) {
-                        Crossfade(targetState = aNews) {
-                            if (it != null) {
-                                ContentView(aNews = aNews!!)
-                            } else {
-                                RoundedSurface {
-                                    Text(
-                                        modifier = Modifier.fillMaxSize(),
-                                        text = "컨텐츠를 클릭해 보세요.",
-                                        textAlign = TextAlign.Center
-                                    )
+                    if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH.dp) {
+                        viewModel.changeTabletUi(true)
+                        Box(modifier = Modifier
+                            .weight(1f)
+                            .align(Alignment.CenterVertically)) {
+                            Crossfade(targetState = aNews) {
+                                if (it != null) {
+                                    ContentView(aNews = aNews!!)
+                                } else {
+                                    RoundedSurface {
+                                        Text(
+                                            modifier = Modifier.fillMaxSize(),
+                                            text = "컨텐츠를 클릭해 보세요.",
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        viewModel.changeTabletUi(false)
                     }
-                } else {
-                    viewModel.changeTabletUi(false)
                 }
             }
+        } else {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                ConnectErrorView()
+            }
         }
-    } else {
-        Box(
-            Modifier.fillMaxSize()
-        ) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .align(Alignment.Center),
+    }
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
