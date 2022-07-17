@@ -236,5 +236,13 @@ fun ConnectErrorView() {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun RoundedSurfacePreview() {
+    RoundedSurface {
+        ContentView(
+            dummies[0]
+        )
     }
 }
