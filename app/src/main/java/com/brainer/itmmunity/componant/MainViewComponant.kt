@@ -2,11 +2,11 @@ package com.brainer.itmmunity.componant
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -17,7 +17,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -31,8 +30,11 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.brainer.itmmunity.ContentActivity
+import com.brainer.itmmunity.ContentView
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
+import com.brainer.itmmunity.Utility.getSurfaceColor
+import com.brainer.itmmunity.dummies
 import com.brainer.itmmunity.viewmodel.MainViewModel
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
@@ -202,21 +204,19 @@ fun NewsListOf(
  */
 @Composable
 fun RoundedSurface(contentView: @Composable () -> Unit = {}) {
-    val backGroundColor = if (isSystemInDarkTheme()) {
-        Color.Black
-    } else {
-        Color(245, 244, 244)
-    }
-    Box(
-        Modifier
+    val backGroundColor = getSurfaceColor()
+    Surface(
+        modifier = Modifier
             .fillMaxSize()
-            .background(backGroundColor)
+            .background(backGroundColor),
+        shape = RoundedCornerShape(ROUNDED_VALUE.dp)
     ) {
-        Surface(shape = RoundedCornerShape(ROUNDED_VALUE.dp)) {
-            Box(Modifier.padding(bottom = 8.dp)) {
-                contentView()
-            }
+        Box(Modifier.padding(bottom = 8.dp)) {
+            contentView()
         }
+    }
+}
+
 @Preview
 @Composable
 fun ConnectErrorView() {
