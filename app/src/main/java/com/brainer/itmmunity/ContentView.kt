@@ -19,6 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.Utility.getSurfaceColor
+import com.brainer.itmmunity.Utility.getTextColor
 import com.brainer.itmmunity.componant.AdMobCompose
 import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.RoundedSurface
@@ -44,8 +46,8 @@ fun ContentView(
     val listState = rememberScrollState()
     val swipeRefreshState by remember { mutableStateOf(true) }
 
-    var textColor = Color(255, 255, 255)
-    if (isDarkMode) {
+    val backGroundColor = getSurfaceColor()
+    val textColor = getTextColor()
         textColor = Color(255, 255, 255)
     } else if (!isDarkMode) {
         textColor = Color(23, 23, 23)
