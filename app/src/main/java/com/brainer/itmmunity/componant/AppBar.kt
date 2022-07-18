@@ -1,11 +1,14 @@
 package com.brainer.itmmunity.componant
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomNavigation
@@ -18,11 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
 import com.brainer.itmmunity.viewmodel.MainViewModel
@@ -38,6 +43,8 @@ const val SCROLL_TABLET_HEIGHT = 155f
  * @param viewModel MainViewModel
  * @param contentView content parameter for Scaffold
  */
+@SuppressLint("ResourceType")
+@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalAnimationApi
 @Composable
 fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable () -> Unit = {}) {
@@ -46,6 +53,8 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
     } else {
         Color(245, 244, 244)
     }
+
+    val context = LocalContext.current
 
     val titleString by viewModel.titleString.collectAsState()
     val nestedScrollViewState = rememberNestedScrollViewState()
@@ -99,13 +108,32 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
                         }
                     },
                     actions = {
-                        IconButton(
-                            onClick = { }
-                        ) {
-                            Icon(
-                                painterResource(R.drawable.ic_baseline_oui_search_24),
-                                contentDescription = stringResource(R.string.search)
-                            )
+                        Row {
+                            IconButton(
+                                onClick = {
+
+                                },
+                                enabled = false,
+                                modifier = Modifier.combinedClickable(
+                                    onLongClick = { /*....*/ },
+                                    onClick = { /*....*/ })
+                            ) {
+                                Icon(
+                                    painterResource(R.drawable.ic_baseline_oui_search_24),
+                                    contentDescription = stringResource(R.string.search)
+                                )
+                            }
+                            IconButton(
+                                onClick = {
+//                                    val intent = Intent(context, SettingActivity::class.java)
+//                                    startActivity(context, intent, null)
+                                }
+                            ) {
+                                Icon(
+                                    painterResource(R.drawable.ic_baseline_oui_more_24),
+                                    contentDescription = stringResource(R.string.more)
+                                )
+                            }
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor)
