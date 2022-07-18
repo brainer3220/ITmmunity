@@ -48,10 +48,6 @@ fun ContentView(
 
     val backGroundColor = getSurfaceColor()
     val textColor = getTextColor()
-        textColor = Color(255, 255, 255)
-    } else if (!isDarkMode) {
-        textColor = Color(23, 23, 23)
-    }
 
     contentViewModel.setContent(aNews)
 

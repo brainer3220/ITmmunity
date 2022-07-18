@@ -8,7 +8,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -19,10 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
-import com.brainer.itmmunity.componant.AppBar
-import com.brainer.itmmunity.componant.LoadingView
 import com.brainer.itmmunity.componant.*
-import com.brainer.itmmunity.componant.RoundedSurface
 import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.viewmodel.BackGroundViewModel
 import com.brainer.itmmunity.viewmodel.CONFIG_STR
@@ -112,83 +112,74 @@ fun MainCompose(
 }
 
 
-    @ExperimentalAnimationApi
-    @Composable
-    fun MainView(
-        viewModel: MainViewModel = remember { MainViewModel() },
-        networkViewModel: BackGroundViewModel
-    ) {
-        val unifiedList by viewModel.unifiedList.collectAsState()
-        val aNewsState = MutableLiveData(viewModel.aNews.collectAsState())
-        val aNews by rememberSaveable { aNewsState.value!! }
+@ExperimentalAnimationApi
+@Composable
+fun MainView(
+    viewModel: MainViewModel = remember { MainViewModel() },
+    networkViewModel: BackGroundViewModel
+) {
+    val unifiedList by viewModel.unifiedList.collectAsState()
+    val aNewsState = MutableLiveData(viewModel.aNews.collectAsState())
+    val aNews by rememberSaveable { aNewsState.value!! }
 
-        val isConnection by networkViewModel.isConnect.collectAsState()
+    val isConnection by networkViewModel.isConnect.collectAsState()
 //    val isTabletUi by viewModel.isTabletUi.collectAsState()
 
-        val swipeRefreshState by remember { mutableStateOf(true) }
+    val swipeRefreshState by remember { mutableStateOf(true) }
 
-        Log.d("Unified_List", unifiedList.toString())
+    Log.d("Unified_List", unifiedList.toString())
 
 
-        if (isConnection) {
-            BoxWithConstraints(Modifier.fillMaxSize()) {
-                val boxWithConstraintsScope = this
-                Row(Modifier.fillMaxSize()) {
-                    SwipeRefresh(
-                        modifier = Modifier.weight(1f),
-                        state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                        onRefresh = { viewModel.getRefresh() }) {
-                        if (unifiedList.isNotEmpty()) {
-                            NewsCard(
-                                unifiedList,
-                                viewModel
-                            )
-                        } else {
-                            LoadingView()
-                        }
+    if (isConnection) {
+        BoxWithConstraints(Modifier.fillMaxSize()) {
+            val boxWithConstraintsScope = this
+            Row(Modifier.fillMaxSize()) {
+                SwipeRefresh(
+                    modifier = Modifier.weight(1f),
+                    state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                    onRefresh = { viewModel.getRefresh() }) {
+                    if (unifiedList.isNotEmpty()) {
+                        NewsCard(
+                            unifiedList,
+                            viewModel
+                        )
+                    } else {
+                        LoadingView()
                     }
+                }
 
-                    if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH.dp) {
-                        viewModel.changeTabletUi(true)
-                        Box(modifier = Modifier
+                if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH.dp) {
+                    viewModel.changeTabletUi(true)
+                    Box(
+                        modifier = Modifier
                             .weight(1f)
-                            .align(Alignment.CenterVertically)) {
-                            Crossfade(targetState = aNews) {
-                                if (it != null) {
-                                    ContentView(aNews = aNews!!)
-                                } else {
-                                    RoundedSurface {
-                                        Text(
-                                            modifier = Modifier.fillMaxSize(),
-                                            text = "컨텐츠를 클릭해 보세요.",
-                                            textAlign = TextAlign.Center
-                                        )
-                                    }
+                            .align(Alignment.CenterVertically)
+                    ) {
+                        Crossfade(targetState = aNews) {
+                            if (it != null) {
+                                ContentView(aNews = aNews!!)
+                            } else {
+                                RoundedSurface {
+                                    Text(
+                                        modifier = Modifier.fillMaxSize(),
+                                        text = "컨텐츠를 클릭해 보세요.",
+                                        textAlign = TextAlign.Center
+                                    )
                                 }
                             }
                         }
-                    } else {
-                        viewModel.changeTabletUi(false)
                     }
+                } else {
+                    viewModel.changeTabletUi(false)
                 }
             }
-        } else {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                ConnectErrorView()
-            }
         }
-    }
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "인터넷이 연결돼있지 않아요.\n인터넷 연결을 확인해주세요.",
-                    textAlign = TextAlign.Center
-                )
-            }
+    } else {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            ConnectErrorView()
         }
     }
 }
