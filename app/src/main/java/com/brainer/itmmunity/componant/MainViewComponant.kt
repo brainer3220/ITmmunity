@@ -95,7 +95,7 @@ fun NewsCard(
                                 .fillMaxWidth()
                                 .height(32.dp)
                         ) {
-                            LoadingView(spaceWeight = 0F)
+                            LoadingView()
                         }
                     }
                     mainViewModel.addData()
@@ -136,7 +136,7 @@ fun NewsListOf(
                         imageModel = aNews.image,
                         contentScale = ContentScale.FillWidth,
                         loading = {
-                            LoadingView(LOTTIE_IMG_VIEW_URL, spaceWeight = 0F)
+                            LoadingView(LOTTIE_IMG_VIEW_URL)
                         },
                         contentDescription = stringResource(id = R.string.main_thumbnail),
                         circularReveal = CircularReveal(duration = 350),
