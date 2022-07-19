@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import com.airbnb.lottie.compose.LottieAnimation
@@ -51,40 +52,22 @@ const val ROUNDED_VALUE = 26
 @Composable
 fun LoadingView(
     lottieURL: String? = DEFAULT_LOTTIE_VIEW_URL,
-    spaceWeight: Float = DEFAULT_SPACE_WEIGHT
+    size: Int = 72
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.Url(lottieURL!!))
 
-    RoundedSurface {
-        Surface(Modifier.fillMaxSize()) {
-            Column {
-                if (spaceWeight != 0F) {
-                    Spacer(modifier = Modifier.weight(spaceWeight))
-                }
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                ) {
-                    if (composition == null) {
-                        CircularProgressIndicator(
-                            Modifier
-                                .align(Alignment.Center)
-                                .fillMaxSize()
-                        )
-                    } else {
-                        LottieAnimation(
-                            composition, modifier = Modifier
-                                .align(Alignment.Center)
-                                .fillMaxSize()
-                        )
-                    }
-                }
-                if (spaceWeight != 0F) {
-                    Spacer(modifier = Modifier.weight(spaceWeight))
-                }
-            }
-        }
+    if (composition == null) {
+        CircularProgressIndicator(
+            Modifier
+                .size(size.dp)
+                .fillMaxWidth()
+        )
+    } else {
+        LottieAnimation(
+            composition, modifier = Modifier
+                .size(size.dp)
+                .fillMaxWidth()
+        )
     }
 }
 
