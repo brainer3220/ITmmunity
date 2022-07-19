@@ -8,10 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -144,7 +141,12 @@ fun MainView(
                             viewModel
                         )
                     } else {
-                        LoadingView()
+                        Box(
+                            modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            LoadingView()
+                        }
                     }
                 }
 
