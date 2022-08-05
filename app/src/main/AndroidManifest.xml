@@ -21,6 +21,11 @@
         android:theme="@style/OneUITheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".SettingActivity"
+            android:exported="false"
+            android:label="@string/title_activity_setting"
+            android:theme="@style/OneUITheme" />
+        <activity
             android:name=".ContentActivity"
             android:exported="false"
             android:label="@string/title_activity_content"
