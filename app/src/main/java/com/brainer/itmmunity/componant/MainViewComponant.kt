@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.brainer.itmmunity.componant
 
 import android.annotation.SuppressLint
@@ -5,6 +7,7 @@ import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import com.airbnb.lottie.compose.LottieAnimation
@@ -34,7 +36,7 @@ import com.brainer.itmmunity.ContentActivity
 import com.brainer.itmmunity.ContentView
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
-import com.brainer.itmmunity.Utility.getSurfaceColor
+import com.brainer.itmmunity.Utility.getBackgroundColor
 import com.brainer.itmmunity.dummies
 import com.brainer.itmmunity.viewmodel.MainViewModel
 import com.skydoves.landscapist.CircularReveal
@@ -45,7 +47,6 @@ import kotlinx.coroutines.launch
 
 const val DEFAULT_LOTTIE_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_wfsunjgd.json"
 const val LOTTIE_IMG_VIEW_URL = "https://assets2.lottiefiles.com/packages/lf20_6odgh2c6.json"
-const val DEFAULT_SPACE_WEIGHT = 5F
 const val ROUNDED_VALUE = 26
 
 @Preview
@@ -72,6 +73,7 @@ fun LoadingView(
 }
 
 
+@ExperimentalAnimationApi
 @Composable
 fun NewsCard(
     news: List<Croll.Content>,
@@ -105,7 +107,7 @@ fun NewsCard(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
+@ExperimentalAnimationApi
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun NewsListOf(
@@ -187,16 +189,12 @@ fun NewsListOf(
  */
 @Composable
 fun RoundedSurface(contentView: @Composable () -> Unit = {}) {
-    val backGroundColor = getSurfaceColor()
+    val backGroundColor = getBackgroundColor()
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(backGroundColor),
+        modifier = Modifier.background(backGroundColor),
         shape = RoundedCornerShape(ROUNDED_VALUE.dp)
     ) {
-        Box(Modifier.padding(bottom = 8.dp)) {
-            contentView()
-        }
+        contentView()
     }
 }
 
@@ -219,7 +217,7 @@ fun ConnectErrorView() {
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
+@ExperimentalAnimationApi
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun RoundedSurfacePreview() {

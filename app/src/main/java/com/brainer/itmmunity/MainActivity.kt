@@ -52,15 +52,15 @@ class MainActivity : ComponentActivity() {
         remoteConfig.setConfigSettingsAsync(configSettings)
 
         remoteConfig.fetchAndActivate()
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val updated = task.result
-                    Log.d(CONFIG_STR, "MainActivity Config params updated: $updated")
-                    Log.d(CONFIG_STR, "MainActivity Fetch and activate succeeded")
-                } else {
-                    Log.d(CONFIG_STR, "Fetch failed")
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        val updated = task.result
+                        Log.d(CONFIG_STR, "MainActivity Config params updated: $updated")
+                        Log.d(CONFIG_STR, "MainActivity Fetch and activate succeeded")
+                    } else {
+                        Log.d(CONFIG_STR, "Fetch failed")
+                    }
                 }
-            }
 
         APPLICATION_CONTEXT = applicationContext
         setContent {
@@ -68,8 +68,8 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface {
                     MainCompose(
-                        viewModel = mainvViewModel,
-                        networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT)
+                            viewModel = mainvViewModel,
+                            networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT)
                     )
                 }
             }
@@ -96,13 +96,13 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun MainCompose(
-    viewModel: MainViewModel = remember { MainViewModel() },
-    networkViewModel: BackGroundViewModel = BackGroundViewModel(context = APPLICATION_CONTEXT)
+        viewModel: MainViewModel = remember { MainViewModel() },
+        networkViewModel: BackGroundViewModel = BackGroundViewModel(context = APPLICATION_CONTEXT)
 ) {
     AppBar(viewModel = viewModel) {
         MainView(
-            viewModel = viewModel,
-            networkViewModel = networkViewModel
+                viewModel = viewModel,
+                networkViewModel = networkViewModel
         )
 //        NavGraph(navController, viewModel, networkViewModel)
     }
@@ -112,8 +112,8 @@ fun MainCompose(
 @ExperimentalAnimationApi
 @Composable
 fun MainView(
-    viewModel: MainViewModel = remember { MainViewModel() },
-    networkViewModel: BackGroundViewModel
+        viewModel: MainViewModel = remember { MainViewModel() },
+        networkViewModel: BackGroundViewModel
 ) {
     val unifiedList by viewModel.unifiedList.collectAsState()
     val aNewsState = MutableLiveData(viewModel.aNews.collectAsState())
@@ -132,18 +132,18 @@ fun MainView(
             val boxWithConstraintsScope = this
             Row(Modifier.fillMaxSize()) {
                 SwipeRefresh(
-                    modifier = Modifier.weight(1f),
-                    state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                    onRefresh = { viewModel.getRefresh() }) {
+                        modifier = Modifier.weight(1f),
+                        state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                        onRefresh = { viewModel.getRefresh() }) {
                     if (unifiedList.isNotEmpty()) {
                         NewsCard(
-                            unifiedList,
-                            viewModel
+                                unifiedList,
+                                viewModel
                         )
                     } else {
                         Box(
-                            modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically),
-                            contentAlignment = Alignment.Center
+                                modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically),
+                                contentAlignment = Alignment.Center
                         ) {
                             LoadingView()
                         }
@@ -153,9 +153,9 @@ fun MainView(
                 if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH.dp) {
                     viewModel.changeTabletUi(true)
                     Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .align(Alignment.CenterVertically)
+                            modifier = Modifier
+                                    .weight(1f)
+                                    .align(Alignment.CenterVertically)
                     ) {
                         Crossfade(targetState = aNews) {
                             if (it != null) {
@@ -163,9 +163,9 @@ fun MainView(
                             } else {
                                 RoundedSurface {
                                     Text(
-                                        modifier = Modifier.fillMaxSize(),
-                                        text = "컨텐츠를 클릭해 보세요.",
-                                        textAlign = TextAlign.Center
+                                            modifier = Modifier.fillMaxSize(),
+                                            text = "컨텐츠를 클릭해 보세요.",
+                                            textAlign = TextAlign.Center
                                     )
                                 }
                             }
@@ -178,8 +178,8 @@ fun MainView(
         }
     } else {
         Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
         ) {
             ConnectErrorView()
         }
@@ -191,6 +191,6 @@ fun MainView(
 @Composable
 fun MainViewTest() {
     MainView(
-        networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT)
+            networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT)
     )
 }

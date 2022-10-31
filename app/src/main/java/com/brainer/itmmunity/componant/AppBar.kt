@@ -1,6 +1,7 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.brainer.itmmunity.componant
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -13,21 +14,17 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
 import com.brainer.itmmunity.Croll.Croll
 import com.brainer.itmmunity.R
 import com.brainer.itmmunity.viewmodel.MainViewModel
@@ -43,7 +40,6 @@ const val SCROLL_TABLET_HEIGHT = 155f
  * @param viewModel MainViewModel
  * @param contentView content parameter for Scaffold
  */
-@SuppressLint("ResourceType")
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalAnimationApi
 @Composable
@@ -53,9 +49,6 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
     } else {
         Color(245, 244, 244)
     }
-
-    val context = LocalContext.current
-
     val titleString by viewModel.titleString.collectAsState()
     val nestedScrollViewState = rememberNestedScrollViewState()
     val smallTopAppBarAlpha by animateFloatAsState(1f)
@@ -115,25 +108,15 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable 
                                 },
                                 enabled = false,
                                 modifier = Modifier.combinedClickable(
-                                    onLongClick = { /*....*/ },
-                                    onClick = { /*....*/ })
+                                    onLongClick = { TODO() },
+                                    onClick = { TODO() })
                             ) {
                                 Icon(
                                     painterResource(R.drawable.ic_baseline_oui_search_24),
                                     contentDescription = stringResource(R.string.search)
                                 )
                             }
-                            IconButton(
-                                onClick = {
-//                                    val intent = Intent(context, SettingActivity::class.java)
-//                                    startActivity(context, intent, null)
-                                }
-                            ) {
-                                Icon(
-                                    painterResource(R.drawable.ic_baseline_oui_more_24),
-                                    contentDescription = stringResource(R.string.more)
-                                )
-                            }
+                            ShowDropDown()
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor)

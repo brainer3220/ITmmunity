@@ -11,17 +11,27 @@ fun getSurfaceColor(): Color {
     } else {
         Color(245, 244, 244)
     }
+
+    return backGroundColor
+}
+
+@Composable
+fun getBackgroundColor(): Color {
+    val backGroundColor = if (isSystemInDarkTheme()) {
+        Color.Black
+    } else {
+        Color(245, 244, 244)
+    }
+
     return backGroundColor
 }
 
 @Composable
 fun getTextColor(): Color {
-    var textColor = Color(255, 255, 255)
-
-    if (isSystemInDarkTheme()) {
-        textColor = Color(255, 255, 255)
+    val textColor = if (isSystemInDarkTheme()) {
+        Color(255, 255, 255)
     } else {
-        textColor = Color(23, 23, 23)
+        Color(23, 23, 23)
     }
 
     return textColor

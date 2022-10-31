@@ -46,17 +46,16 @@ class MainViewModel : ViewModel() {
             minimumFetchIntervalInSeconds = 3600
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
-        remoteConfig.fetch()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val updated = task.result
-                    meecoNewsSliceValue = remoteConfig.getLong("meecoNewsSlice").toInt()
-                    Log.d(CONFIG_STR, "Config params updated: $updated")
-                    Log.d(CONFIG_STR, "Fetch and activate succeeded")
-                } else {
-                    Log.d(CONFIG_STR, "Fetch failed")
-                }
+        remoteConfig.fetch().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val updated = task.result
+                meecoNewsSliceValue = remoteConfig.getLong("meecoNewsSlice").toInt()
+                Log.d(CONFIG_STR, "Config params updated: $updated")
+                Log.d(CONFIG_STR, "Fetch and activate succeeded")
+            } else {
+                Log.d(CONFIG_STR, "Fetch failed")
             }
+        }
     }
 
     fun getRefresh() {
@@ -92,15 +91,15 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
                 kotlin.runCatching {
-                    KGNewsContent().returnData(_underKgNextPage.value!! + 1)
+                    KGNewsContent().returnData(_underKgNextPage.value + 1)
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
-                        _unifiedList.value = _unifiedList.value!!.union(it).toList()
-                        _underKgNextPage.value = _underKgNextPage.value?.plus(1)
+                        _unifiedList.value = _unifiedList.value.union(it).toList()
+                        _underKgNextPage.value = _underKgNextPage.value.plus(1)
                     }
                 }
                 kotlin.runCatching {
-                    MeecoNews().returnData(_meecoNextPage.value!! + 1)
+                    MeecoNews().returnData(_meecoNextPage.value + 1)
                 }.onSuccess {
                     CoroutineScope(Dispatchers.Main).launch {
                         _unifiedList.value =
