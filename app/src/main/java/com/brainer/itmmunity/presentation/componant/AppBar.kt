@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.brainer.itmmunity.componant
+package com.brainer.itmmunity.presentation.componant
 
 import android.app.Activity
 import android.content.Context
@@ -25,9 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.data.Croll.Croll
 import com.brainer.itmmunity.R
-import com.brainer.itmmunity.viewmodel.MainViewModel
+import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
 import moe.tlaster.nestedscrollview.VerticalNestedScrollView
 import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
 

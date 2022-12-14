@@ -1,10 +1,10 @@
-package com.brainer.itmmunity.viewmodel
+package com.brainer.itmmunity.presentation.viewmodel
 
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.brainer.itmmunity.Utility.NetworkConnectCheck
+import com.brainer.itmmunity.utility.NetworkConnectCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

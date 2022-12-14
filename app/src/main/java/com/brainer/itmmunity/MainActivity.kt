@@ -20,10 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import com.brainer.itmmunity.componant.*
-import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
-import com.brainer.itmmunity.viewmodel.BackGroundViewModel
-import com.brainer.itmmunity.viewmodel.CONFIG_STR
-import com.brainer.itmmunity.viewmodel.MainViewModel
+import com.brainer.itmmunity.presentation.componant.*
+import com.brainer.itmmunity.presentation.ui.theme.ITmmunity_AndroidTheme
+import com.brainer.itmmunity.presentation.viewmodel.BackGroundViewModel
+import com.brainer.itmmunity.presentation.viewmodel.CONFIG_STR
+import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.firebase.ktx.Firebase
@@ -96,8 +97,8 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun MainCompose(
-        viewModel: MainViewModel = remember { MainViewModel() },
-        networkViewModel: BackGroundViewModel = BackGroundViewModel(context = APPLICATION_CONTEXT)
+    viewModel: MainViewModel = remember { MainViewModel() },
+    networkViewModel: BackGroundViewModel = BackGroundViewModel(context = APPLICATION_CONTEXT)
 ) {
     AppBar(viewModel = viewModel) {
         MainView(
@@ -112,8 +113,8 @@ fun MainCompose(
 @ExperimentalAnimationApi
 @Composable
 fun MainView(
-        viewModel: MainViewModel = remember { MainViewModel() },
-        networkViewModel: BackGroundViewModel
+    viewModel: MainViewModel = remember { MainViewModel() },
+    networkViewModel: BackGroundViewModel
 ) {
     val unifiedList by viewModel.unifiedList.collectAsState()
     val aNewsState = MutableLiveData(viewModel.aNews.collectAsState())

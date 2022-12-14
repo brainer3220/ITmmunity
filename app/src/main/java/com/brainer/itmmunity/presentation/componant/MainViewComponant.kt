@@ -1,13 +1,12 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.brainer.itmmunity.componant
+package com.brainer.itmmunity.presentation.componant
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -34,11 +33,11 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.brainer.itmmunity.ContentActivity
 import com.brainer.itmmunity.ContentView
-import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.data.Croll.Croll
 import com.brainer.itmmunity.R
-import com.brainer.itmmunity.Utility.getBackgroundColor
+import com.brainer.itmmunity.utility.getBackgroundColor
 import com.brainer.itmmunity.dummies
-import com.brainer.itmmunity.viewmodel.MainViewModel
+import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.CoroutineScope

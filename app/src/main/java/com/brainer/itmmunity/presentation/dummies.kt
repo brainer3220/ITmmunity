@@ -1,7 +1,7 @@
 package com.brainer.itmmunity
 
-import com.brainer.itmmunity.Croll.Croll
-import com.brainer.itmmunity.Croll.UNDERKG_URL
+import com.brainer.itmmunity.data.Croll.Croll
+import com.brainer.itmmunity.data.Croll.UNDERKG_URL
 
 val dummies = listOf(
     Croll.Content(

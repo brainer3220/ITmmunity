@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.ui.theme
+package com.brainer.itmmunity.presentation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

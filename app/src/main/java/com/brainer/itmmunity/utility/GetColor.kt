@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.Utility
+package com.brainer.itmmunity.utility
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable

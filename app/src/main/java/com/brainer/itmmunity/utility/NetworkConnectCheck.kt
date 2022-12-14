@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.Utility
+package com.brainer.itmmunity.utility
 
 import android.content.Context
 import android.net.ConnectivityManager

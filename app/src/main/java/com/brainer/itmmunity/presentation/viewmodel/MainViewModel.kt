@@ -1,11 +1,11 @@
-package com.brainer.itmmunity.viewmodel
+package com.brainer.itmmunity.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.brainer.itmmunity.Croll.Croll
-import com.brainer.itmmunity.Croll.KGNewsContent
-import com.brainer.itmmunity.Croll.MeecoNews
+import com.brainer.itmmunity.data.Croll.Croll
+import com.brainer.itmmunity.data.Croll.KGNewsContent
+import com.brainer.itmmunity.data.Croll.MeecoNews
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings

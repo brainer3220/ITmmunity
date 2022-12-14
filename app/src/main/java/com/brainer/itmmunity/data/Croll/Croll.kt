@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.Croll
+package com.brainer.itmmunity.data.Croll
 
 import android.os.Parcelable
 import android.util.Log

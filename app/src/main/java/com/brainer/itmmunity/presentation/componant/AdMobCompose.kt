@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.componant
+package com.brainer.itmmunity.presentation.componant
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth

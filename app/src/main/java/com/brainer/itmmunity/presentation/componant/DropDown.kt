@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.componant
+package com.brainer.itmmunity.presentation.componant
 
 import android.content.Intent
 import androidx.compose.animation.animateContentSize

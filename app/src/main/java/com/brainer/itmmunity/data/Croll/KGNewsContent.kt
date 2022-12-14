@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.Croll
+package com.brainer.itmmunity.data.Croll
 
 import android.util.Log
 import org.jsoup.select.Elements

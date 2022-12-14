@@ -1,9 +1,9 @@
-package com.brainer.itmmunity.viewmodel
+package com.brainer.itmmunity.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.data.Croll.Croll
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

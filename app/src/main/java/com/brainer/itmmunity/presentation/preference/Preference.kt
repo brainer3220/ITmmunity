@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.preference
+package com.brainer.itmmunity.presentation.preference
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
