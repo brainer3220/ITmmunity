@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.componant
+package com.brainer.itmmunity.presentation.componant
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +20,7 @@ import com.google.android.gms.ads.AdView
 @Composable
 fun AdMobCompose(
     modifier: Modifier = Modifier,
-    adId: String = "ca-app-pub-1000428004132415/8906506129"
+    adId: String = "ca-app-pub-1000428004132415/8906506129",
 ) {
     val isInEditMode = LocalInspectionMode.current
     if (isInEditMode) {
@@ -44,7 +44,7 @@ fun AdMobCompose(
                     getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, this.width)
                     loadAd(AdRequest.Builder().build())
                 }
-            }
+            },
         )
     }
 }

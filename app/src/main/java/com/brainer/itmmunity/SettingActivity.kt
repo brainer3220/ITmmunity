@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.brainer.itmmunity.preference.PreferencePreview
-import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
+import com.brainer.itmmunity.presentation.preference.PreferencePreview
+import com.brainer.itmmunity.presentation.ui.theme.ITmmunity_AndroidTheme
 
 class SettingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +18,7 @@ class SettingActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     PreferencePreview()
                 }

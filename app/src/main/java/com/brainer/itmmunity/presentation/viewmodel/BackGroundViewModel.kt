@@ -1,10 +1,9 @@
-package com.brainer.itmmunity.viewmodel
+package com.brainer.itmmunity.presentation.viewmodel
 
-import android.content.Context
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.brainer.itmmunity.Utility.NetworkConnectCheck
+import androidx.lifecycle.AndroidViewModel
+import com.brainer.itmmunity.utility.NetworkConnectCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -16,8 +15,8 @@ import kotlinx.coroutines.launch
  * @author brainer
  * @param context Context
  */
-class BackGroundViewModel(context: Context) : ViewModel() {
-    private var _context = MutableLiveData(context)
+class BackGroundViewModel(application: Application) : AndroidViewModel(application) {
+    private var _context = application.applicationContext
 
     private var _isConnect = MutableStateFlow<Boolean>(true)
     val isConnect = _isConnect.asStateFlow()
@@ -37,7 +36,7 @@ class BackGroundViewModel(context: Context) : ViewModel() {
             while (true) {
                 delay(3000L)
                 kotlin.runCatching {
-                    NetworkConnectCheck().isConnectNetwork(_context.value!!)
+                    NetworkConnectCheck().isConnectNetwork(_context.applicationContext)
                 }.onSuccess {
                     if (isConnect.value != it) {
                         CoroutineScope(Dispatchers.Main).launch {

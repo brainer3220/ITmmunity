@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.ui
+package com.brainer.itmmunity.presentation.ui
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

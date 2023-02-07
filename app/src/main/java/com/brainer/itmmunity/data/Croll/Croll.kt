@@ -1,4 +1,4 @@
-package com.brainer.itmmunity.Croll
+package com.brainer.itmmunity.data.Croll
 
 import android.os.Parcelable
 import android.util.Log
@@ -18,7 +18,7 @@ open class Croll {
         var image: String? = null,
         var hit: Int,
         var numComment: Int? = null,
-        var url: String
+        var url: String,
     ) : Parcelable {
         private fun returnContent(): Pair<String?, Elements?> {
             val content = this
@@ -37,7 +37,7 @@ open class Croll {
                 content.url.contains(UNDERKG_URL) -> {
                     val aItemList = KGNewsContent().getItem(
                         content.url,
-                        "body > div.user_layout > div.body > div.content > div > div.docInner > div.read_body"
+                        "body > div.user_layout > div.body > div.content > div > div.docInner > div.read_body",
                     )
                     val aCommentList = KGNewsContent().getItem(content.url, "div#comment.feedback")
 
@@ -80,7 +80,7 @@ open class Croll {
                 Log.d("getItem_title", "ForEach: " + i.select("a").text())
                 Log.d(
                     "getItem_image",
-                    "ForEach: " + i.select("div.thumb-wrap > a > img").attr("src")
+                    "ForEach: " + i.select("div.thumb-wrap > a > img").attr("src"),
                 )
                 Log.d("getItem_url", "ForEach: " + i.select("a").attr("href"))
                 itemList.add(
@@ -89,8 +89,8 @@ open class Croll {
                         image = i.select("div.thumb-wrap > a > img").attr("src"),
                         hit = 100,
                         numComment = null,
-                        url = i.select("a").attr("href")
-                    )
+                        url = i.select("a").attr("href"),
+                    ),
                 )
             }
         }
@@ -99,9 +99,9 @@ open class Croll {
 
     open fun returnData(page: Int = 1): ArrayList<Content> {
         val itemList = Croll().getItem(
-            "http://underkg.co.kr/index.php?mid=news&page=${page}",
+            "http://underkg.co.kr/index.php?mid=news&page=$page",
             "#board_list > div > div",
-            "Text"
+            "Text",
         )
 
         Log.d("returnData", "$itemList")

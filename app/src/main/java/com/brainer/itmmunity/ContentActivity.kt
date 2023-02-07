@@ -10,9 +10,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.brainer.itmmunity.Croll.Croll
-import com.brainer.itmmunity.componant.AppBar
-import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
+import com.brainer.itmmunity.data.Croll.Croll
+import com.brainer.itmmunity.presentation.componant.AppBar
+import com.brainer.itmmunity.presentation.ui.theme.ITmmunity_AndroidTheme
 
 lateinit var content: Croll.Content
 

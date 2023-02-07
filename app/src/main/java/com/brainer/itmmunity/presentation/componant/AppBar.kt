@@ -1,8 +1,9 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.brainer.itmmunity.componant
+package com.brainer.itmmunity.presentation.componant
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.*
@@ -25,9 +26,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.brainer.itmmunity.Croll.Croll
+import com.brainer.itmmunity.data.Croll.Croll
 import com.brainer.itmmunity.R
-import com.brainer.itmmunity.viewmodel.MainViewModel
+import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
 import moe.tlaster.nestedscrollview.VerticalNestedScrollView
 import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
 
@@ -43,7 +44,7 @@ const val SCROLL_TABLET_HEIGHT = 155f
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalAnimationApi
 @Composable
-fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable () -> Unit = {}) {
+fun AppBar(viewModel: MainViewModel = MainViewModel(Application()), contentView: @Composable () -> Unit = {}) {
     val containerColor = if (isSystemInDarkTheme()) {
         Black
     } else {
