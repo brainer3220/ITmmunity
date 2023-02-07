@@ -3,6 +3,7 @@
 package com.brainer.itmmunity.presentation.componant
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.*
@@ -43,7 +44,7 @@ const val SCROLL_TABLET_HEIGHT = 155f
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalAnimationApi
 @Composable
-fun AppBar(viewModel: MainViewModel = MainViewModel(), contentView: @Composable () -> Unit = {}) {
+fun AppBar(viewModel: MainViewModel = MainViewModel(Application()), contentView: @Composable () -> Unit = {}) {
     val containerColor = if (isSystemInDarkTheme()) {
         Black
     } else {

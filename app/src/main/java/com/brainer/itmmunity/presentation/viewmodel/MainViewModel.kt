@@ -1,7 +1,8 @@
 package com.brainer.itmmunity.presentation.viewmodel
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.brainer.itmmunity.data.Croll.Croll
 import com.brainer.itmmunity.data.Croll.KGNewsContent
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 
 const val CONFIG_STR = "Config"
 
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
     private var _unifiedList = MutableStateFlow(listOf<Croll.Content>())
     val unifiedList = _unifiedList.asStateFlow()
 
@@ -59,68 +60,59 @@ class MainViewModel : ViewModel() {
     }
 
     fun getRefresh() {
-        viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                CoroutineScope(Dispatchers.Main).launch {
-                    _unifiedList.value = listOf<Croll.Content>()
-                }
-                kotlin.runCatching {
-                    KGNewsContent().returnData()
-                }.onSuccess {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        _unifiedList.value = _unifiedList.value!! + it
-                        _unifiedList.value = _unifiedList.value.toSet().toList()
-                        _underKgNextPage.value = 1
-                    }
-                }
-                kotlin.runCatching {
-                    MeecoNews().returnData()
-                }.onSuccess {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        _unifiedList.value =
-                            _unifiedList.value.plus(it.slice(meecoNewsSliceValue until it.size))
-                        _unifiedList.value = _unifiedList.value.toSet().toList()
-                        _meecoNextPage.value = 1
-                    }
-                }
+        viewModelScope.launch(Dispatchers.IO) {
+            _unifiedList.value = listOf<Croll.Content>()
+            kotlin.runCatching {
+                KGNewsContent().returnData()
+            }.onSuccess {
+                _unifiedList.value = _unifiedList.value!! + it
+                _unifiedList.value = _unifiedList.value.toSet().toList()
+                _underKgNextPage.value = 1
             }
-        }
+        }.onJoin
+
+        viewModelScope.launch(Dispatchers.IO) {
+            kotlin.runCatching {
+                MeecoNews().returnData()
+            }.onSuccess {
+                _unifiedList.value =
+                    _unifiedList.value.plus(it.slice(meecoNewsSliceValue until it.size))
+                _unifiedList.value = _unifiedList.value.toSet().toList()
+                _meecoNextPage.value = 1
+            }
+        }.onJoin
     }
 
     fun addData() {
-        viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                kotlin.runCatching {
-                    KGNewsContent().returnData(_underKgNextPage.value + 1)
-                }.onSuccess {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        _unifiedList.value = _unifiedList.value.union(it).toList()
-                        _underKgNextPage.value = _underKgNextPage.value.plus(1)
-                    }
-                }
-                kotlin.runCatching {
-                    MeecoNews().returnData(_meecoNextPage.value + 1)
-                }.onSuccess {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        _unifiedList.value =
-                            _unifiedList.value.union(it.slice(meecoNewsSliceValue until it.size))
-                                .toList()
-                        _meecoNextPage.value = _meecoNextPage.value.plus(1)
-                    }
-                }
+        viewModelScope.launch(Dispatchers.IO) {
+            kotlin.runCatching {
+                KGNewsContent().returnData(_underKgNextPage.value + 1)
+            }.onSuccess {
+                _unifiedList.value = _unifiedList.value.union(it).toList()
+                _underKgNextPage.value = _underKgNextPage.value.plus(1)
             }
-        }
+        }.onJoin
+
+        viewModelScope.launch(Dispatchers.IO) {
+            kotlin.runCatching {
+                MeecoNews().returnData(_meecoNextPage.value + 1)
+            }.onSuccess {
+                _unifiedList.value =
+                    _unifiedList.value.union(it.slice(meecoNewsSliceValue until it.size))
+                        .toList()
+                _meecoNextPage.value = _meecoNextPage.value.plus(1)
+            }
+        }.onJoin
     }
 
     private var _aNews = MutableStateFlow<Croll.Content?>(null)
     val aNews: MutableStateFlow<Croll.Content?> = _aNews
 
     fun changeAnews(news: Croll.Content?) {
-        CoroutineScope(Dispatchers.Main).launch {
+        viewModelScope.launch {
             _aNews.value = news
         }
     }
-
 
     /**
      * This function determines whether the View generates a Tablet UI.
@@ -129,7 +121,7 @@ class MainViewModel : ViewModel() {
      * @return NO RETURN
      */
     fun changeTabletUi(bool: Boolean) {
-        CoroutineScope(Dispatchers.Main).launch {
+        viewModelScope.launch {
             _isTabletUi.value = bool
         }
     }

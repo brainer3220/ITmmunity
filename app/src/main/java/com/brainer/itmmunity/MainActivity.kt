@@ -1,6 +1,6 @@
 package com.brainer.itmmunity
 
-import android.content.Context
+import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,14 +12,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.MutableLiveData
-import com.brainer.itmmunity.componant.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.brainer.itmmunity.presentation.componant.*
 import com.brainer.itmmunity.presentation.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.presentation.viewmodel.BackGroundViewModel
@@ -36,12 +34,10 @@ const val FIREBASE_MINIMUM_FETCH_SEC = 3600L
 const val ANIMATION_DURATION = 350
 const val ANIMATION_INIT_OFFSET_Y = 800
 const val ANIMATION_TARGET_OFFSET_Y = 5000
-lateinit var APPLICATION_CONTEXT: Context
-
 
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
-    private val mainvViewModel = MainViewModel()
+    private val viewModel = MainViewModel(Application())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,24 +49,23 @@ class MainActivity : ComponentActivity() {
         remoteConfig.setConfigSettingsAsync(configSettings)
 
         remoteConfig.fetchAndActivate()
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        val updated = task.result
-                        Log.d(CONFIG_STR, "MainActivity Config params updated: $updated")
-                        Log.d(CONFIG_STR, "MainActivity Fetch and activate succeeded")
-                    } else {
-                        Log.d(CONFIG_STR, "Fetch failed")
-                    }
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val updated = task.result
+                    Log.d(CONFIG_STR, "MainActivity Config params updated: $updated")
+                    Log.d(CONFIG_STR, "MainActivity Fetch and activate succeeded")
+                } else {
+                    Log.d(CONFIG_STR, "Fetch failed")
                 }
+            }
 
-        APPLICATION_CONTEXT = applicationContext
         setContent {
             ITmmunity_AndroidTheme {
                 // A surface container using the 'background' color from the theme
                 Surface {
                     MainCompose(
-                            viewModel = mainvViewModel,
-                            networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT)
+                        viewModel = viewModel,
+                        networkViewModel = viewModel(BackGroundViewModel::class.java),
                     )
                 }
             }
@@ -94,31 +89,28 @@ class MainActivity : ComponentActivity() {
  * @param networkViewModel BackGroundViewModel
  */
 @ExperimentalAnimationApi
-@Preview
 @Composable
 fun MainCompose(
-    viewModel: MainViewModel = remember { MainViewModel() },
-    networkViewModel: BackGroundViewModel = BackGroundViewModel(context = APPLICATION_CONTEXT)
+    viewModel: MainViewModel,
+    networkViewModel: BackGroundViewModel = BackGroundViewModel(Application()),
 ) {
     AppBar(viewModel = viewModel) {
         MainView(
-                viewModel = viewModel,
-                networkViewModel = networkViewModel
+            viewModel = viewModel,
+            networkViewModel = networkViewModel,
         )
 //        NavGraph(navController, viewModel, networkViewModel)
     }
 }
 
-
 @ExperimentalAnimationApi
 @Composable
 fun MainView(
-    viewModel: MainViewModel = remember { MainViewModel() },
-    networkViewModel: BackGroundViewModel
+    viewModel: MainViewModel = remember { MainViewModel(Application()) },
+    networkViewModel: BackGroundViewModel,
 ) {
     val unifiedList by viewModel.unifiedList.collectAsState()
-    val aNewsState = MutableLiveData(viewModel.aNews.collectAsState())
-    val aNews by rememberSaveable { aNewsState.value!! }
+    val aNews by viewModel.aNews.collectAsState()
 
     val isConnection by networkViewModel.isConnect.collectAsState()
 //    val isTabletUi by viewModel.isTabletUi.collectAsState()
@@ -127,24 +119,24 @@ fun MainView(
 
     Log.d("Unified_List", unifiedList.toString())
 
-
     if (isConnection) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
             val boxWithConstraintsScope = this
             Row(Modifier.fillMaxSize()) {
                 SwipeRefresh(
-                        modifier = Modifier.weight(1f),
-                        state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                        onRefresh = { viewModel.getRefresh() }) {
+                    modifier = Modifier.weight(1f),
+                    state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                    onRefresh = { viewModel.getRefresh() },
+                ) {
                     if (unifiedList.isNotEmpty()) {
-                        NewsCard(
-                                unifiedList,
-                                viewModel
+                        NewsCardListView(
+                            unifiedList,
+                            viewModel,
                         )
                     } else {
                         Box(
-                                modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically),
-                                contentAlignment = Alignment.Center
+                            modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically),
+                            contentAlignment = Alignment.Center,
                         ) {
                             LoadingView()
                         }
@@ -154,9 +146,9 @@ fun MainView(
                 if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH.dp) {
                     viewModel.changeTabletUi(true)
                     Box(
-                            modifier = Modifier
-                                    .weight(1f)
-                                    .align(Alignment.CenterVertically)
+                        modifier = Modifier
+                            .weight(1f)
+                            .align(Alignment.CenterVertically),
                     ) {
                         Crossfade(targetState = aNews) {
                             if (it != null) {
@@ -164,9 +156,9 @@ fun MainView(
                             } else {
                                 RoundedSurface {
                                     Text(
-                                            modifier = Modifier.fillMaxSize(),
-                                            text = "컨텐츠를 클릭해 보세요.",
-                                            textAlign = TextAlign.Center
+                                        modifier = Modifier.fillMaxSize(),
+                                        text = "컨텐츠를 클릭해 보세요.",
+                                        textAlign = TextAlign.Center,
                                     )
                                 }
                             }
@@ -179,8 +171,8 @@ fun MainView(
         }
     } else {
         Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
         ) {
             ConnectErrorView()
         }
@@ -192,6 +184,6 @@ fun MainView(
 @Composable
 fun MainViewTest() {
     MainView(
-            networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT)
+        networkViewModel = BackGroundViewModel(Application()),
     )
 }
