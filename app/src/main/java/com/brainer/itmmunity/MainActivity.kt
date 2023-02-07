@@ -1,7 +1,7 @@
 package com.brainer.itmmunity
 
-import android.annotation.SuppressLint
-import android.content.Context
+import android.app.Application
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -9,47 +9,35 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.MutableLiveData
-import androidx.navigation.NavHostController
-import com.brainer.itmmunity.componant.AppBar
-import com.brainer.itmmunity.componant.LoadingView
-import com.brainer.itmmunity.componant.NewsCard
-import com.brainer.itmmunity.componant.RoundedSurface
-import com.brainer.itmmunity.navcontrol.NavGraph
-import com.brainer.itmmunity.ui.theme.ITmmunity_AndroidTheme
-import com.brainer.itmmunity.viewmodel.BackGroundViewModel
-import com.brainer.itmmunity.viewmodel.CONFIG_STR
-import com.brainer.itmmunity.viewmodel.MainViewModel
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.brainer.itmmunity.presentation.componant.*
+import com.brainer.itmmunity.presentation.ui.theme.ITmmunity_AndroidTheme
+import com.brainer.itmmunity.presentation.viewmodel.BackGroundViewModel
+import com.brainer.itmmunity.presentation.viewmodel.CONFIG_STR
+import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
-import kotlinx.coroutines.DelicateCoroutinesApi
 
 const val TABLET_UI_WIDTH = 480
 const val FIREBASE_MINIMUM_FETCH_SEC = 3600L
-const val ANIMATION_DURATION = 700
+const val ANIMATION_DURATION = 350
 const val ANIMATION_INIT_OFFSET_Y = 800
 const val ANIMATION_TARGET_OFFSET_Y = 5000
-lateinit var APPLICATION_CONTEXT: Context
-
 
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
-    private val mainvViewModel = MainViewModel()
+    private val viewModel = MainViewModel(Application())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,18 +59,27 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-        APPLICATION_CONTEXT = applicationContext
         setContent {
             ITmmunity_AndroidTheme {
                 // A surface container using the 'background' color from the theme
                 Surface {
                     MainCompose(
-                        viewModel = mainvViewModel,
-                        networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT)
+                        viewModel = viewModel,
+                        networkViewModel = viewModel(BackGroundViewModel::class.java),
                     )
                 }
             }
         }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.d("MainActivity", "onActivityResult")
+
+//        if (requestCode == REQUEST_CODE) {
+//            Log.d("MainActivity", "onActivityResult REQUEST_INITIAL_ROUTE")
+//        }
     }
 }
 
@@ -92,38 +89,35 @@ class MainActivity : ComponentActivity() {
  * @param networkViewModel BackGroundViewModel
  */
 @ExperimentalAnimationApi
-@Preview
 @Composable
 fun MainCompose(
-    viewModel: MainViewModel = remember { MainViewModel() },
-    networkViewModel: BackGroundViewModel = BackGroundViewModel(context = APPLICATION_CONTEXT)
+    viewModel: MainViewModel,
+    networkViewModel: BackGroundViewModel = BackGroundViewModel(Application()),
 ) {
-    val navController = rememberAnimatedNavController()
-
     AppBar(viewModel = viewModel) {
-        NavGraph(navController, viewModel, networkViewModel)
+        MainView(
+            viewModel = viewModel,
+            networkViewModel = networkViewModel,
+        )
+//        NavGraph(navController, viewModel, networkViewModel)
     }
 }
-
 
 @ExperimentalAnimationApi
 @Composable
 fun MainView(
-    viewModel: MainViewModel = remember { MainViewModel() },
+    viewModel: MainViewModel = remember { MainViewModel(Application()) },
     networkViewModel: BackGroundViewModel,
-    navController: NavHostController
 ) {
     val unifiedList by viewModel.unifiedList.collectAsState()
-    val aNewsState = MutableLiveData(viewModel.aNews.collectAsState())
-    val aNews by rememberSaveable { aNewsState.value!! }
+    val aNews by viewModel.aNews.collectAsState()
 
     val isConnection by networkViewModel.isConnect.collectAsState()
-    val isTabletUi by viewModel.isTabletUi.collectAsState()
+//    val isTabletUi by viewModel.isTabletUi.collectAsState()
 
     val swipeRefreshState by remember { mutableStateOf(true) }
 
     Log.d("Unified_List", unifiedList.toString())
-
 
     if (isConnection) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
@@ -132,23 +126,30 @@ fun MainView(
                 SwipeRefresh(
                     modifier = Modifier.weight(1f),
                     state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                    onRefresh = { viewModel.getRefresh() }) {
+                    onRefresh = { viewModel.getRefresh() },
+                ) {
                     if (unifiedList.isNotEmpty()) {
-                        Column {
-                            NewsCard(
-                                unifiedList,
-                                viewModel,
-                                navController = navController
-                            )
-                        }
+                        NewsCardListView(
+                            unifiedList,
+                            viewModel,
+                        )
                     } else {
-                        LoadingView()
+                        Box(
+                            modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            LoadingView()
+                        }
                     }
                 }
 
                 if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH.dp) {
                     viewModel.changeTabletUi(true)
-                    Box(modifier = Modifier.weight(1f)) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .align(Alignment.CenterVertically),
+                    ) {
                         Crossfade(targetState = aNews) {
                             if (it != null) {
                                 ContentView(aNews = aNews!!)
@@ -157,7 +158,7 @@ fun MainView(
                                     Text(
                                         modifier = Modifier.fillMaxSize(),
                                         text = "컨텐츠를 클릭해 보세요.",
-                                        textAlign = TextAlign.Center
+                                        textAlign = TextAlign.Center,
                                     )
                                 }
                             }
@@ -169,19 +170,11 @@ fun MainView(
             }
         }
     } else {
-        Box(Modifier.fillMaxSize()) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .align(Alignment.Center),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "인터넷이 연결돼있지 않아요.\n인터넷 연결을 확인해주세요.",
-                    textAlign = TextAlign.Center
-                )
-            }
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            ConnectErrorView()
         }
     }
 }
@@ -190,9 +183,7 @@ fun MainView(
 @Preview
 @Composable
 fun MainViewTest() {
-    val navController = rememberAnimatedNavController()
     MainView(
-        networkViewModel = BackGroundViewModel(APPLICATION_CONTEXT),
-        navController = navController
+        networkViewModel = BackGroundViewModel(Application()),
     )
 }
