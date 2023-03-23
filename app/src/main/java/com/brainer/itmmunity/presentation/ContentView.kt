@@ -61,37 +61,38 @@ fun ContentView(
                 LoadingView()
             }
         }
-        SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-            onRefresh = { contentViewModel.getHtml() },
-        ) {
-            Column(
-                modifier = Modifier
-                    .background(backGroundColor)
-                    .fillMaxSize()
-                    .verticalScroll(listState),
+        Box {
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
+                onRefresh = { contentViewModel.getHtml() },
             ) {
-                RoundedSurface {
-                    BoxWithConstraints {
-                        kotlin.runCatching {
-                            SelectionContainer(Modifier) {
-                                Column(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .animateContentSize()
-                                        .padding(20.dp),
-                                ) {
-                                    Text(
-                                        text = aNews.title,
-                                        fontSize = 20.sp,
-                                        textAlign = TextAlign.Left,
-                                    )
+                Column(
+                    modifier = Modifier
+                        .background(backGroundColor)
+                        .fillMaxSize()
+                        .verticalScroll(listState),
+                ) {
+                    RoundedSurface {
+                        BoxWithConstraints {
+                            kotlin.runCatching {
+                                SelectionContainer(Modifier) {
+                                    Column(
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .animateContentSize()
+                                            .padding(20.dp),
+                                    ) {
+                                        Text(
+                                            text = aNews.title,
+                                            fontSize = 20.sp,
+                                            textAlign = TextAlign.Left,
+                                        )
 
-                                    MarkdownText(
-                                        modifier = Modifier.padding(top = 16.dp),
-                                        markdown = contentHtml,
-                                        color = textColor,
-                                    )
+                                        MarkdownText(
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            markdown = contentHtml,
+                                            color = textColor,
+                                        )
 
                                         Log.v("contentHtml", contentHtml)
                                     }
@@ -102,16 +103,41 @@ fun ContentView(
                         }
                     }
 
-                Spacer(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .alpha(0.0f),
-                )
+                    Spacer(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .alpha(0.0f),
+                    )
 
-                RoundedSurface {
-                    AdMobCompose(
-                        modifier = Modifier.padding(12.dp),
-                        adId = "ca-app-pub-3940256099942544/6300978111",
+                    RoundedSurface {
+                        AdMobCompose(
+                            modifier = Modifier.padding(12.dp),
+                            adId = "ca-app-pub-3940256099942544/6300978111",
+                        )
+                    }
+                }
+            }
+            val showButton by remember {
+                derivedStateOf {
+                    listState.value > 0
+                }
+            }
+            AnimatedVisibility(
+                visible = showButton,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 24.dp),
+            ) {
+                IconButton(onClick = {
+                    scope.launch {
+                        listState.animateScrollTo(0)
+                    }
+                }) {
+                    Icon(
+                        imageVector = (Icons.Default.KeyboardArrowUp),
+                        contentDescription = "위로",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(42.dp),
                     )
                 }
             }
