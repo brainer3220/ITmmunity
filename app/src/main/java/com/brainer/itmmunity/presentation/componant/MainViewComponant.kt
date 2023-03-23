@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +15,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -78,25 +81,53 @@ fun NewsCardListView(
     news: List<Croll.Content>,
     mainViewModel: MainViewModel,
 ) {
+    val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
+
     RoundedSurface {
-        LazyColumn(state = listState) {
-            itemsIndexed(news) { index, item ->
-                NewsListOf(item, mainViewModel = mainViewModel)
-                if (index % 10 == 0) {
-                    AdMobCompose(
-                        modifier = Modifier.height(125.dp).fillMaxWidth(),
-                    )
-                }
-                if (index == news.lastIndex) {
-                    this@LazyColumn.item {
-                        Box(
-                            Modifier.fillMaxWidth().height(32.dp),
-                        ) {
-                            LoadingView()
-                        }
+        Box() {
+            LazyColumn(state = listState) {
+                itemsIndexed(news) { index, item ->
+                    NewsListOf(item, mainViewModel = mainViewModel)
+                    if (index % 10 == 0) {
+                        AdMobCompose(
+                            modifier = Modifier.height(125.dp).fillMaxWidth(),
+                        )
                     }
-                    mainViewModel.addData()
+                    if (index == news.lastIndex) {
+                        this@LazyColumn.item {
+                            Box(
+                                Modifier.fillMaxWidth().height(32.dp),
+                            ) {
+                                LoadingView()
+                            }
+                        }
+                        mainViewModel.addData()
+                    }
+                }
+            }
+            val showButton by remember {
+                derivedStateOf {
+                    listState.firstVisibleItemIndex > 0
+                }
+            }
+            AnimatedVisibility(
+                visible = showButton,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 24.dp),
+            ) {
+                IconButton(onClick = {
+                    scope.launch {
+                        listState.animateScrollToItem(0)
+                    }
+                }) {
+                    Icon(
+                        imageVector = (Icons.Default.KeyboardArrowUp),
+                        contentDescription = "위로",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(42.dp),
+                    )
                 }
             }
         }
