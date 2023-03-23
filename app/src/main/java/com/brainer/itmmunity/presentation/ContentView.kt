@@ -20,23 +20,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.brainer.itmmunity.data.Croll.Croll
-import com.brainer.itmmunity.utility.getSurfaceColor
-import com.brainer.itmmunity.utility.getTextColor
 import com.brainer.itmmunity.presentation.componant.AdMobCompose
 import com.brainer.itmmunity.presentation.componant.LoadingView
 import com.brainer.itmmunity.presentation.componant.RoundedSurface
 import com.brainer.itmmunity.presentation.viewmodel.ContentViewModel
+import com.brainer.itmmunity.utility.getSurfaceColor
+import com.brainer.itmmunity.utility.getTextColor
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dev.jeziellago.compose.markdowntext.MarkdownText
-
 
 @ExperimentalAnimationApi
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun ContentView(
     aNews: Croll.Content,
-    contentViewModel: ContentViewModel = ContentViewModel()
+    contentViewModel: ContentViewModel = ContentViewModel(),
 ) {
     val contentHtmlState by mutableStateOf(contentViewModel.contentHtml.collectAsState())
     val contentHtml by rememberSaveable { contentHtmlState }
