@@ -83,24 +83,25 @@ fun AppBar(
         },
         content = {
             Column {
-                SmallTopAppBar(
+                TopAppBar(
                     title = {
                         AnimatedContent(
                             targetState = titleString,
                             transitionSpec = {
                                 if (titleString != "ITmmunity") {
                                     slideInVertically { height -> height } + fadeIn() with
-                                            slideOutVertically { height -> -height } + fadeOut()
+                                        slideOutVertically { height -> -height } + fadeOut()
                                 } else {
                                     slideInVertically { height -> -height } + fadeIn() with
-                                            slideOutVertically { height -> height } + fadeOut()
+                                        slideOutVertically { height -> height } + fadeOut()
                                 }.using(
-                                    SizeTransform(clip = false)
+                                    SizeTransform(clip = false),
                                 )
-                            }) { targetTitle ->
+                            },
+                        ) { targetTitle ->
                             Text(
                                 text = targetTitle,
-                                modifier = Modifier.graphicsLayer(alpha = smallTopAppBarAlpha)
+                                modifier = Modifier.graphicsLayer(alpha = smallTopAppBarAlpha),
                             )
                         }
                     },
@@ -108,32 +109,32 @@ fun AppBar(
                         Row {
                             IconButton(
                                 onClick = {
-
                                 },
                                 enabled = false,
                                 modifier = Modifier.combinedClickable(
                                     onLongClick = { TODO() },
-                                    onClick = { TODO() })
+                                    onClick = { TODO() },
+                                ),
                             ) {
                                 Icon(
                                     painterResource(R.drawable.ic_baseline_oui_search_24),
-                                    contentDescription = stringResource(R.string.search)
+                                    contentDescription = stringResource(R.string.search),
                                 )
                             }
                             ShowDropDown()
                         }
                     },
-                    colors = TopAppBarDefaults.smallTopAppBarColors(containerColor)
+                    colors = TopAppBarDefaults.smallTopAppBarColors(containerColor),
                 )
                 Box(
                     Modifier
-                        .fillMaxSize()
+                        .fillMaxSize(),
                 ) {
                     contentView()
                 }
                 BottomNavigation(
                     modifier = Modifier.height(62.dp),
-                    backgroundColor = containerColor
+                    backgroundColor = containerColor,
                 ) {
 //                    val navBackStackEntry by navController.currentBackStackEntryAsState()
 //                    val currentDestination = navBackStackEntry?.destination
@@ -142,7 +143,7 @@ fun AppBar(
 //                    }
                 }
             }
-        }
+        },
     )
 }
 
@@ -155,7 +156,7 @@ fun AppBar(content: Croll.Content, context: Context, contentView: @Composable ()
     }
 
     Column {
-        SmallTopAppBar(
+        TopAppBar(
             title = {
 //                Text(
 //                    text = "ITmmunity",
@@ -169,7 +170,7 @@ fun AppBar(content: Croll.Content, context: Context, contentView: @Composable ()
                 }) {
                     Icon(
                         painterResource(R.drawable.ic_baseline_oui_keyboard_arrow_left_24),
-                        contentDescription = stringResource(R.string.back)
+                        contentDescription = stringResource(R.string.back),
                     )
                 }
             },
@@ -180,7 +181,7 @@ fun AppBar(content: Croll.Content, context: Context, contentView: @Composable ()
                         putExtra(Intent.EXTRA_TITLE, content.title)
                         putExtra(
                             Intent.EXTRA_SUBJECT,
-                            "Powered by ITmmunity"
+                            "Powered by ITmmunity",
                         )
                         putExtra(Intent.EXTRA_TEXT, content.url)
                         type = "text/plain"
@@ -196,7 +197,7 @@ fun AppBar(content: Croll.Content, context: Context, contentView: @Composable ()
                     )
                 }
             },
-            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor)
+            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor),
         )
         contentView()
     }
@@ -209,6 +210,6 @@ fun AppBarPreview() {
     AppBar(
         contentView = {
             Text("Hello")
-        }
+        },
     )
 }
