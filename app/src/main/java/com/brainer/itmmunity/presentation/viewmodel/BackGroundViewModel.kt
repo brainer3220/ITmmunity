@@ -3,6 +3,7 @@ package com.brainer.itmmunity.presentation.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.brainer.itmmunity.utility.NetworkConnectCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +33,7 @@ class BackGroundViewModel(application: Application) : AndroidViewModel(applicati
      * @return NO RETURN
      */
     private fun getConnectState() {
-        CoroutineScope(Dispatchers.Default).launch {
+        viewModelScope.launch {
             while (true) {
                 delay(3000L)
                 kotlin.runCatching {

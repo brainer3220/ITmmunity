@@ -1,6 +1,7 @@
 package com.brainer.itmmunity
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -17,7 +18,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -42,11 +42,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun ContentView(
     aNews: Croll.Content,
-    contentViewModel: ContentViewModel = ContentViewModel(),
+    contentViewModel: ContentViewModel,
 ) {
     val scope = rememberCoroutineScope()
-    val contentHtmlState by mutableStateOf(contentViewModel.contentHtml.collectAsState())
-    val contentHtml by rememberSaveable { contentHtmlState }
+    val contentHtmlState by contentViewModel.contentHtml.collectAsState()
     val listState = rememberScrollState()
     val swipeRefreshState by remember { mutableStateOf(true) }
 
@@ -56,7 +55,7 @@ fun ContentView(
     contentViewModel.setContent(aNews)
 
     RoundedSurface {
-        if (contentHtml.isEmpty()) {
+        if (contentHtmlState.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 LoadingView()
             }
@@ -67,9 +66,7 @@ fun ContentView(
                 onRefresh = { contentViewModel.getHtml() },
             ) {
                 Column(
-                    modifier = Modifier
-                        .background(backGroundColor)
-                        .fillMaxSize()
+                    modifier = Modifier.background(backGroundColor).fillMaxSize()
                         .verticalScroll(listState),
                 ) {
                     RoundedSurface {
@@ -77,10 +74,7 @@ fun ContentView(
                             kotlin.runCatching {
                                 SelectionContainer(Modifier) {
                                     Column(
-                                        Modifier
-                                            .fillMaxWidth()
-                                            .animateContentSize()
-                                            .padding(20.dp),
+                                        Modifier.fillMaxWidth().animateContentSize().padding(20.dp),
                                     ) {
                                         Text(
                                             text = aNews.title,
@@ -90,11 +84,11 @@ fun ContentView(
 
                                         MarkdownText(
                                             modifier = Modifier.padding(top = 16.dp),
-                                            markdown = contentHtml,
+                                            markdown = contentHtmlState,
                                             color = textColor,
                                         )
 
-                                        Log.v("contentHtml", contentHtml)
+                                        Log.v("contentHtml", contentHtmlState)
                                     }
                                 }
                             }.onFailure {
@@ -104,9 +98,7 @@ fun ContentView(
                     }
 
                     Spacer(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .alpha(0.0f),
+                        modifier = Modifier.padding(16.dp).alpha(0.0f),
                     )
 
                     RoundedSurface {
@@ -124,9 +116,7 @@ fun ContentView(
             }
             AnimatedVisibility(
                 visible = showButton,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 24.dp),
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp),
             ) {
                 IconButton(onClick = {
                     scope.launch {
@@ -151,5 +141,6 @@ fun ContentView(
 fun ContentViewTest() {
     ContentView(
         dummies[0],
+        ContentViewModel(Application()),
     )
 }

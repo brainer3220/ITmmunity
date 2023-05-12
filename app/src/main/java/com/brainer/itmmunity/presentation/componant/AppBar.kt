@@ -26,8 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.brainer.itmmunity.data.Croll.Croll
 import com.brainer.itmmunity.R
+import com.brainer.itmmunity.data.Croll.Croll
 import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
 import moe.tlaster.nestedscrollview.VerticalNestedScrollView
 import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
@@ -44,7 +44,10 @@ const val SCROLL_TABLET_HEIGHT = 155f
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalAnimationApi
 @Composable
-fun AppBar(viewModel: MainViewModel = MainViewModel(Application()), contentView: @Composable () -> Unit = {}) {
+fun AppBar(
+    viewModel: MainViewModel = MainViewModel(Application()),
+    contentView: @Composable () -> Unit = {},
+) {
     val containerColor = if (isSystemInDarkTheme()) {
         Black
     } else {
@@ -69,7 +72,7 @@ fun AppBar(viewModel: MainViewModel = MainViewModel(Application()), contentView:
                         .graphicsLayer(alpha = smallTopAppBarAlpha)
                         .fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
                         text = "ITmmunity",

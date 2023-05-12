@@ -22,6 +22,7 @@ import com.brainer.itmmunity.presentation.componant.*
 import com.brainer.itmmunity.presentation.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.presentation.viewmodel.BackGroundViewModel
 import com.brainer.itmmunity.presentation.viewmodel.CONFIG_STR
+import com.brainer.itmmunity.presentation.viewmodel.ContentViewModel
 import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -134,11 +135,13 @@ fun MainView(
                             viewModel,
                         )
                     } else {
-                        Box(
-                            modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            LoadingView()
+                        RoundedSurface {
+                            Box(
+                                modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                LoadingView()
+                            }
                         }
                     }
                 }
@@ -152,7 +155,7 @@ fun MainView(
                     ) {
                         Crossfade(targetState = aNews) {
                             if (it != null) {
-                                ContentView(aNews = aNews!!)
+                                ContentView(aNews = aNews!!, ContentViewModel(Application()))
                             } else {
                                 RoundedSurface {
                                     Text(

@@ -1,30 +1,30 @@
 package com.brainer.itmmunity.presentation.viewmodel
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.brainer.itmmunity.data.Croll.Croll
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class ContentViewModel : ViewModel() {
+class ContentViewModel(application: Application) : AndroidViewModel(application) {
     private val _aNews = MutableStateFlow(
         Croll.Content(
             title = "",
             image = null,
             hit = 0,
             url = "",
-            numComment = null
-        )
+            numComment = null,
+        ),
     )
 
     private var _contentHtml = MutableStateFlow<String>("")
     val contentHtml: MutableStateFlow<String> = _contentHtml
 
     fun setContent(content: Croll.Content?) {
-        CoroutineScope(Dispatchers.Main).launch {
+        viewModelScope.launch {
             if (content != null) {
                 _aNews.value = content
             }
@@ -40,7 +40,7 @@ class ContentViewModel : ViewModel() {
      * @return NO RETURN
      */
     private fun changeHtml(html: String?) {
-        CoroutineScope(Dispatchers.Main).launch {
+        viewModelScope.launch {
             if (html != null) {
                 _contentHtml.value = html
             }
@@ -48,17 +48,15 @@ class ContentViewModel : ViewModel() {
     }
 
     fun getHtml() {
-        viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                kotlin.runCatching {
-                    _aNews.value.htmlToMarkdown()
-                }.onSuccess {
-                    val contentHtmlTmp = it!!.slice(2 until it.length -1)
-                    changeHtml(contentHtmlTmp)
-                    Log.d("getHtmlViewModel", contentHtmlTmp)
-                }.onFailure {
-                    Log.w("getHtmlViewModel", "Failed")
-                }
+        viewModelScope.launch(Dispatchers.IO) {
+            kotlin.runCatching {
+                _aNews.value.htmlToMarkdown()
+            }.onSuccess {
+                val contentHtmlTmp = it!!.slice(2 until it.length - 1)
+                changeHtml(contentHtmlTmp)
+                Log.d("getHtmlViewModel", contentHtmlTmp)
+            }.onFailure {
+                Log.w("getHtmlViewModel", "Failed")
             }
         }
     }

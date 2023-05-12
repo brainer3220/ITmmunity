@@ -3,6 +3,7 @@
 package com.brainer.itmmunity.presentation.componant
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
@@ -40,6 +41,7 @@ import com.brainer.itmmunity.ContentView
 import com.brainer.itmmunity.R
 import com.brainer.itmmunity.data.Croll.Croll
 import com.brainer.itmmunity.dummies
+import com.brainer.itmmunity.presentation.viewmodel.ContentViewModel
 import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
 import com.brainer.itmmunity.utility.getBackgroundColor
 import com.skydoves.landscapist.ImageOptions
@@ -256,6 +258,7 @@ fun RoundedSurfacePreview() {
     RoundedSurface {
         ContentView(
             dummies[0],
+            ContentViewModel(Application()),
         )
     }
 }
