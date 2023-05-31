@@ -18,7 +18,16 @@ import kotlinx.coroutines.launch
 
 const val CONFIG_STR = "Config"
 
+enum class LoadState {
+    LOADING,
+    LOADED,
+    ERROR,
+}
+
 class MainViewModel(application: Application) : AndroidViewModel(application) {
+    private val _loadState = MutableStateFlow(LoadState.LOADED)
+    val loadState = _loadState.asStateFlow()
+
     private var _unifiedList = MutableStateFlow(listOf<Croll.Content>())
     val unifiedList = _unifiedList.asStateFlow()
 
@@ -61,13 +70,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getRefresh() {
         viewModelScope.launch(Dispatchers.IO) {
+            _loadState.value = LoadState.LOADING
             _unifiedList.value = listOf<Croll.Content>()
             kotlin.runCatching {
                 KGNewsContent().returnData()
             }.onSuccess {
-                _unifiedList.value = _unifiedList.value!! + it
+                _unifiedList.value = _unifiedList.value + it
                 _unifiedList.value = _unifiedList.value.toSet().toList()
                 _underKgNextPage.value = 1
+                _loadState.value = LoadState.LOADED
+            }.onFailure {
+                _loadState.value = LoadState.ERROR
             }
         }.onJoin
 
