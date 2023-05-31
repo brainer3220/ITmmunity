@@ -9,6 +9,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -17,18 +21,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.brainer.itmmunity.presentation.componant.*
 import com.brainer.itmmunity.presentation.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.presentation.viewmodel.BackGroundViewModel
 import com.brainer.itmmunity.presentation.viewmodel.CONFIG_STR
 import com.brainer.itmmunity.presentation.viewmodel.ContentViewModel
+import com.brainer.itmmunity.presentation.viewmodel.LoadState
 import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import kotlinx.coroutines.launch
 
 const val TABLET_UI_WIDTH = 480
 const val FIREBASE_MINIMUM_FETCH_SEC = 3600L
@@ -38,8 +43,6 @@ const val ANIMATION_TARGET_OFFSET_Y = 5000
 
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
-    private val viewModel = MainViewModel(Application())
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,7 +68,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface {
                     MainCompose(
-                        viewModel = viewModel,
+                        viewModel = viewModel(MainViewModel::class.java),
                         networkViewModel = viewModel(BackGroundViewModel::class.java),
                     )
                 }
@@ -104,19 +107,33 @@ fun MainCompose(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @ExperimentalAnimationApi
 @Composable
 fun MainView(
     viewModel: MainViewModel = remember { MainViewModel(Application()) },
     networkViewModel: BackGroundViewModel,
 ) {
+    val scope = rememberCoroutineScope()
     val unifiedList by viewModel.unifiedList.collectAsState()
     val aNews by viewModel.aNews.collectAsState()
+    val loadState by viewModel.loadState.collectAsState()
+    val refreshing = remember {
+        mutableStateOf(loadState == LoadState.LOADING)
+    }
 
     val isConnection by networkViewModel.isConnect.collectAsState()
 //    val isTabletUi by viewModel.isTabletUi.collectAsState()
 
-    val swipeRefreshState by remember { mutableStateOf(true) }
+    LaunchedEffect(loadState) {
+        refreshing.value = loadState == LoadState.LOADING
+    }
+
+    fun refresh() = scope.launch {
+        viewModel.getRefresh()
+    }
+
+    val pullRefreshState = rememberPullRefreshState(refreshing.value, ::refresh)
 
     Log.d("Unified_List", unifiedList.toString())
 
@@ -124,25 +141,16 @@ fun MainView(
         BoxWithConstraints(Modifier.fillMaxSize()) {
             val boxWithConstraintsScope = this
             Row(Modifier.fillMaxSize()) {
-                SwipeRefresh(
-                    modifier = Modifier.weight(1f),
-                    state = rememberSwipeRefreshState(isRefreshing = !swipeRefreshState),
-                    onRefresh = { viewModel.getRefresh() },
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .pullRefresh(pullRefreshState),
                 ) {
                     if (unifiedList.isNotEmpty()) {
                         NewsCardListView(
                             unifiedList,
                             viewModel,
                         )
-                    } else {
-                        RoundedSurface {
-                            Box(
-                                modifier = Modifier.fillMaxSize().align(Alignment.CenterVertically),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                LoadingView()
-                            }
-                        }
                     }
                 }
 
@@ -153,7 +161,7 @@ fun MainView(
                             .weight(1f)
                             .align(Alignment.CenterVertically),
                     ) {
-                        Crossfade(targetState = aNews) {
+                        Crossfade(targetState = aNews, label = "") {
                             if (it != null) {
                                 ContentView(aNews = aNews!!, ContentViewModel(Application()))
                             } else {
@@ -171,6 +179,7 @@ fun MainView(
                     viewModel.changeTabletUi(false)
                 }
             }
+            CustomPullRefreshIndicator(refreshing.value, pullRefreshState, Modifier.align(Alignment.TopCenter))
         }
     } else {
         Box(

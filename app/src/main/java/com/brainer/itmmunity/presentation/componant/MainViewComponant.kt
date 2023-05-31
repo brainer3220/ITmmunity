@@ -8,16 +8,24 @@ import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.pullrefresh.PullRefreshState
+import androidx.compose.material.pullrefresh.pullRefreshIndicatorTransform
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -71,9 +79,53 @@ fun LoadingView(
         )
     } else {
         LottieAnimation(
-            composition,
+            composition = composition,
             modifier = Modifier.size(size.dp).fillMaxWidth(),
+            iterations = 100,
         )
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun CustomPullRefreshIndicator(
+    refreshing: Boolean,
+    state: PullRefreshState,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = contentColorFor(backgroundColor),
+    scale: Boolean = false,
+) {
+    val CrossfadeDurationMs = 100
+
+    val IndicatorSize = 40.dp
+    val SpinnerShape = CircleShape
+    val Elevation = 6.dp
+
+    val showElevation by remember(refreshing, state) {
+        derivedStateOf { refreshing || state.progress > 0.5f }
+    }
+
+    Surface(
+        modifier = modifier
+            .size(IndicatorSize)
+            .pullRefreshIndicatorTransform(state, scale),
+        shape = SpinnerShape,
+        color = backgroundColor,
+        elevation = if (showElevation) Elevation else 0.dp,
+    ) {
+        Crossfade(
+            targetState = refreshing,
+            animationSpec = tween(durationMillis = CrossfadeDurationMs),
+            label = "",
+        ) { _ ->
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                LoadingView()
+            }
+        }
     }
 }
 
@@ -100,6 +152,7 @@ fun NewsCardListView(
                         this@LazyColumn.item {
                             Box(
                                 Modifier.fillMaxWidth().height(32.dp),
+                                contentAlignment = Alignment.Center,
                             ) {
                                 LoadingView()
                             }

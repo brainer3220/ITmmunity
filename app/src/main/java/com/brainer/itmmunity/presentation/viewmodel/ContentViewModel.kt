@@ -7,9 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.brainer.itmmunity.data.Croll.Croll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ContentViewModel(application: Application) : AndroidViewModel(application) {
+    private val _loadState = MutableStateFlow(LoadState.LOADED)
+    val loadState = _loadState.asStateFlow()
+
     private val _aNews = MutableStateFlow(
         Croll.Content(
             title = "",
@@ -49,14 +53,18 @@ class ContentViewModel(application: Application) : AndroidViewModel(application)
 
     fun getHtml() {
         viewModelScope.launch(Dispatchers.IO) {
+            _loadState.value = LoadState.LOADING
             kotlin.runCatching {
                 _aNews.value.htmlToMarkdown()
             }.onSuccess {
                 val contentHtmlTmp = it!!.slice(2 until it.length - 1)
                 changeHtml(contentHtmlTmp)
+                _loadState.value = LoadState.LOADED
                 Log.d("getHtmlViewModel", contentHtmlTmp)
             }.onFailure {
-                Log.w("getHtmlViewModel", "Failed")
+                _loadState.value = LoadState.ERROR
+                Log.e("getHtmlViewModel", "Failed")
+                return@launch
             }
         }
     }
