@@ -30,10 +30,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.brainer.itmmunity.data.Croll.Croll
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.brainer.itmmunity.domain.model.ContentModel
 import com.brainer.itmmunity.presentation.componant.AdMobCompose
 import com.brainer.itmmunity.presentation.componant.CustomPullRefreshIndicator
-import com.brainer.itmmunity.presentation.componant.LoadingView
 import com.brainer.itmmunity.presentation.componant.RoundedSurface
 import com.brainer.itmmunity.presentation.viewmodel.ContentViewModel
 import com.brainer.itmmunity.presentation.viewmodel.LoadState
@@ -47,13 +47,13 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun ContentView(
-    aNews: Croll.Content,
+    aNews: ContentModel,
     contentViewModel: ContentViewModel,
 ) {
     val scope = rememberCoroutineScope()
-    val contentHtmlState by contentViewModel.contentHtml.collectAsState()
+    val contentHtmlState by contentViewModel.contentHtml.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
-    val loadState by contentViewModel.loadState.collectAsState()
+    val loadState by contentViewModel.loadState.collectAsStateWithLifecycle()
     val refreshing = remember { mutableStateOf(false) }
     val pullRefreshState =
         rememberPullRefreshState(
@@ -71,11 +71,6 @@ fun ContentView(
     }
 
     RoundedSurface {
-        if (contentHtmlState.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                LoadingView()
-            }
-        }
         Box(modifier = Modifier.pullRefresh(state = pullRefreshState)) {
             Column(
                 modifier = Modifier
@@ -85,31 +80,26 @@ fun ContentView(
             ) {
                 RoundedSurface {
                     BoxWithConstraints {
-                        kotlin.runCatching {
-                            SelectionContainer(Modifier) {
-                                Column(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .animateContentSize()
-                                        .padding(20.dp),
-                                ) {
-                                    Text(
-                                        text = aNews.title,
-                                        fontSize = 20.sp,
-                                        textAlign = TextAlign.Left,
-                                    )
+                        SelectionContainer(Modifier) {
+                            Column(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .animateContentSize()
+                                    .padding(20.dp),
+                            ) {
+                                Text(
+                                    text = aNews.title,
+                                    fontSize = 20.sp,
+                                    textAlign = TextAlign.Left,
+                                )
 
-                                    MarkdownText(
-                                        modifier = Modifier.padding(top = 16.dp),
-                                        markdown = contentHtmlState,
-                                        color = textColor,
-                                    )
-
-                                    Log.v("contentHtml", contentHtmlState)
-                                }
+                                MarkdownText(
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    markdown = contentHtmlState,
+                                    color = textColor,
+                                )
+                                Log.v("contentHtml", contentHtmlState)
                             }
-                        }.onFailure {
-                            Log.e("contentHtml", it.toString())
                         }
                     }
                 }
@@ -153,7 +143,11 @@ fun ContentView(
                     )
                 }
             }
-            CustomPullRefreshIndicator(refreshing.value, pullRefreshState, Modifier.align(Alignment.TopCenter))
+            CustomPullRefreshIndicator(
+                refreshing.value,
+                pullRefreshState,
+                Modifier.align(Alignment.TopCenter),
+            )
         }
     }
 }

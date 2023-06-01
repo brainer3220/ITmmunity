@@ -8,10 +8,7 @@ import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -47,7 +44,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.brainer.itmmunity.ContentActivity
 import com.brainer.itmmunity.ContentView
 import com.brainer.itmmunity.R
-import com.brainer.itmmunity.data.Croll.Croll
+import com.brainer.itmmunity.domain.model.ContentModel
 import com.brainer.itmmunity.dummies
 import com.brainer.itmmunity.presentation.viewmodel.ContentViewModel
 import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
@@ -114,25 +111,25 @@ fun CustomPullRefreshIndicator(
         color = backgroundColor,
         elevation = if (showElevation) Elevation else 0.dp,
     ) {
-        Crossfade(
-            targetState = refreshing,
-            animationSpec = tween(durationMillis = CrossfadeDurationMs),
-            label = "",
-        ) { _ ->
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                LoadingView()
-            }
+//        Crossfade(
+//            targetState = refreshing,
+//            animationSpec = tween(durationMillis = CrossfadeDurationMs),
+//            label = "",
+//        ) { _ ->
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            LoadingView()
         }
+//        }
     }
 }
 
 @ExperimentalAnimationApi
 @Composable
 fun NewsCardListView(
-    news: List<Croll.Content>,
+    news: List<ContentModel>,
     mainViewModel: MainViewModel,
 ) {
     val scope = rememberCoroutineScope()
@@ -142,7 +139,7 @@ fun NewsCardListView(
         Box() {
             LazyColumn(state = listState) {
                 itemsIndexed(news) { index, item ->
-                    NewsListOf(item, mainViewModel = mainViewModel)
+                    NewsView(item, mainViewModel = mainViewModel)
                     if (index % 10 == 0) {
                         AdMobCompose(
                             modifier = Modifier.height(125.dp).fillMaxWidth(),
@@ -157,7 +154,7 @@ fun NewsCardListView(
                                 LoadingView()
                             }
                         }
-                        mainViewModel.addData()
+                        mainViewModel.fetchLatestNews()
                     }
                 }
             }
@@ -192,8 +189,8 @@ fun NewsCardListView(
 @ExperimentalAnimationApi
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun NewsListOf(
-    aNews: Croll.Content,
+fun NewsView(
+    aNews: ContentModel,
     mainViewModel: MainViewModel,
     modifier: Modifier = Modifier,
 ) {
@@ -261,9 +258,7 @@ fun NewsListOf(
                 }
                 startActivity(context, intent, null)
             } else {
-                kotlin.runCatching {
-                    mainViewModel.changeAnews(aNews)
-                }
+                mainViewModel.changeAnews(aNews)
             }
         }
         expanded = !expanded

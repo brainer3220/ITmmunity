@@ -11,12 +11,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.brainer.itmmunity.data.Croll.Croll
+import com.brainer.itmmunity.domain.model.ContentModel
 import com.brainer.itmmunity.presentation.componant.AppBar
 import com.brainer.itmmunity.presentation.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.presentation.viewmodel.ContentViewModel
 
-lateinit var content: Croll.Content
+lateinit var content: ContentModel
 
 @ExperimentalAnimationApi
 class ContentActivity : ComponentActivity() {

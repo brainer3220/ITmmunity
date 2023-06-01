@@ -4,8 +4,9 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.brainer.itmmunity.data.Croll.Croll
+import com.brainer.itmmunity.domain.model.ContentModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -15,7 +16,7 @@ class ContentViewModel(application: Application) : AndroidViewModel(application)
     val loadState = _loadState.asStateFlow()
 
     private val _aNews = MutableStateFlow(
-        Croll.Content(
+        ContentModel(
             title = "",
             image = null,
             hit = 0,
@@ -27,7 +28,7 @@ class ContentViewModel(application: Application) : AndroidViewModel(application)
     private var _contentHtml = MutableStateFlow<String>("")
     val contentHtml: MutableStateFlow<String> = _contentHtml
 
-    fun setContent(content: Croll.Content?) {
+    fun setContent(content: ContentModel?) {
         viewModelScope.launch {
             if (content != null) {
                 _aNews.value = content
@@ -60,10 +61,10 @@ class ContentViewModel(application: Application) : AndroidViewModel(application)
                 val contentHtmlTmp = it!!.slice(2 until it.length - 1)
                 changeHtml(contentHtmlTmp)
                 _loadState.value = LoadState.LOADED
-                Log.d("getHtmlViewModel", contentHtmlTmp)
+//                Log.d("getHtmlViewModel", contentHtmlTmp)
             }.onFailure {
                 _loadState.value = LoadState.ERROR
-                Log.e("getHtmlViewModel", "Failed")
+                Log.e("getHtml", "Failed")
                 return@launch
             }
         }

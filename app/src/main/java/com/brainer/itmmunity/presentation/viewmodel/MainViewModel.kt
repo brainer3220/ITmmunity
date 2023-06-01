@@ -1,15 +1,14 @@
 package com.brainer.itmmunity.presentation.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.brainer.itmmunity.data.Croll.Croll
-import com.brainer.itmmunity.data.Croll.KGNewsContent
-import com.brainer.itmmunity.data.Croll.MeecoNews
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.brainer.itmmunity.domain.data.MeecoDataSource
+import com.brainer.itmmunity.domain.data.UnderkgDataSource
+import com.brainer.itmmunity.domain.model.ContentModel
+import com.brainer.itmmunity.domain.network.MeecoApi
+import com.brainer.itmmunity.domain.network.UnderkgApi
+import com.brainer.itmmunity.domain.repository.ContentRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,18 +23,26 @@ enum class LoadState {
     ERROR,
 }
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel(
+    application: Application,
+) : AndroidViewModel(application) {
+    companion object {
+        private val contentRepository: ContentRepository = ContentRepository(
+            UnderkgDataSource(
+                UnderkgApi(),
+                Dispatchers.IO,
+            ),
+            MeecoDataSource(
+                MeecoApi(),
+                Dispatchers.IO,
+            ),
+        )
+    }
+
     private val _loadState = MutableStateFlow(LoadState.LOADED)
     val loadState = _loadState.asStateFlow()
 
-    private var _unifiedList = MutableStateFlow(listOf<Croll.Content>())
-    val unifiedList = _unifiedList.asStateFlow()
-
-    private var _underKgNextPage = MutableStateFlow(0)
-//    val underKgNextPage: LiveData<Int> = _underKgNextPage
-
-    private var _meecoNextPage = MutableStateFlow(0)
-//    val meecoNextPage: LiveData<Int> = _meecoNextPage
+    private var _page = MutableStateFlow(0)
 
     private var _isTabletUi = MutableStateFlow(false)
     val isTabletUi = _isTabletUi.asStateFlow()
@@ -43,85 +50,34 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private var _titleString = MutableStateFlow("ITmmunity")
     val titleString = _titleString.asStateFlow()
 
-    var meecoNewsSliceValue = 0
+    private var _newsList = MutableStateFlow(listOf<ContentModel>())
+    val newsList = _newsList.asStateFlow()
 
     init {
-        getRefresh()
-        getMeecoSliceValue()
+        refresh()
     }
 
-    private fun getMeecoSliceValue() {
-        val remoteConfig = Firebase.remoteConfig
-        val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 3600
-        }
-        remoteConfig.setConfigSettingsAsync(configSettings)
-        remoteConfig.fetch().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val updated = task.result
-                meecoNewsSliceValue = remoteConfig.getLong("meecoNewsSlice").toInt()
-                Log.d(CONFIG_STR, "Config params updated: $updated")
-                Log.d(CONFIG_STR, "Fetch and activate succeeded")
-            } else {
-                Log.d(CONFIG_STR, "Fetch failed")
-            }
-        }
+    fun fetchLatestNews() {
+        if (_loadState.value == LoadState.LOADING) return
+        viewModelScope.launch {
+            _page.value = _page.value.plus(1)
+            _newsList.value += contentRepository.getLatestNewsList(_page.value)
+        }.onJoin
     }
 
-    fun getRefresh() {
+    fun refresh() {
         viewModelScope.launch(Dispatchers.IO) {
             _loadState.value = LoadState.LOADING
-            _unifiedList.value = listOf<Croll.Content>()
-            kotlin.runCatching {
-                KGNewsContent().returnData()
-            }.onSuccess {
-                _unifiedList.value = _unifiedList.value + it
-                _unifiedList.value = _unifiedList.value.toSet().toList()
-                _underKgNextPage.value = 1
-                _loadState.value = LoadState.LOADED
-            }.onFailure {
-                _loadState.value = LoadState.ERROR
-            }
-        }.onJoin
-
-        viewModelScope.launch(Dispatchers.IO) {
-            kotlin.runCatching {
-                MeecoNews().returnData()
-            }.onSuccess {
-                _unifiedList.value =
-                    _unifiedList.value.plus(it.slice(meecoNewsSliceValue until it.size))
-                _unifiedList.value = _unifiedList.value.toSet().toList()
-                _meecoNextPage.value = 1
-            }
+            _page.value = 0
+            _newsList.value = contentRepository.getLatestNewsList(_page.value)
+            _loadState.value = LoadState.LOADED
         }.onJoin
     }
 
-    fun addData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            kotlin.runCatching {
-                KGNewsContent().returnData(_underKgNextPage.value + 1)
-            }.onSuccess {
-                _unifiedList.value = _unifiedList.value.union(it).toList()
-                _underKgNextPage.value = _underKgNextPage.value.plus(1)
-            }
-        }.onJoin
+    private var _aNews = MutableStateFlow<ContentModel?>(null)
+    val aNews: MutableStateFlow<ContentModel?> = _aNews
 
-        viewModelScope.launch(Dispatchers.IO) {
-            kotlin.runCatching {
-                MeecoNews().returnData(_meecoNextPage.value + 1)
-            }.onSuccess {
-                _unifiedList.value =
-                    _unifiedList.value.union(it.slice(meecoNewsSliceValue until it.size))
-                        .toList()
-                _meecoNextPage.value = _meecoNextPage.value.plus(1)
-            }
-        }.onJoin
-    }
-
-    private var _aNews = MutableStateFlow<Croll.Content?>(null)
-    val aNews: MutableStateFlow<Croll.Content?> = _aNews
-
-    fun changeAnews(news: Croll.Content?) {
+    fun changeAnews(news: ContentModel) {
         viewModelScope.launch {
             _aNews.value = news
         }
