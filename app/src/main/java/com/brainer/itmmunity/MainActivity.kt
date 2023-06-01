@@ -4,13 +4,17 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Surface
@@ -21,8 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.brainer.itmmunity.presentation.NavigationView
 import com.brainer.itmmunity.presentation.componant.*
 import com.brainer.itmmunity.presentation.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.presentation.viewmodel.BackGroundViewModel
@@ -30,6 +37,12 @@ import com.brainer.itmmunity.presentation.viewmodel.CONFIG_STR
 import com.brainer.itmmunity.presentation.viewmodel.ContentViewModel
 import com.brainer.itmmunity.presentation.viewmodel.LoadState
 import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
+import com.google.accompanist.navigation.material.BottomSheetNavigator
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
@@ -42,7 +55,14 @@ const val ANIMATION_INIT_OFFSET_Y = 800
 const val ANIMATION_TARGET_OFFSET_Y = 5000
 
 @ExperimentalAnimationApi
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+    companion object {
+        @OptIn(ExperimentalMaterialNavigationApi::class)
+        lateinit var bottomSheetNavigator: BottomSheetNavigator
+        lateinit var navController: NavHostController
+    }
+
+    @OptIn(ExperimentalMaterialNavigationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,12 +85,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ITmmunity_AndroidTheme {
+                bottomSheetNavigator = rememberBottomSheetNavigator()
+                navController = rememberNavController(bottomSheetNavigator)
                 // A surface container using the 'background' color from the theme
                 Surface {
-                    MainCompose(
-                        viewModel = viewModel(MainViewModel::class.java),
-                        networkViewModel = viewModel(BackGroundViewModel::class.java),
-                    )
+                    NavigationView(bottomSheetNavigator, navController)
                 }
             }
         }
@@ -94,7 +113,7 @@ class MainActivity : ComponentActivity() {
  */
 @ExperimentalAnimationApi
 @Composable
-fun MainCompose(
+fun MainViewWithAppBar(
     viewModel: MainViewModel,
     networkViewModel: BackGroundViewModel = BackGroundViewModel(Application()),
 ) {
@@ -103,42 +122,44 @@ fun MainCompose(
             viewModel = viewModel,
             networkViewModel = networkViewModel,
         )
-//        NavGraph(navController, viewModel, networkViewModel)
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @ExperimentalAnimationApi
 @Composable
-fun MainView(
-    viewModel: MainViewModel = remember { MainViewModel(Application()) },
+private fun MainView(
+    viewModel: MainViewModel,
     networkViewModel: BackGroundViewModel,
 ) {
     val scope = rememberCoroutineScope()
-    val unifiedList by viewModel.unifiedList.collectAsState()
-    val aNews by viewModel.aNews.collectAsState()
-    val loadState by viewModel.loadState.collectAsState()
+//    val unifiedList by viewModel.unifiedList.collectAsStateWithLifecycle()
+    val newsList by viewModel.newsList.collectAsStateWithLifecycle()
+    val aNews by viewModel.aNews.collectAsStateWithLifecycle()
+    val loadState by viewModel.loadState.collectAsStateWithLifecycle()
     val refreshing = remember {
         mutableStateOf(loadState == LoadState.LOADING)
     }
 
-    val isConnection by networkViewModel.isConnect.collectAsState()
-//    val isTabletUi by viewModel.isTabletUi.collectAsState()
+    val isConnection by networkViewModel.isConnect.collectAsStateWithLifecycle()
+//    val isTabletUi by viewModel.isTabletUi.collectAsStateWithLifecycle()
 
     LaunchedEffect(loadState) {
         refreshing.value = loadState == LoadState.LOADING
     }
 
     fun refresh() = scope.launch {
-        viewModel.getRefresh()
+        viewModel.refresh()
     }
 
     val pullRefreshState = rememberPullRefreshState(refreshing.value, ::refresh)
 
-    Log.d("Unified_List", unifiedList.toString())
+    Log.d("Unified_List", newsList.toString())
 
     if (isConnection) {
-        BoxWithConstraints(Modifier.fillMaxSize()) {
+        BoxWithConstraints(
+            Modifier.fillMaxSize(),
+        ) {
             val boxWithConstraintsScope = this
             Row(Modifier.fillMaxSize()) {
                 Column(
@@ -146,11 +167,51 @@ fun MainView(
                         .weight(1f)
                         .pullRefresh(pullRefreshState),
                 ) {
-                    if (unifiedList.isNotEmpty()) {
-                        NewsCardListView(
-                            unifiedList,
-                            viewModel,
+                    AnimatedContent(newsList.isNotEmpty(), label = "", transitionSpec = {
+                        ContentTransform(
+                            targetContentEnter = fadeIn(animationSpec = tween(500)),
+                            initialContentExit = fadeOut(animationSpec = tween(500)),
                         )
+                    }) { isNotEmpty ->
+                        when (isNotEmpty) {
+                            true -> {
+                                NewsCardListView(
+                                    newsList,
+                                    viewModel,
+                                )
+                            }
+
+                            false -> {
+                                Column {
+                                    repeat(10) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth().height(100.dp)
+                                                .padding(16.dp),
+                                        ) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .weight(2f)
+                                                    .placeholder(
+                                                        visible = true,
+                                                        highlight = PlaceholderHighlight.shimmer(),
+                                                    ),
+                                            ) {}
+                                            Spacer(modifier = Modifier.width(16.dp))
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .weight(9f)
+                                                    .placeholder(
+                                                        visible = true,
+                                                        highlight = PlaceholderHighlight.shimmer(),
+                                                    ),
+                                            ) {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -179,7 +240,11 @@ fun MainView(
                     viewModel.changeTabletUi(false)
                 }
             }
-            CustomPullRefreshIndicator(refreshing.value, pullRefreshState, Modifier.align(Alignment.TopCenter))
+            CustomPullRefreshIndicator(
+                refreshing.value,
+                pullRefreshState,
+                Modifier.align(Alignment.TopCenter),
+            )
         }
     } else {
         Box(
@@ -194,8 +259,9 @@ fun MainView(
 @ExperimentalAnimationApi
 @Preview
 @Composable
-fun MainViewTest() {
+private fun MainViewTest() {
     MainView(
         networkViewModel = BackGroundViewModel(Application()),
+        viewModel = viewModel(),
     )
 }
