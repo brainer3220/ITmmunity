@@ -106,8 +106,13 @@ dependencies {
     implementation 'androidx.compose.runtime:runtime-livedata:1.3.3'
 
 
-    //system-ui accompanist library
-    implementation 'com.google.accompanist:accompanist-systemuicontroller:0.28.0'
+    //accompanist
+    def accompanist_version = "0.30.1"
+    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-placeholder-material:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-navigation-material:$accompanist_version"
 
 //    NestedScrollView
     implementation "com.github.Tlaster:NestedScrollView:0.7.0"
