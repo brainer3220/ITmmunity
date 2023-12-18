@@ -15,7 +15,6 @@ apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion 33
-    buildToolsVersion '31.0.0'
 
     defaultConfig {
         applicationId "com.brainer.itmmunity"
