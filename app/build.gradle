@@ -14,12 +14,12 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
-    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.brainer.itmmunity"
         minSdkVersion 23
-        targetSdkVersion 33
+        targetSdkVersion 34
+        compileSdkVersion 34
         versionCode 4
         versionName "0.2"
 
