@@ -125,7 +125,7 @@ dependencies {
     implementation "com.github.skydoves:landscapist-animation:$glide_version"
 
     // Lottie
-    implementation 'com.airbnb.android:lottie-compose:6.1.0'
+    implementation 'com.airbnb.android:lottie-compose:6.3.0'
 
     implementation 'io.github.furstenheim:copy_down:1.1'
     implementation 'com.github.jeziellago:compose-markdown:0.3.0'
