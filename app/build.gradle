@@ -19,7 +19,7 @@ android {
         applicationId "com.brainer.itmmunity"
         minSdkVersion 23
         targetSdkVersion 34
-        compileSdkVersion 34
+        compileSdk 34
         versionCode 4
         versionName "0.2"
 
