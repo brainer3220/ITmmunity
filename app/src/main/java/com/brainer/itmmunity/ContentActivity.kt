@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.brainer.itmmunity.domain.model.ContentModel
 import com.brainer.itmmunity.presentation.componant.AppBar
-import com.brainer.itmmunity.presentation.ui.theme.ITmmunity_AndroidTheme
 import com.brainer.itmmunity.presentation.viewmodel.ContentViewModel
+import org.oneui.compose.theme.OneUITheme
 
 lateinit var content: ContentModel
 
@@ -26,7 +26,7 @@ class ContentActivity : ComponentActivity() {
         content = intent.getParcelableExtra("content")!!
 
         setContent {
-            ITmmunity_AndroidTheme {
+            OneUITheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),

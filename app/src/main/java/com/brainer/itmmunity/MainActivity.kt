@@ -13,13 +13,27 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -30,8 +44,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.brainer.itmmunity.presentation.NavigationView
-import com.brainer.itmmunity.presentation.componant.*
-import com.brainer.itmmunity.presentation.ui.theme.ITmmunity_AndroidTheme
+import com.brainer.itmmunity.presentation.componant.AppBar
+import com.brainer.itmmunity.presentation.componant.ConnectErrorView
+import com.brainer.itmmunity.presentation.componant.CustomPullRefreshIndicator
+import com.brainer.itmmunity.presentation.componant.NewsCardListView
 import com.brainer.itmmunity.presentation.viewmodel.BackGroundViewModel
 import com.brainer.itmmunity.presentation.viewmodel.CONFIG_STR
 import com.brainer.itmmunity.presentation.viewmodel.ContentViewModel
@@ -47,6 +63,8 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import kotlinx.coroutines.launch
+import org.oneui.compose.theme.OneUITheme
+import org.oneui.compose.widgets.box.RoundedCornerBox
 
 const val TABLET_UI_WIDTH = 480
 const val FIREBASE_MINIMUM_FETCH_SEC = 3600L
@@ -84,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         setContent {
-            ITmmunity_AndroidTheme {
+            OneUITheme {
                 bottomSheetNavigator = rememberBottomSheetNavigator()
                 navController = rememberNavController(bottomSheetNavigator)
                 // A surface container using the 'background' color from the theme
@@ -188,7 +206,7 @@ private fun MainView(
                                             modifier = Modifier.fillMaxWidth().height(100.dp)
                                                 .padding(16.dp),
                                         ) {
-                                            Box(
+                                            RoundedCornerBox(
                                                 modifier = Modifier
                                                     .fillMaxSize()
                                                     .weight(2f)
@@ -198,7 +216,7 @@ private fun MainView(
                                                     ),
                                             ) {}
                                             Spacer(modifier = Modifier.width(16.dp))
-                                            Box(
+                                            RoundedCornerBox(
                                                 modifier = Modifier
                                                     .fillMaxSize()
                                                     .weight(9f)
@@ -226,7 +244,7 @@ private fun MainView(
                             if (it != null) {
                                 ContentView(aNews = aNews!!, ContentViewModel(Application()))
                             } else {
-                                RoundedSurface {
+                                RoundedCornerBox {
                                     Text(
                                         modifier = Modifier.fillMaxSize(),
                                         text = "컨텐츠를 클릭해 보세요.",
@@ -247,7 +265,7 @@ private fun MainView(
             )
         }
     } else {
-        Box(
+        RoundedCornerBox(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center,
         ) {

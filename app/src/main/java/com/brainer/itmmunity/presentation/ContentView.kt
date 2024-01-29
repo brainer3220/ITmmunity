@@ -11,7 +11,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
@@ -34,14 +33,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.brainer.itmmunity.domain.model.ContentModel
 import com.brainer.itmmunity.presentation.componant.AdMobCompose
 import com.brainer.itmmunity.presentation.componant.CustomPullRefreshIndicator
-import com.brainer.itmmunity.presentation.componant.RoundedSurface
 import com.brainer.itmmunity.presentation.viewmodel.ContentViewModel
 import com.brainer.itmmunity.presentation.viewmodel.LoadState
 import com.brainer.itmmunity.utility.getSurfaceColor
 import com.brainer.itmmunity.utility.getTextColor
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.launch
+import org.oneui.compose.widgets.box.RoundedCornerBox
 
+@Suppress("ktlint:standard:function-naming")
 @OptIn(ExperimentalMaterialApi::class)
 @ExperimentalAnimationApi
 @SuppressLint("UnrememberedMutableState")
@@ -70,88 +70,89 @@ fun ContentView(
         refreshing.value = loadState == LoadState.LOADING
     }
 
-    RoundedSurface {
-        Box(modifier = Modifier.pullRefresh(state = pullRefreshState)) {
-            Column(
-                modifier = Modifier
+    RoundedCornerBox(
+        modifier = Modifier.pullRefresh(state = pullRefreshState),
+        padding = PaddingValues(0.dp),
+    ) {
+        Column(
+            modifier =
+                Modifier
                     .background(backGroundColor)
                     .fillMaxSize()
                     .verticalScroll(scrollState),
-            ) {
-                RoundedSurface {
-                    BoxWithConstraints {
-                        SelectionContainer(Modifier) {
-                            Column(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .animateContentSize()
-                                    .padding(20.dp),
-                            ) {
-                                Text(
-                                    text = aNews.title,
-                                    fontSize = 20.sp,
-                                    textAlign = TextAlign.Left,
-                                )
+        ) {
+            RoundedCornerBox {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .animateContentSize(),
+                ) {
+                    Text(
+                        text = aNews.title,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Left,
+                        color = textColor,
+                    )
 
-                                MarkdownText(
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    markdown = contentHtmlState,
-                                    color = textColor,
-                                )
-                                Log.v("contentHtml", contentHtmlState)
-                            }
-                        }
-                    }
+                    MarkdownText(
+                        modifier = Modifier.padding(top = 16.dp),
+                        markdown = contentHtmlState,
+                        color = textColor,
+                    )
+                    Log.v("contentHtml", contentHtmlState)
                 }
+            }
 
-                Spacer(
-                    modifier = Modifier
+            Spacer(
+                modifier =
+                    Modifier
                         .padding(16.dp)
                         .alpha(0.0f),
-                )
+            )
 
-                RoundedSurface {
-                    AdMobCompose(
-                        modifier = Modifier.padding(12.dp),
-                        adId = "ca-app-pub-3940256099942544/6300978111",
-                    )
-                }
+            RoundedCornerBox {
+                AdMobCompose(
+                    modifier = Modifier.padding(12.dp),
+                    adId = "ca-app-pub-3940256099942544/6300978111",
+                )
             }
-            val showButton by remember {
-                derivedStateOf {
-                    scrollState.value > 0
-                }
+        }
+        val showButton by remember {
+            derivedStateOf {
+                scrollState.value > 0
             }
-            AnimatedVisibility(
-                visible = showButton,
-                modifier = Modifier
+        }
+        AnimatedVisibility(
+            visible = showButton,
+            modifier =
+                Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 24.dp),
-                enter = fadeIn(),
-                exit = fadeOut(),
-            ) {
-                IconButton(onClick = {
-                    scope.launch {
-                        scrollState.animateScrollTo(0)
-                    }
-                }) {
-                    Icon(
-                        imageVector = (Icons.Default.KeyboardArrowUp),
-                        contentDescription = "위로",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(42.dp),
-                    )
+            enter = fadeIn(),
+            exit = fadeOut(),
+        ) {
+            IconButton(onClick = {
+                scope.launch {
+                    scrollState.animateScrollTo(0)
                 }
+            }) {
+                Icon(
+                    imageVector = (Icons.Default.KeyboardArrowUp),
+                    contentDescription = "위로",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(42.dp),
+                )
             }
-            CustomPullRefreshIndicator(
-                refreshing.value,
-                pullRefreshState,
-                Modifier.align(Alignment.TopCenter),
-            )
         }
+        CustomPullRefreshIndicator(
+            refreshing.value,
+            pullRefreshState,
+            Modifier.align(Alignment.TopCenter),
+        )
     }
 }
 
+@Suppress("ktlint:standard:function-naming")
 @ExperimentalAnimationApi
 @Preview
 @Composable
