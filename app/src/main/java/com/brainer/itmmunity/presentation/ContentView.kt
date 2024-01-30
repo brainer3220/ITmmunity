@@ -1,7 +1,7 @@
 package com.brainer.itmmunity
 
 import android.annotation.SuppressLint
-import android.app.Application
+import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -26,10 +26,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.brainer.itmmunity.domain.model.ContentModel
 import com.brainer.itmmunity.presentation.componant.AdMobCompose
 import com.brainer.itmmunity.presentation.componant.CustomPullRefreshIndicator
@@ -49,6 +49,7 @@ import org.oneui.compose.widgets.box.RoundedCornerBox
 fun ContentView(
     aNews: ContentModel,
     contentViewModel: ContentViewModel,
+    navController: NavHostController,
 ) {
     val scope = rememberCoroutineScope()
     val contentHtmlState by contentViewModel.contentHtml.collectAsStateWithLifecycle()
@@ -71,7 +72,10 @@ fun ContentView(
     }
 
     RoundedCornerBox(
-        modifier = Modifier.pullRefresh(state = pullRefreshState),
+        modifier =
+            Modifier
+                .background(color = backGroundColor)
+                .pullRefresh(state = pullRefreshState),
         padding = PaddingValues(0.dp),
     ) {
         Column(
@@ -97,7 +101,19 @@ fun ContentView(
                     MarkdownText(
                         modifier = Modifier.padding(top = 16.dp),
                         markdown = contentHtmlState,
-                        color = textColor,
+                        linkColor = MaterialTheme.colorScheme.primary,
+                        style =
+                            androidx.compose.ui.text.TextStyle(
+                                color = textColor,
+                                fontSize = 14.sp,
+                            ),
+                        isTextSelectable = true,
+                        onLinkClicked = { url ->
+                            val encodedUrl = Uri.encode(url)
+                            navController.navigate(
+                                "webview/$encodedUrl",
+                            )
+                        },
                     )
                     Log.v("contentHtml", contentHtmlState)
                 }
@@ -150,15 +166,4 @@ fun ContentView(
             Modifier.align(Alignment.TopCenter),
         )
     }
-}
-
-@Suppress("ktlint:standard:function-naming")
-@ExperimentalAnimationApi
-@Preview
-@Composable
-fun ContentViewTest() {
-    ContentView(
-        dummies[0],
-        ContentViewModel(Application()),
-    )
 }

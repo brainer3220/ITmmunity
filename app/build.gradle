@@ -130,7 +130,7 @@ dependencies {
     implementation 'com.airbnb.android:lottie-compose:6.3.0'
 
     implementation 'io.github.furstenheim:copy_down:1.1'
-    implementation 'com.github.jeziellago:compose-markdown:0.3.0'
+    implementation 'com.github.jeziellago:compose-markdown:0.4.1'
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
     implementation "com.github.TrainerSnow:oneui-compose:0.5.5"
