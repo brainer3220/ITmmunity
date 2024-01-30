@@ -32,8 +32,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.brainer.itmmunity.R
 import com.brainer.itmmunity.domain.model.ContentModel
 import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
@@ -54,6 +55,7 @@ import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
 const val SCROLL_HEIGHT = 295f
 const val SCROLL_TABLET_HEIGHT = 155f
 
+@Suppress("ktlint:standard:function-naming")
 /**
  * AppBar is reusable and app based Comopse
  * @author brainer
@@ -67,23 +69,25 @@ fun AppBar(
     viewModel: MainViewModel = MainViewModel(Application()),
     contentView: @Composable () -> Unit = {},
 ) {
-    val containerColor = if (isSystemInDarkTheme()) {
-        Black
-    } else {
-        Color(245, 244, 244)
-    }
-    val titleString by viewModel.titleString.collectAsState()
+    val containerColor =
+        if (isSystemInDarkTheme()) {
+            Black
+        } else {
+            Color(245, 244, 244)
+        }
+    val titleString by viewModel.titleString.collectAsStateWithLifecycle()
     val nestedScrollViewState = rememberNestedScrollViewState()
-    val smallTopAppBarAlpha by animateFloatAsState(1f)
-    val isTabletUi by viewModel.isTabletUi.collectAsState()
+    val smallTopAppBarAlpha by animateFloatAsState(1f, label = "smallTopAppBarAlpha")
+    val isTabletUi by viewModel.isTabletUi.collectAsStateWithLifecycle()
 
     VerticalNestedScrollView(
         state = nestedScrollViewState,
         header = {
             Box(
-                modifier = Modifier
-                    .height(isTabletUi.let { if (it) SCROLL_TABLET_HEIGHT.dp else SCROLL_HEIGHT.dp })
-                    .background(containerColor),
+                modifier =
+                    Modifier
+                        .height(isTabletUi.let { if (it) SCROLL_TABLET_HEIGHT.dp else SCROLL_HEIGHT.dp })
+                        .background(containerColor),
                 contentAlignment = Alignment.Center,
             ) {
                 Column(
@@ -131,10 +135,11 @@ fun AppBar(
                                 onClick = {
                                 },
                                 enabled = false,
-                                modifier = Modifier.combinedClickable(
-                                    onLongClick = { TODO() },
-                                    onClick = { TODO() },
-                                ),
+                                modifier =
+                                    Modifier.combinedClickable(
+                                        onLongClick = { TODO() },
+                                        onClick = { TODO() },
+                                    ),
                             ) {
                                 Icon(
                                     painterResource(R.drawable.ic_baseline_oui_search_24),
@@ -147,8 +152,7 @@ fun AppBar(
                     colors = TopAppBarDefaults.smallTopAppBarColors(containerColor),
                 )
                 Box(
-                    Modifier
-                        .fillMaxSize(),
+                    Modifier.fillMaxSize(),
                 ) {
                     contentView()
                 }
@@ -156,24 +160,30 @@ fun AppBar(
                     modifier = Modifier.height(62.dp),
                     backgroundColor = containerColor,
                 ) {
-//                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-//                    val currentDestination = navBackStackEntry?.destination
-//                    BottomNavigationItem(selected = 0, onClick = { /*TODO*/ }) {
-//                        /*TODO*/
-//                    }
+                    //                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    //                    val currentDestination = navBackStackEntry?.destination
+                    //                    BottomNavigationItem(selected = 0, onClick = { /*TODO*/ }) {
+                    //                        /*TODO*/
+                    //                    }
                 }
             }
         },
     )
 }
 
+@Suppress("ktlint:standard:function-naming")
 @Composable
-fun AppBar(content: ContentModel, context: Context, contentView: @Composable () -> Unit = {}) {
-    val containerColor = if (isSystemInDarkTheme()) {
-        Black
-    } else {
-        Color(245, 244, 244)
-    }
+fun AppBar(
+    content: ContentModel,
+    context: Context,
+    contentView: @Composable () -> Unit = {},
+) {
+    val containerColor =
+        if (isSystemInDarkTheme()) {
+            Black
+        } else {
+            Color(245, 244, 244)
+        }
 
     Column {
         TopAppBar(
@@ -196,16 +206,17 @@ fun AppBar(content: ContentModel, context: Context, contentView: @Composable () 
             },
             actions = {
                 IconButton(onClick = {
-                    val sendIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TITLE, content.title)
-                        putExtra(
-                            Intent.EXTRA_SUBJECT,
-                            "Powered by ITmmunity",
-                        )
-                        putExtra(Intent.EXTRA_TEXT, content.url)
-                        type = "text/plain"
-                    }
+                    val sendIntent: Intent =
+                        Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TITLE, content.title)
+                            putExtra(
+                                Intent.EXTRA_SUBJECT,
+                                "Powered by ITmmunity",
+                            )
+                            putExtra(Intent.EXTRA_TEXT, content.url)
+                            type = "text/plain"
+                        }
 
                     val shareIntent =
                         Intent.createChooser(sendIntent, null)
@@ -217,12 +228,16 @@ fun AppBar(content: ContentModel, context: Context, contentView: @Composable () 
                     )
                 }
             },
-            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor),
+            colors =
+                topAppBarColors(
+                    containerColor,
+                ),
         )
         contentView()
     }
 }
 
+@Suppress("ktlint:standard:function-naming")
 @ExperimentalAnimationApi
 @Preview
 @Composable
