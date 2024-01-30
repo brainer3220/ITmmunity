@@ -7,6 +7,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -38,6 +39,8 @@ import com.brainer.itmmunity.ContentActivity
 import com.brainer.itmmunity.R
 import com.brainer.itmmunity.domain.model.ContentModel
 import com.brainer.itmmunity.presentation.viewmodel.MainViewModel
+import com.brainer.itmmunity.utility.getSurfaceColor
+import com.brainer.itmmunity.utility.getTextColor
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.animation.circular.CircularRevealPlugin
 import com.skydoves.landscapist.components.rememberImageComponent
@@ -111,6 +114,7 @@ fun CustomPullRefreshIndicator(
     }
 }
 
+@Suppress("ktlint:standard:function-naming")
 @ExperimentalAnimationApi
 @Composable
 fun NewsCardListView(
@@ -120,7 +124,7 @@ fun NewsCardListView(
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
 
-    RoundedCornerBox(padding = PaddingValues(0.dp)) {
+    RoundedCornerBox(modifier = Modifier.background(color = getSurfaceColor()), padding = PaddingValues(0.dp)) {
         LazyColumn(state = listState) {
             itemsIndexed(news) { index, item ->
                 NewsView(item, mainViewModel = mainViewModel)
@@ -240,6 +244,7 @@ fun NewsView(
                 text = aNews.title,
                 style = MaterialTheme.typography.titleLarge,
                 overflow = TextOverflow.Ellipsis,
+                color = getTextColor(),
             )
         }
 

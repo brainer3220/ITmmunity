@@ -37,17 +37,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.brainer.itmmunity.presentation.NavigationView
+import com.brainer.itmmunity.MainActivity.Companion.navController
 import com.brainer.itmmunity.presentation.componant.AppBar
 import com.brainer.itmmunity.presentation.componant.ConnectErrorView
 import com.brainer.itmmunity.presentation.componant.CustomPullRefreshIndicator
 import com.brainer.itmmunity.presentation.componant.NewsCardListView
+import com.brainer.itmmunity.presentation.navigation.NavigationView
 import com.brainer.itmmunity.presentation.viewmodel.BackGroundViewModel
 import com.brainer.itmmunity.presentation.viewmodel.CONFIG_STR
 import com.brainer.itmmunity.presentation.viewmodel.ContentViewModel
@@ -85,9 +84,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val remoteConfig = Firebase.remoteConfig
-        val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = FIREBASE_MINIMUM_FETCH_SEC
-        }
+        val configSettings =
+            remoteConfigSettings {
+                minimumFetchIntervalInSeconds = FIREBASE_MINIMUM_FETCH_SEC
+            }
         remoteConfig.setConfigSettingsAsync(configSettings)
 
         remoteConfig.fetchAndActivate()
@@ -107,14 +107,18 @@ class MainActivity : AppCompatActivity() {
                 navController = rememberNavController(bottomSheetNavigator)
                 // A surface container using the 'background' color from the theme
                 Surface {
-                    NavigationView(bottomSheetNavigator, navController)
+                    NavigationView(navController)
                 }
             }
         }
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d("MainActivity", "onActivityResult")
 
@@ -124,6 +128,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+@Suppress("ktlint:standard:function-naming")
 /**
  * @author brainer
  * @param viewModel MainViewModel
@@ -143,6 +148,7 @@ fun MainViewWithAppBar(
     }
 }
 
+@Suppress("ktlint:standard:function-naming")
 @OptIn(ExperimentalMaterialApi::class)
 @ExperimentalAnimationApi
 @Composable
@@ -155,9 +161,10 @@ private fun MainView(
     val newsList by viewModel.newsList.collectAsStateWithLifecycle()
     val aNews by viewModel.aNews.collectAsStateWithLifecycle()
     val loadState by viewModel.loadState.collectAsStateWithLifecycle()
-    val refreshing = remember {
-        mutableStateOf(loadState == LoadState.LOADING)
-    }
+    val refreshing =
+        remember {
+            mutableStateOf(loadState == LoadState.LOADING)
+        }
 
     val isConnection by networkViewModel.isConnect.collectAsStateWithLifecycle()
 //    val isTabletUi by viewModel.isTabletUi.collectAsStateWithLifecycle()
@@ -166,9 +173,10 @@ private fun MainView(
         refreshing.value = loadState == LoadState.LOADING
     }
 
-    fun refresh() = scope.launch {
-        viewModel.refresh()
-    }
+    fun refresh() =
+        scope.launch {
+            viewModel.refresh()
+        }
 
     val pullRefreshState = rememberPullRefreshState(refreshing.value, ::refresh)
 
@@ -181,9 +189,10 @@ private fun MainView(
             val boxWithConstraintsScope = this
             Row(Modifier.fillMaxSize()) {
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .pullRefresh(pullRefreshState),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .pullRefresh(pullRefreshState),
                 ) {
                     AnimatedContent(newsList.isNotEmpty(), label = "", transitionSpec = {
                         ContentTransform(
@@ -203,27 +212,30 @@ private fun MainView(
                                 Column {
                                     repeat(10) {
                                         Row(
-                                            modifier = Modifier.fillMaxWidth().height(100.dp)
-                                                .padding(16.dp),
+                                            modifier =
+                                                Modifier.fillMaxWidth().height(100.dp)
+                                                    .padding(16.dp),
                                         ) {
                                             RoundedCornerBox(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .weight(2f)
-                                                    .placeholder(
-                                                        visible = true,
-                                                        highlight = PlaceholderHighlight.shimmer(),
-                                                    ),
+                                                modifier =
+                                                    Modifier
+                                                        .fillMaxSize()
+                                                        .weight(2f)
+                                                        .placeholder(
+                                                            visible = true,
+                                                            highlight = PlaceholderHighlight.shimmer(),
+                                                        ),
                                             ) {}
                                             Spacer(modifier = Modifier.width(16.dp))
                                             RoundedCornerBox(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .weight(9f)
-                                                    .placeholder(
-                                                        visible = true,
-                                                        highlight = PlaceholderHighlight.shimmer(),
-                                                    ),
+                                                modifier =
+                                                    Modifier
+                                                        .fillMaxSize()
+                                                        .weight(9f)
+                                                        .placeholder(
+                                                            visible = true,
+                                                            highlight = PlaceholderHighlight.shimmer(),
+                                                        ),
                                             ) {}
                                         }
                                     }
@@ -236,13 +248,18 @@ private fun MainView(
                 if (boxWithConstraintsScope.maxWidth >= TABLET_UI_WIDTH.dp) {
                     viewModel.changeTabletUi(true)
                     Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .align(Alignment.CenterVertically),
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .align(Alignment.CenterVertically),
                     ) {
                         Crossfade(targetState = aNews, label = "") {
                             if (it != null) {
-                                ContentView(aNews = aNews!!, ContentViewModel(Application()))
+                                ContentView(
+                                    aNews = aNews!!,
+                                    ContentViewModel(Application()),
+                                    navController,
+                                )
                             } else {
                                 RoundedCornerBox {
                                     Text(
@@ -272,14 +289,4 @@ private fun MainView(
             ConnectErrorView()
         }
     }
-}
-
-@ExperimentalAnimationApi
-@Preview
-@Composable
-private fun MainViewTest() {
-    MainView(
-        networkViewModel = BackGroundViewModel(Application()),
-        viewModel = viewModel(),
-    )
 }
