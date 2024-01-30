@@ -140,4 +140,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.22"
     implementation 'androidx.compose.compiler:compiler:1.5.8'
 
+    implementation "androidx.webkit:webkit:1.10.0"
+
 }
