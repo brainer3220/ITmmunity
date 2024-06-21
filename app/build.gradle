@@ -20,7 +20,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 34
         compileSdk 34
-        versionCode 4
+        versionCode 6
         versionName "0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -36,13 +36,13 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_18
-        targetCompatibility JavaVersion.VERSION_18
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
         // 코어 라이브러리 디슈거링 활성화
         coreLibraryDesugaringEnabled true
     }
     kotlinOptions {
-        jvmTarget = "18"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose true
