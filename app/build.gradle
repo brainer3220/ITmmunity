@@ -62,33 +62,33 @@ android {
 dependencies {
 
     def lifecycle_version = '2.7.0'
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation "androidx.compose.material:material:1.6.0"
-    implementation 'androidx.compose.material3:material3:1.1.2'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation "androidx.compose.material:material:1.6.8"
+    implementation 'androidx.compose.material3:material3:1.2.1'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.preference:preference-ktx:1.2.1"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    implementation 'com.google.accompanist:accompanist-navigation-animation:0.28.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.accompanist:accompanist-navigation-animation:0.30.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'com.google.android.gms:play-services-ads-lite:22.6.0'
+    implementation 'com.google.android.gms:play-services-ads-lite:23.1.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
 //    implementation "com.github.JamalMulla:ComposePrefs3:1.0.2"
     // Preferences DataStore (SharedPreferences like APIs)
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "androidx.datastore:datastore-preferences:1.1.1"
 
     // Alternatively - use the following artifact without an Android dependency.
     dependencies {
-        implementation "androidx.datastore:datastore-preferences-core:1.0.0"
+        implementation "androidx.datastore:datastore-preferences-core:1.1.1"
     }
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:32.0.0')
+    implementation platform('com.google.firebase:firebase-bom:33.1.1')
     implementation 'com.google.firebase:firebase-config-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-inappmessaging-display-ktx'
@@ -97,13 +97,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging-ktx'
 
     // Google AdMob
-    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+    implementation 'com.google.android.gms:play-services-ads:23.1.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-    implementation 'androidx.compose.runtime:runtime-livedata:1.5.4'
+    implementation 'androidx.compose.runtime:runtime-livedata:1.6.8'
 
 
     //accompanist
@@ -138,8 +138,8 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.22"
-    implementation 'androidx.compose.compiler:compiler:1.5.8'
+    implementation 'androidx.compose.compiler:compiler:1.5.14'
 
-    implementation "androidx.webkit:webkit:1.10.0"
+    implementation "androidx.webkit:webkit:1.11.0"
 
 }
